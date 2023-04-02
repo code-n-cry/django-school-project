@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.staticfiles',
     'django.forms',
     'ckeditor',
     'debug_toolbar',
@@ -131,9 +130,12 @@ USE_TZ = True
 
 
 LOGIN_URL = '/auth/login/'
+
 LOGIN_REDIRECT_URL = '/'
+
 LOGOUT_REDIRECT_URL = '/auth/login/'
-AUTH_USER_MODEL = 'users.models.User'
+
+AUTH_USER_MODEL = 'users.User'
 
 
 # Static files (CSS, JavaScript, Images)
