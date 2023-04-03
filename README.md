@@ -1,11 +1,14 @@
 # django-school-project
 
+![python linting](https://github.com/code-n-cry/django-school-project/actions/workflows/python-linting.yml/badge.svg)
+
+![python testing](https://github.com/code-n-cry/django-school-project/actions/workflows/python-testing.yml/badge.svg)
+
 ## Описание
 Project for yandex django school
 
 ## Технологии
 - Django
-- React.js
 
 ## TODOs
 - [ ] Сделать возможность выбрать лидера, который будет назначать задачи команде(при этом каждый член команды может создавать свои задачи или подпункты к имеющимся)
