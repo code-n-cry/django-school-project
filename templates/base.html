@@ -1,0 +1,18 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'favicon/favicon.ico' %}">
+    {% block title %}
+        <title>Base template</title>
+    {% endblock %}
+  </head>
+  <body>
+    <main style="margin-top: 4.6rem">
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>
