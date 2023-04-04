@@ -23,5 +23,3 @@ Project for yandex django school
 
 ## Руководство по запуску
 Soon...
-
-black . --skip-string-normalization --line-length=79
