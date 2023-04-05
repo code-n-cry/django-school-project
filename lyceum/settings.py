@@ -1,21 +1,31 @@
+import os
 from pathlib import Path
+
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+env = environ.Env(
+    interpolate=True,
+    SECRET_KEY=(str, 'not-a-secret'),
+    DEBUG=(bool, False),
+    ALLOWED_HOSTS=(list, ['*']),
+    FROM_EMAIL=(str, 'noreply@example.com'),
+    MAX_LOGIN_AMOUNT=(int, 5),
+    USER_ACTIVE_DEFAULT=(bool, False),
+)
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    'django-insecure-7#23egp36j-6_ey7ss8&3da1nqm3e5v-sb1v7bifs^7pu@cyb='
-)
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -112,6 +122,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+USER_ACTIVE_DEFAULT = env('USER_ACTIVE_DEFAULT')
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -128,6 +140,8 @@ USE_L10N = False
 
 USE_TZ = True
 
+
+MAX_LOGIN_AMOUNT = env('MAX_LOGIN_AMOUNT')
 
 LOGIN_URL = '/auth/login/'
 
@@ -155,6 +169,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
+
+FROM_EMAIL = env('FROM_EMAIL')
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
