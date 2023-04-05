@@ -1,0 +1,25 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'favicon/favicon.ico' %}">
+    <link href="{% static 'css/global.css' %}" rel="stylesheet">
+    <link href="{% static 'css/tailwind-output.css' %}" rel="stylesheet" />
+    {% block title %}
+      <title>Base template</title>
+    {% endblock %}
+  </head>
+  <body>
+    <div class="flex flex-col h-screen">
+      {% include "includes/header.html" %}
+      <main class="mt-2 grow">
+        {% block content %}{% endblock %}
+      </main>
+      {% include "includes/footer.html" %}
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
+</html>

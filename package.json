@@ -1,0 +1,27 @@
+{
+  "name": "django-school-project",
+  "version": "1.0.0",
+  "description": "![python linting](https://github.com/code-n-cry/django-school-project/actions/workflows/python-linting.yml/badge.svg)",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "tailwind:watch": "tailwindcss -i static_dev/css/tailwind-input.css -o static_dev/css/tailwind-output.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/code-n-cry/django-school-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/code-n-cry/django-school-project/issues"
+  },
+  "homepage": "https://github.com/code-n-cry/django-school-project#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.3.1"
+  },
+  "dependencies": {
+    "tw-elements": "^1.0.0-beta1"
+  }
+}
