@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'tasks.apps.TasksConfig',
     'teams.apps.TeamsConfig',
     'users.apps.UsersConfig',
+    'homepage.apps.HomepageConfig',
 ]
 
 MIDDLEWARE = [

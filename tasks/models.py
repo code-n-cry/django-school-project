@@ -27,3 +27,6 @@ class Task(django.db.models.Model):
         verbose_name = 'задача'
         verbose_name_plural = 'задачи'
         default_related_name = 'task'
+
+    def __str__(self):
+        return self.name
