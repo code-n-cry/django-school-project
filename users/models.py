@@ -1,8 +1,9 @@
 import django.db.models
 import django.utils.html
-import sorl
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy
+
+import sorl
 
 import teams.models
 
@@ -36,6 +37,7 @@ class User(AbstractUser):
         on_delete=django.db.models.CASCADE,
         verbose_name='приглашения',
         help_text='куда вас пригласили?',
+        null=True,
     )
     avatar = django.db.models.ImageField(
         upload_to=avatar_image_path,
