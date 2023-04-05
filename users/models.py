@@ -36,6 +36,7 @@ class User(AbstractUser):
         on_delete=django.db.models.CASCADE,
         verbose_name='приглашения',
         help_text='куда вас пригласили?',
+        null=True,
     )
     avatar = django.db.models.ImageField(
         upload_to=avatar_image_path,
