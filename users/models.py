@@ -17,13 +17,11 @@ class User(AbstractUser):
         verbose_name='статус видимости',
         help_text='могут ли другие пользователи звать вас в команды?',
     )
-    lead = django.db.models.ForeignKey(
+    lead_teams = django.db.models.ManyToManyField(
         teams.models.Team,
-        on_delete=django.db.models.DO_NOTHING,
-        null=True,
         verbose_name='управляемые команды',
         help_text='какими командами вы управляете?',
-        related_name='lead',
+        related_name='leads',
     )
     members = django.db.models.ManyToManyField(
         teams.models.Team,
