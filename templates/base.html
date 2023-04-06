@@ -7,15 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{% static 'favicon/favicon.ico' %}">
     <link type="text/css" href="{% static 'css/global.css' %}" rel="stylesheet">
-    <link type="text/css" href="{% static 'css/tailwind-output.css' %}" rel="stylesheet" />
+    <link type="text/css" href="{% static 'css/tailwind-output.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
     {% block title %}
       <title>Base template</title>
     {% endblock %}
   </head>
-  <body>
+  <body class="bg-neutral-800">
     <div class="flex flex-col h-screen">
       {% include "includes/header.html" %}
-      <main class="mt-2 grow">
+      <main class="text-neutral-200 mt-2 grow">
         {% block content %}{% endblock %}
       </main>
       {% include "includes/footer.html" %}
