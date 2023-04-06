@@ -90,4 +90,8 @@ black . --skip-string-normalization --line-length=79
   | --------------- | ------- |
   | ``` python3 manage.py migrate ``` | ``` python manage.py migrate ``` |
   
- Здесь ещё будет ER-диаграмма и не только! Возвращайтесь😻
+## ERD
+
+<img src="https://github.com/code-n-cry/django_school/blob/main/image.png">
+
+ Здесь ещё будет много всего интересного! Возвращайтесь😻
