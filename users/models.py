@@ -2,28 +2,31 @@ import django.db.models
 import django.utils.html
 import sorl
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 from django.utils.translation import gettext_lazy
 
+import skills.models
 import teams.models
+import users.managers
 
 
 def avatar_image_path(instance, filename):
-    return f'uploads/{instance.user.id}/{filename}'
+    return f'uploads/{instance.id}-{timezone.now}/{filename}'
 
 
 class User(AbstractUser):
+    objects = users.managers.ActiveUserManager()
+
     is_visible = django.db.models.BooleanField(
         default=True,
         verbose_name='статус видимости',
         help_text='могут ли другие пользователи звать вас в команды?',
     )
-    lead = django.db.models.ForeignKey(
+    lead_teams = django.db.models.ManyToManyField(
         teams.models.Team,
-        on_delete=django.db.models.DO_NOTHING,
-        null=True,
         verbose_name='управляемые команды',
         help_text='какими командами вы управляете?',
-        related_name='lead',
+        related_name='leads',
     )
     members = django.db.models.ManyToManyField(
         teams.models.Team,
@@ -44,6 +47,11 @@ class User(AbstractUser):
         help_text='картинка профиля пользователя',
         null=True,
         blank=True,
+    )
+    skills = django.db.models.ManyToManyField(
+        to=skills.models.Skill,
+        verbose_name='навыки',
+        help_text='Ваши навыки',
     )
     failed_logins = django.db.models.IntegerField(
         verbose_name='количество неудачных входов с момента удачного',

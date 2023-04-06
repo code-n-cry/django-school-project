@@ -1,30 +1,49 @@
 import django.db.models
+from django.utils import timezone
 
-import tasks.models
+import core.models
+import skills.models
+from tasks.models import Meeting, Task
 
 
-class Team(django.db.models.Model):
-    name = django.db.models.CharField(
-        verbose_name='название команды',
-        help_text='как будет называться команда?',
-        max_length=150,
-        unique=True,
-    )
+def avatar_image_path(instance, filename):
+    return f'uploads/teams/{instance.id}-{timezone.now()}/{filename}'
+
+
+class Team(core.models.UniqueNameWithDetailAbstractModel):
     created_at = django.db.models.DateTimeField(
         verbose_name='дата создания',
         help_text='когда создана команда?',
         auto_now_add=True,
     )
     tasks = django.db.models.ForeignKey(
-        tasks.models.Task,
+        Task,
         on_delete=django.db.models.CASCADE,
         verbose_name='задания',
         help_text='задания для команды',
+    )
+    meetings = django.db.models.ForeignKey(
+        to=Meeting,
+        on_delete=django.db.models.CASCADE,
+        verbose_name='встречи',
+        help_text='запланированные командные встречи',
     )
     is_open = django.db.models.BooleanField(
         default=True,
         verbose_name='открытость',
         help_text='показывается ли ваша команда в поиске?',
+    )
+    skills = django.db.models.ManyToManyField(
+        to=skills.models.Skill,
+        verbose_name='требуемые навыки',
+        help_text='какие навыки нужны команде?',
+    )
+    avatar = django.db.models.ImageField(
+        upload_to=avatar_image_path,
+        verbose_name='аватарка',
+        help_text='картинка профиля команды',
+        null=True,
+        blank=True,
     )
 
     class Meta:

@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import environ
+from django.utils.translation import gettext_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'django_dump_load_utf8',
     'sorl.thumbnail',
+    'skills.apps.SkillsConfig',
     'tasks.apps.TasksConfig',
     'teams.apps.TeamsConfig',
     'users.apps.UsersConfig',
@@ -58,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'lyceum.middleware.middlewares.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'lyceum.urls'
@@ -144,6 +147,8 @@ USE_TZ = True
 
 MAX_LOGIN_AMOUNT = env('MAX_LOGIN_AMOUNT')
 
+AUTHENTICATION_BACKENDS = ('users.backends.EmailBackend',)
+
 LOGIN_URL = '/auth/login/'
 
 LOGIN_REDIRECT_URL = '/'
@@ -152,6 +157,10 @@ LOGOUT_REDIRECT_URL = '/auth/login/'
 
 AUTH_USER_MODEL = 'users.User'
 
+LANGUAGES = [
+    ('ru', gettext_lazy('Russian')),
+    ('en', gettext_lazy('English')),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -166,6 +175,8 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale/'),)
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 

@@ -23,4 +23,8 @@
     </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
+  <script>
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = "django_timezone=" + timezone;
+  </script>
 </html>
