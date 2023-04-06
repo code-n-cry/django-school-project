@@ -92,6 +92,6 @@ black . --skip-string-normalization --line-length=79
   
 ## ERD
 
-<img src="https://github.com/code-n-cry/django_school/blob/main/image.png">
+<img src="https://github.com/code-n-cry/django_school_project/tree/feature/Egor/erd.png">
 
  Здесь ещё будет много всего интересного! Возвращайтесь😻
