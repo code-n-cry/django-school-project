@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('teams', '0001_initial'),
         ('users', '0002_alter_user_invites'),
@@ -18,6 +17,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='lead_teams',
-            field=models.ManyToManyField(help_text='какими командами вы управляете?', related_name='leads', to='teams.Team', verbose_name='управляемые команды'),
+            field=models.ManyToManyField(
+                help_text='какими командами вы управляете?',
+                related_name='leads',
+                to='teams.Team',
+                verbose_name='управляемые команды',
+            ),
         ),
     ]

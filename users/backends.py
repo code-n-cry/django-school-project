@@ -28,9 +28,7 @@ class EmailBackend(ModelBackend):
                 return user
             if not user.check_password(password):
                 user.failed_logins += 1
-                user.last_failed_login_date = (
-                    django.utils.timezone.now()
-                )
+                user.last_failed_login_date = django.utils.timezone.now()
                 user.save()
                 if user.profile.failed_logins >= settings.MAX_LOGIN_AMOUNT:
                     user.is_active = False
@@ -40,13 +38,15 @@ class EmailBackend(ModelBackend):
                             [
                                 'Совершено много неудачных попыток входа в Ваш'
                                 'аккаунт! Для безопасности он был отключён.\n',
-                                'Ваша ссылка для восстановления: '
+                                'Ваша ссылка для восстановления: ',
                             ]
                         )
-                    ) + request.build_absolute_uri(django.urls.reverse(
-                        'auth:recover',
-                        kwargs={'username': user.get_username()},
-                    ))
+                    ) + request.build_absolute_uri(
+                        django.urls.reverse(
+                            'auth:recover',
+                            kwargs={'username': user.get_username()},
+                        )
+                    )
                     django.core.mail.send_mail(
                         gettext_lazy('Восстановление'),
                         email_text,

@@ -27,7 +27,8 @@ class ActiveUserManager(django.contrib.auth.models.UserManager):
             self.get_queryset()
             .filter(
                 is_active=True,
-            ).only(
+            )
+            .only(
                 users.models.User.id.field.name,
                 users.models.User.username.field.name,
                 users.models.User.email.field.name,
@@ -41,7 +42,8 @@ class ActiveUserManager(django.contrib.auth.models.UserManager):
             .filter(
                 is_active=True,
                 is_visible=True,
-            ).only(
+            )
+            .only(
                 users.models.User.id.field.name,
                 users.models.User.username.field.name,
                 users.models.User.email.field.name,

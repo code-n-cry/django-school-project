@@ -2,16 +2,20 @@ import django.db.models
 import django.utils.html
 import sorl
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 from django.utils.translation import gettext_lazy
 
 import teams.models
+import users.managers
 
 
 def avatar_image_path(instance, filename):
-    return f'uploads/{instance.user.id}/{filename}'
+    return f'uploads/{instance.id}-{timezone.now}/{filename}'
 
 
 class User(AbstractUser):
+    objects = users.managers.ActiveUserManager()
+
     is_visible = django.db.models.BooleanField(
         default=True,
         verbose_name='статус видимости',
