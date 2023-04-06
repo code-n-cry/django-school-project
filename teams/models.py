@@ -2,7 +2,8 @@ import django.db.models
 from django.utils import timezone
 
 import core.models
-from tasks.models import Task, Meeting
+import skills.models
+from tasks.models import Meeting, Task
 
 
 def avatar_image_path(instance, filename):
@@ -31,6 +32,11 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         default=True,
         verbose_name='открытость',
         help_text='показывается ли ваша команда в поиске?',
+    )
+    skills = django.db.models.ManyToManyField(
+        to=skills.models.Skill,
+        verbose_name='требуемые навыки',
+        help_text='какие навыки нужны команде?',
     )
     avatar = django.db.models.ImageField(
         upload_to=avatar_image_path,

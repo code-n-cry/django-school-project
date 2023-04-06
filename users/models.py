@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 from django.utils.translation import gettext_lazy
 
+import skills.models
 import teams.models
 import users.managers
 
@@ -46,6 +47,11 @@ class User(AbstractUser):
         help_text='картинка профиля пользователя',
         null=True,
         blank=True,
+    )
+    skills = django.db.models.ManyToManyField(
+        to=skills.models.Skill,
+        verbose_name='навыки',
+        help_text='Ваши навыки',
     )
     failed_logins = django.db.models.IntegerField(
         verbose_name='количество неудачных входов с момента удачного',

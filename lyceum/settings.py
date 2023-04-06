@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'django_dump_load_utf8',
     'sorl.thumbnail',
+    'skills.apps.SkillsConfig',
     'tasks.apps.TasksConfig',
     'teams.apps.TeamsConfig',
     'users.apps.UsersConfig',
