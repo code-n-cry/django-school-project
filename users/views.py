@@ -3,6 +3,7 @@ import datetime
 import django.core.mail
 import django.urls
 import django.utils.timezone
+import django.views.generic
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -10,13 +11,6 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy
 from django.views import View
-from django.views.generic import (
-    DetailView,
-    FormView,
-    ListView,
-    TemplateView,
-    UpdateView,
-)
 
 import users.forms
 import users.models
@@ -70,7 +64,7 @@ class ActivateView(View):
         return redirect('auth:login')
 
 
-class SignUpView(FormView):
+class SignUpView(django.views.generic.FormView):
     form_class = users.forms.SignUpForm
     model = users.models.User
     success_url = django.urls.reverse_lazy('auth:login')
@@ -106,27 +100,27 @@ class SignUpView(FormView):
         return self.render_to_response(self.get_context_data(**kwargs))
 
 
-class UserListView(ListView):
+class UserListView(django.views.generic.ListView):
     template_name = None
     queryset = users.models.User.objects.public()
     context_object_name = 'users'
     http_method_names = ['get', 'head']
 
 
-class UserDetailView(DetailView):
+class UserDetailView(django.views.generic.DetailView):
     template_name = None
     queryset = users.models.User.objects.public()
     context_object_name = 'user'
     http_method_names = ['get', 'head']
 
 
-class UnauthorizedView(TemplateView):
+class UnauthorizedView(django.views.generic.TemplateView):
     template_name = None
     http_method_names = ['get', 'head']
 
 
 @method_decorator(login_required, name='dispatch')
-class ProfileView(UpdateView):
+class ProfileView(django.views.generic.UpdateView):
     template_name = None
     model = users.models.User
     form_class = users.forms.ProfileForm

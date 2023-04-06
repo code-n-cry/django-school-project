@@ -110,13 +110,12 @@ class SignUpForm(django.contrib.auth.forms.UserCreationForm):
 
     def save(self, commit: bool = True):
         cleaned_data = super().clean()
-        user = User.objects.create_user(
+        return User.objects.create_user(
             cleaned_data['username'],
             cleaned_data['email'],
             cleaned_data['password1'],
             is_active=settings.USER_ACTIVE_DEFAULT,
         )
-        return user
 
     class Meta(django.contrib.auth.forms.UserCreationForm.Meta):
         model = User
