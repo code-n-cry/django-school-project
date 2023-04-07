@@ -3,6 +3,7 @@ from django.utils import timezone
 
 import core.models
 import skills.models
+import teams.managers
 from tasks.models import Meeting, Task
 
 
@@ -11,6 +12,8 @@ def avatar_image_path(instance, filename):
 
 
 class Team(core.models.UniqueNameWithDetailAbstractModel):
+    objects = teams.managers.TeamManager()
+
     created_at = django.db.models.DateTimeField(
         verbose_name='дата создания',
         help_text='когда создана команда?',
@@ -21,12 +24,16 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         on_delete=django.db.models.CASCADE,
         verbose_name='задания',
         help_text='задания для команды',
+        null=True,
+        blank=True,
     )
     meetings = django.db.models.ForeignKey(
         to=Meeting,
         on_delete=django.db.models.CASCADE,
         verbose_name='встречи',
         help_text='запланированные командные встречи',
+        null=True,
+        blank=True,
     )
     is_open = django.db.models.BooleanField(
         default=True,
@@ -51,19 +58,5 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         verbose_name_plural = 'команды'
         default_related_name = 'team'
 
-
-class Invite(django.db.models.Model):
-    to_team = django.db.models.ForeignKey(
-        Team,
-        on_delete=django.db.models.CASCADE,
-        verbose_name='команда',
-        help_text='в какую команду приглашение?',
-    )
-
-    class Meta:
-        verbose_name = 'приглашение'
-        verbose_name_plural = 'приглашения'
-        default_related_name = 'invite'
-
     def __str__(self):
-        return f'Приглашение в команду {self.to_team.name.field}'
+        return self.name

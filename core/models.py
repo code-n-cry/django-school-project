@@ -74,10 +74,10 @@ class UniqueNameWithDetailAbstractModel(NameWithDetailAbstractModel):
                     normalized_name_english += letter
         name_checking_1 = self.__class__.objects.filter(
             unique_name=normalized_name_english
-        )
+        ).exclude(pk=self.pk)
         name_checking_2 = self.__class__.objects.filter(
             unique_name=normalized_name_russian
-        )
+        ).exclude(pk=self.pk)
         if not name_checking_1 and not name_checking_2:
             self.unique_name = normalized_name_russian
             return super().clean()
@@ -152,10 +152,10 @@ class ShortUniqueNameAbstractModel(models.Model):
                     normalized_name_english += letter
         name_checking_1 = self.__class__.objects.filter(
             unique_name=normalized_name_english
-        )
+        ).exclude(pk=self.pk)
         name_checking_2 = self.__class__.objects.filter(
             unique_name=normalized_name_russian
-        )
+        ).exclude(pk=self.pk)
         if not name_checking_1 and not name_checking_2:
             self.unique_name = normalized_name_russian
             return super().clean()

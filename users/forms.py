@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils.translation import gettext_lazy
 
-from users.models import User
+from users.models import Invite, Request, User
 
 
 class StyledLoginForm(django.contrib.auth.forms.AuthenticationForm):
@@ -131,3 +131,13 @@ class SignUpForm(django.contrib.auth.forms.UserCreationForm):
         help_texts = {
             User.email.field.name: gettext_lazy('Обязательное поле.'),
         }
+
+
+class InviteForm(django.forms.ModelForm):
+    class Meta:
+        model = Invite
+
+
+class RequestForm(django.forms.ModelForm):
+    class Meta:
+        model = Request
