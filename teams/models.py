@@ -8,7 +8,13 @@ from tasks.models import Meeting, Task
 
 
 def avatar_image_path(instance, filename):
-    return f'uploads/teams/{instance.id}-{timezone.now()}/{filename}'
+    return ''.join(
+        [
+            f'uploads/teams/{instance.id}-',
+            timezone.now().strftime('%Y-%d-%m-%H%M%S'),
+            f'/{filename}',
+        ]
+    )
 
 
 class Team(core.models.UniqueNameWithDetailAbstractModel):

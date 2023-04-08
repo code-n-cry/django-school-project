@@ -27,6 +27,7 @@ class Migration(migrations.Migration):
         ('tasks', '0002_alter_meeting_status'),
         ('auth', '0012_alter_user_first_name_max_length'),
         ('teams', '0001_squashed_0005_delete_invite'),
+        ('teams', '__first__'),
         ('skills', '0001_initial'),
     ]
 
@@ -139,17 +140,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    'invites',
-                    models.ForeignKey(
-                        help_text='куда вас пригласили?',
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name='user',
-                        to='teams.invite',
-                        verbose_name='приглашения',
-                    ),
-                ),
-                (
                     'members',
                     models.ManyToManyField(
                         help_text='в каких команда вы состоите?',
@@ -228,10 +218,6 @@ class Migration(migrations.Migration):
                 to='skills.Skill',
                 verbose_name='навыки',
             ),
-        ),
-        migrations.RemoveField(
-            model_name='user',
-            name='invites',
         ),
         migrations.RenameField(
             model_name='user',

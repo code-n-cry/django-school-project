@@ -8,6 +8,7 @@ import teams.models
 
 class Migration(migrations.Migration):
     replaces = [
+        ('teams', '0001_initial'),
         ('teams', '0001_squashed_0005_alter_team_skills'),
         ('teams', '0002_auto_20230407_1533'),
         ('teams', '0003_auto_20230407_1535'),
