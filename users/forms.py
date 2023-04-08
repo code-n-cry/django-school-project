@@ -136,8 +136,10 @@ class SignUpForm(django.contrib.auth.forms.UserCreationForm):
 class InviteForm(django.forms.ModelForm):
     class Meta:
         model = Invite
+        fields = (Invite.to_user.field.name,)
 
 
 class RequestForm(django.forms.ModelForm):
     class Meta:
         model = Request
+        fields = (Request.to_team.field.name,)
