@@ -14,6 +14,12 @@ class MembersInlineAdmin(admin.TabularInline):
 
 @admin.register(teams.models.Team)
 class TeamAdmin(admin.ModelAdmin):
+    list_display = (
+        teams.models.Team.name.field.name,
+        teams.models.Team.is_open.field.name,
+    )
+    list_display_links = (teams.models.Team.name.field.name,)
+    list_editable = (teams.models.Team.is_open.field.name,)
     inlines = (
         LeadsInlineAdmin,
         MembersInlineAdmin,
