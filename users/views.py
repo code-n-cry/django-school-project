@@ -1,5 +1,7 @@
 from django.contrib.auth import views
+from django.contrib.auth.decorators import login_required
 from django.views.generic import FormView, TemplateView
+from django.utils.decorators import method_decorator
 
 from users import forms
 
@@ -26,6 +28,11 @@ class PasswordResetView(views.PasswordResetView):
 class PasswordResetDoneView(TemplateView):
     template_name = 'users/password_reset_done.html'
 
+# class UserDetailView(django.views.generic.DetailView):
+#     template_name = 'users/detail.html'
+#     queryset = users.models.User.objects.public()
+#     context_object_name = 'user'
+#     http_method_names = ['get', 'head']
 
 class PasswordResetConfirmView(views.PasswordResetConfirmView):
     template_name = 'users/password_confirm.html'
@@ -40,7 +47,7 @@ class SignupView(FormView):
     template_name = 'users/signup.html'
     form_class = forms.UserCreationForm
 
-
+@method_decorator(login_required, name='dispatch')
 class ProfileView(FormView):
     template_name = 'users/profile.html'
     form_class = forms.ProfileForm
