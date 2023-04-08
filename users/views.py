@@ -28,11 +28,6 @@ class PasswordResetView(views.PasswordResetView):
 class PasswordResetDoneView(TemplateView):
     template_name = 'users/password_reset_done.html'
 
-# class UserDetailView(django.views.generic.DetailView):
-#     template_name = 'users/detail.html'
-#     queryset = users.models.User.objects.public()
-#     context_object_name = 'user'
-#     http_method_names = ['get', 'head']
 
 class PasswordResetConfirmView(views.PasswordResetConfirmView):
     template_name = 'users/password_confirm.html'
@@ -54,7 +49,7 @@ class ProfileView(FormView):
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(instance=request.user)
-        extra_context = {'form': form}
+        extra_context = {'form': form, 'user': request.user}
         context = self.get_context_data(**kwargs)
         context.update(extra_context)
         return self.render_to_response(context)
