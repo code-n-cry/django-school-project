@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+  <title>{% translate 'Главная' %}</title>
+{% endblock %}
+{% block content %}
+  <div class="mx-auto container px-64">
+    <div class="flex">
+      <div class="w-20 h-20 bg-slate-600 rounded mr-3">
+
+      </div>
+      <div>
+        <p class="text-4xl">Artur</p>
+        <p class="text-xl">test@mail.ru</p>
+        <p class="text-xl">(GMT+05:00) Asia/Yekaterinburg</p>
+      </div>
+    </div>
+    <div>
+      <p>Программист</p>
+      <div class="flex space-x-3">
+        <div class="p-3 border border-white rounded">C++</div>
+        <div class="p-3 border border-white rounded">C++</div>
+        <div class="p-3 border border-white rounded">C#</div>
+      </div>
+      <div>
+        <p class="text-3xl">Команды</p>
+        ...
+      </div>
+    </div>
+  </div>
+{% endblock %}
