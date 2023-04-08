@@ -46,7 +46,7 @@ urlpatterns = [
             form_class=users.forms.StyledResetPasswordForm,
             success_url=django.urls.reverse_lazy('password_reset_done'),
             email_template_name='users/password_reset_email.html',
-            from_email=settings.EMAIL,
+            from_email=settings.FROM_EMAIL,
         ),
         name='password_reset',
     ),
