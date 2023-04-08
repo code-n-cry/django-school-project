@@ -1,0 +1,36 @@
+[
+{
+    "model": "teams.team",
+    "pk": 1,
+    "fields": {
+        "name": "SuperTeam!",
+        "detail": "Команда, специализирующаяся на разработке енотов",
+        "unique_name": "suреrтеам",
+        "created_at": "2023-04-07T12:36:08.679Z",
+        "tasks": null,
+        "meetings": null,
+        "is_open": true,
+        "avatar": "",
+        "skills": [
+            1
+        ]
+    }
+},
+{
+    "model": "teams.team",
+    "pk": 2,
+    "fields": {
+        "name": "Моя игра",
+        "detail": "Команда питонистов-фанатов Басты",
+        "unique_name": "мояигра",
+        "created_at": "2023-04-08T07:48:09.412Z",
+        "tasks": null,
+        "meetings": null,
+        "is_open": false,
+        "avatar": "uploads/teams/22023-08-04-074908/erd.png",
+        "skills": [
+            1
+        ]
+    }
+}
+]
