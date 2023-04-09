@@ -6,9 +6,6 @@ app_name = 'users'
 
 urlpatterns = [
     django.urls.path(
-        'list/', users.views.UserListView.as_view(), name='user_list'
-    ),
-    django.urls.path(
         'detail/<int:pk>/',
         users.views.UserDetailView.as_view(),
         name='user_detail',
