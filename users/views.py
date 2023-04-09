@@ -56,6 +56,7 @@ class SignupView(FormView):
     template_name = 'users/signup.html'
     form_class = forms.UserCreationForm
 
+
 @method_decorator(login_required, name='dispatch')
 class ProfileView(FormView):
     template_name = 'users/profile.html'
@@ -72,7 +73,7 @@ class ProfileView(FormView):
         form.save()
         return super().form_valid(form)
 
-
+# << develop, пока под вопросом
 # @method_decorator(login_required, name='dispatch')
 # class ProfileView(django.views.generic.UpdateView):
 #     template_name = None

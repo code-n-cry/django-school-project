@@ -1,8 +1,6 @@
-from django.contrib.auth import forms, get_user_model
-
 from core.forms import BaseTailwindForm, BaseTailwindModelForm
 from core.widgets import CheckboxInput, ImageInput
-
+from django.contrib.auth import forms
 import django.contrib.auth.forms
 import django.forms
 import django.utils.html
@@ -13,8 +11,6 @@ from django.utils.translation import gettext_lazy
 
 from users.models import Invite, Request, User
 
-UserModel = get_user_model()
-
 
 class AuthenticationForm(BaseTailwindForm, forms.AuthenticationForm):
     ...
@@ -24,22 +20,22 @@ class PasswordChangeForm(BaseTailwindForm, forms.PasswordChangeForm):
     ...
 
 
-class UserCreationForm(BaseTailwindForm, forms.UserCreationForm):
-    class Meta(forms.UserCreationForm.Meta):
-        model = UserModel
-        fields = (
-            UserModel.username.field.name,
-            UserModel.avatar.field.name,
-        )
-        widgets = {UserModel.avatar.field.name: ImageInput}
-
-
 class PasswordResetForm(BaseTailwindForm, forms.PasswordResetForm):
     ...
 
 
 class SetPasswordForm(BaseTailwindForm, forms.SetPasswordForm):
     ...
+
+
+class UserCreationForm(BaseTailwindForm, forms.UserCreationForm):
+    class Meta(forms.UserCreationForm.Meta):
+        model = User
+        fields = (
+            User.username.field.name,
+            User.avatar.field.name,
+        )
+        widgets = {User.avatar.field.name: ImageInput}
 
 
 class StyledLoginForm(django.contrib.auth.forms.AuthenticationForm):
@@ -70,34 +66,20 @@ class StyledSetPassword(django.contrib.auth.forms.SetPasswordForm):
             self.fields[field].widget.attrs.update({'class': 'form-control'})
 
 
-class ProfileForm:
+class ProfileForm(BaseTailwindModelForm):
     class Meta:
         model = User
         fields = (
             User.username.field.name,
-            User.email.field.name,
             User.first_name.field.name,
             User.last_name.field.name,
-            User.avatar.field.name,
+            User.email.field.name,
             User.is_visible.field.name,
+            User.avatar.field.name,
         )
-        labels = {
-            User.username.field.name: gettext_lazy('Юзернейм'),
-            User.email.field.name: 'E-mail',
-            User.first_name.field.name: gettext_lazy('Имя(если хотите)'),
-            User.last_name.field.name: gettext_lazy('Фамилия(если хотите)'),
-            User.avatar.field.name: gettext_lazy('Аватарка'),
-            User.is_visible.field.name: gettext_lazy('Ваша публичность'),
-        }
-        help_texts = {
-            User.username.field.name: gettext_lazy('Измените имя'),
-            User.email.field.name: gettext_lazy('Измените почту'),
-            User.first_name.field.name: gettext_lazy('Измените имя'),
-            User.last_name.field.name: gettext_lazy('Измените фамилию'),
-            User.avatar.field.name: gettext_lazy('Загрузите фото профиля'),
-            User.is_visible.field.name: gettext_lazy(
-                'Будут ли другие пользователи видеть Вас и Вашу статистику'
-            ),
+        widgets = {
+            User.avatar.field.name: ImageInput,
+            User.is_visible.field.name: CheckboxInput,
         }
 
     def clean_email(self):
@@ -166,11 +148,13 @@ class SignUpForm(django.contrib.auth.forms.UserCreationForm):
         }
 
 
-# class InviteForm(django.forms.ModelForm):
-#     class Meta:
-#         model = Invite
+class InviteForm(django.forms.ModelForm):
+    class Meta:
+        model = Invite
+        fields = (Invite.to_user.field.name,)
 
 
-# class RequestForm(django.forms.ModelForm):
-#     class Meta:
-#         model = Request
+class RequestForm(django.forms.ModelForm):
+    class Meta:
+        model = Request
+        fields = (Request.to_team.field.name,)

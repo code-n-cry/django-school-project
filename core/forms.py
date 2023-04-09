@@ -11,7 +11,7 @@ class BaseTailwindForm(forms.Form):
                 field.field.widget.attrs.update(
                     {
                         'class': (
-                            'block w-full rounded-md '
+                            'block w-full rounded-md bg-white '
                             'border-0 py-1.5 pl-7 pr-20 '
                             'text-gray-900 ring-1 '
                             'ring-inset ring-gray-300 '
