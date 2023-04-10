@@ -1,8 +1,10 @@
+import time
+
 import django.db.models
 import django.utils.html
 import sorl
 from django.contrib.auth.models import AbstractUser
-from django.utils import timezone
+from django.templatetags.static import static
 from django.utils.translation import gettext_lazy
 
 import skills.models
@@ -12,7 +14,7 @@ import users.managers
 
 
 def avatar_image_path(instance, filename):
-    return f'uploads/{instance.id}-{timezone.now}/{filename}'
+    return f'uploads/{instance.id}-{time.strftime("%Y%m%d-%H%M%S")}/{filename}'
 
 
 class User(AbstractUser):
@@ -29,24 +31,6 @@ class User(AbstractUser):
         verbose_name='статус видимости',
         help_text='могут ли другие пользователи звать вас в команды?',
     )
-    lead_teams = django.db.models.ManyToManyField(
-        teams.models.Team,
-        verbose_name='управляемые команды',
-        help_text='какими командами вы управляете?',
-        related_name='leads',
-    )
-    teams = django.db.models.ManyToManyField(
-        teams.models.Team,
-        verbose_name='команды',
-        help_text='в каких команда вы состоите?',
-        related_name='members',
-    )
-    tasks = django.db.models.ManyToManyField(
-        tasks.models.Task,
-        verbose_name='задачи',
-        help_text='задачи, назначенные вам',
-        related_name='to_users',
-    )
     avatar = django.db.models.ImageField(
         upload_to=avatar_image_path,
         verbose_name='аватарка',
@@ -58,6 +42,28 @@ class User(AbstractUser):
         to=skills.models.Skill,
         verbose_name='навыки',
         help_text='Ваши навыки',
+        blank=True,
+    )
+    lead_teams = django.db.models.ManyToManyField(
+        teams.models.Team,
+        verbose_name='управляемые команды',
+        help_text='какими командами вы управляете?',
+        related_name='leads',
+        blank=True,
+    )
+    teams = django.db.models.ManyToManyField(
+        teams.models.Team,
+        verbose_name='команды',
+        help_text='в каких команда вы состоите?',
+        related_name='members',
+        blank=True,
+    )
+    tasks = django.db.models.ManyToManyField(
+        tasks.models.Task,
+        verbose_name='задачи',
+        help_text='задачи, назначенные вам',
+        related_name='to_users',
+        blank=True,
     )
     failed_logins = django.db.models.IntegerField(
         verbose_name='количество неудачных входов с момента удачного',
@@ -75,9 +81,11 @@ class User(AbstractUser):
         default_related_name = 'user'
 
     def get_avatar_300x300(self):
-        return sorl.thumbnail.get_thumbnail(
-            self.avatar, '300x300', crop='center', quality=65
-        )
+        if self.avatar:
+            return sorl.thumbnail.get_thumbnail(
+                self.avatar, '300x300', crop='center', quality=65
+            )
+        return {'url': static('img/Новый проект (4).jpg')}
 
     def avatar_tmb(self):
         if self.avatar:

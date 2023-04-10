@@ -7,17 +7,16 @@
 {% block content %}
   <div class="mx-auto container px-64">
     <div class="flex">
-      <div class="w-20 h-20 bg-slate-600 rounded mr-3">
-
+      <div class="w-36 h-36 bg-slate-600 rounded mr-3" style="background-image: url({{ user.get_avatar_300x300.url }})">
       </div>
       <div>
-        <p class="text-4xl">Artur</p>
-        <p class="text-xl">test@mail.ru</p>
+        <p class="text-4xl">{{ user.username }}</p>
+        <p class="text-xl">{{ user.email }}</p>
         <p class="text-xl">(GMT+05:00) Asia/Yekaterinburg</p>
+        <p>Программист</p>
       </div>
     </div>
-    <div>
-      <p>Программист</p>
+    <div class="mt-5">
       <div class="flex space-x-3">
         <div class="p-3 border border-white rounded">C++</div>
         <div class="p-3 border border-white rounded">C++</div>

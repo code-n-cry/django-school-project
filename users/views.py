@@ -187,7 +187,7 @@ class UserListView(django.views.generic.ListView):
 
 
 class UserDetailView(django.views.generic.DetailView):
-    template_name = None
+    template_name = 'users/detail.html'
     queryset = users.models.User.objects.public()
     context_object_name = 'user'
     http_method_names = ['get', 'head']
