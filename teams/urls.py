@@ -1,9 +1,14 @@
 from django.urls import path
 
-from teams.views import CreateTeamView
+import teams.views
 
 app_name = 'teams'
 
 urlpatterns = [
-    path('create/', CreateTeamView.as_view(), name='create'),
+    path('create/', teams.views.CreateTeamView.as_view(), name='create'),
+    path(
+        '<int:pk>/',
+        teams.views.TeamDetailView.as_view(),
+        name='team_detail',
+    ),
 ]
