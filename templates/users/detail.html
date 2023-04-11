@@ -5,7 +5,7 @@
   <title>{% translate 'Главная' %}</title>
 {% endblock %}
 {% block content %}
-  <div class="mx-auto container px-64">
+  <div class="mx-auto container">
     <div class="flex">
       <div class="w-36 h-36 bg-slate-600 rounded mr-3" style="background-image: url({{ user.get_avatar_300x300.url }})">
       </div>
@@ -22,9 +22,13 @@
         <div class="p-3 border border-white rounded">C++</div>
         <div class="p-3 border border-white rounded">C#</div>
       </div>
-      <div>
+      <div class="mt-6">
         <p class="text-3xl">Команды</p>
-        ...
+        <div class="mt-5">
+          {% for team in user.teams.all %}
+            {% include "includes/command_card.html" with team=team %}
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>

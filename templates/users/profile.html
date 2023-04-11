@@ -8,12 +8,9 @@
   <div class="mx-auto container">
     <div>
       <p class="text-6xl">{{ user.username }}</p>
-      <p class="text-2xl">Command1, command2</p>
     </div>
     <div class="mt-5">
-      <div class="container mx-auto">
-        {% include 'includes/form2.html' with form_title='Редактирование профиля' submit_text='Сохранить' %}
-      </div>
+      {% include 'includes/form2.html' with form_title='Редактирование профиля' submit_text='Сохранить' %}
     </div>
   </div>
 {% endblock %}
