@@ -60,13 +60,12 @@ class SignupView(FormView):
 class ProfileView(FormView):
     template_name = 'users/profile.html'
     form_class = forms.ProfileForm
+    success_url = '.'
 
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(instance=request.user)
-        extra_context = {'form': form, 'user': request.user}
-        context = self.get_context_data(**kwargs)
-        context.update(extra_context)
-        return self.render_to_response(context)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         form.save()

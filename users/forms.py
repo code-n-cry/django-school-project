@@ -84,10 +84,10 @@ class ProfileForm(BaseTailwindModelForm):
 
     def clean_email(self):
         if self.cleaned_data['email']:
-            is_email_unique = User.objects.filter(
-                ~Q(pk=self.instance.id), email=self.cleaned_data['email']
+            user_with_same_email = User.objects.filter(
+                ~Q(pk=self.instance.pk), email=self.cleaned_data['email']
             ).exists()
-            if is_email_unique:
+            if user_with_same_email:
                 raise ValidationError(
                     gettext_lazy(
                         'Пользователь с такой почтой уже зарегистрирован!'
