@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+  <title>{% translate 'Команда' %}</title>
+{% endblock %}
+{% block content %}
+  <div class="mx-auto container block h-full sm:flex">
+    <div>
+      {% for team in teams %}
+        <a href="{% url 'teams:team_detail' team.pk %}">
+          <div class="border border-neutral-500">
+            <img class="h-32 w-full object-cover" src="{{ team.avatar.url }}" alt="">
+            <div class="h-full p-3">
+              <h2 class="text-4xl">{{ team.name }}</h2>
+              <p class="mt-2">{{ team.detail  }}</p>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

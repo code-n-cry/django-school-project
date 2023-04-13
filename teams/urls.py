@@ -11,4 +11,5 @@ urlpatterns = [
         teams.views.TeamDetailView.as_view(),
         name='team_detail',
     ),
+    path('list/', teams.views.TeamListView.as_view(), name='list'),
 ]
