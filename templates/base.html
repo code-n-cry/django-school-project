@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{% static 'favicon/favicon.ico' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css" />
     <link type="text/css" href="{% static 'css/global.css' %}" rel="stylesheet">
     <link type="text/css" href="{% static 'css/tailwind-output.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
@@ -16,7 +17,7 @@
   <body class="bg-neutral-800 dark">
     <div class="flex flex-col h-screen dark:text-white">
       {% include "includes/header.html" %}
-      <main class="text-neutral-200 mt-2 grow">
+      <main class="text-neutral-200 mt-2 h-full grow">
         {% block content %}{% endblock %}
       </main>
       {% include "includes/footer.html" %}
