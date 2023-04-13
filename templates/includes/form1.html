@@ -1,10 +1,9 @@
 {% load i18n %}
 
-<!-- Тут форма типо такой https://tailwindui.com/components/application-ui/forms/sign-in-forms#component-bc08eb211afa45fad7c9f89c1891f284 -->
 <div class="max-w-lg mx-auto">
     <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{% translate form_title|default:'Форма' %}</h2>
     {% for error in form.non_field_errors %}
-      <div class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4">
+      <div class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4 mt-4 dark:bg-neutral-800 dark:text-white dark:border border-red-400">
           <div class="">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 stroke-red-700">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
@@ -12,7 +11,7 @@
           </div>
           <div>
             <div class="text-lg font-medium">Ошибка</div>
-            <p class="text-slate-500">{{ error }}</p>
+            <p class="text-slate-500 dark:text-neutral-300">{{ error }}</p>
           </div>
           <div class="hover:cursor-pointer hover:scale-90 duration-75" onclick="this.parentElement.remove()">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">

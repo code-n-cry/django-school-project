@@ -142,11 +142,11 @@ class ActivateView(View):
         return redirect('auth:login')
 
 
-class SignUpView(django.views.generic.FormView):
-    form_class = users.forms.SignUpForm
+class SignUpView(FormView):
     model = users.models.User
+    template_name = 'users/signup.html'
+    form_class = users.forms.SignUpForm
     success_url = django.urls.reverse_lazy('auth:login')
-    template_name = None
     http_method_names = ['get', 'head', 'post']
 
     def form_valid(self, form):

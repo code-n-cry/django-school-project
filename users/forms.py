@@ -99,12 +99,9 @@ class ProfileForm(BaseTailwindModelForm):
         )
 
 
-class SignUpForm(django.contrib.auth.forms.UserCreationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields:
-            self.fields[field].widget.attrs.update({'class': 'form-control'})
-
+class SignUpForm(
+    BaseTailwindModelForm, django.contrib.auth.forms.UserCreationForm
+):
     def clean_email(self):
         if not self.cleaned_data['email']:
             return self.add_error(
