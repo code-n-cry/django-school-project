@@ -4,8 +4,9 @@
 {% block title %}
   <title>{% translate 'Главная' %}</title>
 {% endblock %}
+{% block main_class %}mb-7{% endblock %}
 {% block content %}
-  <div class="mx-auto container">
+  <div class="mx-auto container pb-3">
     <div>
       <p class="text-6xl">{{ user.username }}</p>
     </div>

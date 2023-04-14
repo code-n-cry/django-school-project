@@ -17,7 +17,7 @@
   <body class="bg-neutral-800 dark">
     <div class="flex flex-col h-screen dark:text-white">
       {% include "includes/header.html" %}
-      <main class="text-neutral-200 mt-2 h-full grow">
+      <main class="text-neutral-200 mt-2 h-full grow {% block main_class %}{% endblock main_class %}">
         {% block content %}{% endblock %}
       </main>
       {% include "includes/footer.html" %}
