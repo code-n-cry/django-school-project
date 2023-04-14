@@ -15,4 +15,7 @@ urlpatterns = [
         name='user_detail',
     ),
     django.urls.path('me/', users.views.ProfileView.as_view(), name='profile'),
+    django.urls.path(
+        'invites/', users.views.InvitesView.as_view(), name='invites'
+    ),
 ]

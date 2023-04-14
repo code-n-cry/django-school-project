@@ -94,6 +94,11 @@ class ProfileView(FormView):
 #         return self.render_to_response(context)
 
 
+@method_decorator(login_required, name='dispatch')
+class InvitesView(TemplateView):
+    template_name = 'users/invites.html'
+
+
 class ActivateNewView(View):
     http_method_names = ['get', 'head']
 
