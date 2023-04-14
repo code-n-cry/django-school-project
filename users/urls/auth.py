@@ -12,7 +12,7 @@ urlpatterns = [
         'login/',
         django.contrib.auth.views.LoginView.as_view(
             template_name='users/login.html',
-            form_class=users.forms.StyledLoginForm,
+            form_class=users.forms.AuthenticationForm,
             redirect_authenticated_user=True,
         ),
         name='login',
@@ -42,7 +42,7 @@ urlpatterns = [
     django.urls.path(
         'password_reset/',
         django.contrib.auth.views.PasswordResetView.as_view(
-            template_name='users/password_reset_form.html',
+            template_name='users/password_reset.html',
             form_class=users.forms.StyledResetPasswordForm,
             success_url=django.urls.reverse_lazy('password_reset_done'),
             email_template_name='users/password_reset_email.html',

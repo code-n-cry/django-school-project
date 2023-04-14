@@ -1,9 +1,27 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: 0;
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark !important;
 }
 
 body {
   font-family: sans-serif;
+}
+
+/* dark scrollbar */
+::-webkit-scrollbar {
+  background-color: #252829;
+  color: #a9a298;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: #1d1f20;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #484d50;
 }

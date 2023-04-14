@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'teams.apps.TeamsConfig',
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
+    'core.apps.CoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,8 @@ TEMPLATES = [
         },
     },
 ]
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 WSGI_APPLICATION = 'lyceum.wsgi.application'
 

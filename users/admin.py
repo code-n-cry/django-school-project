@@ -18,6 +18,7 @@ class CustomUserAdmin(UserAdmin):
             None,
             {
                 'fields': (
+                    User.avatar.field.name,
                     User.lead_teams.field.name,
                     User.teams.field.name,
                     User.skills.field.name,

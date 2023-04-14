@@ -2,6 +2,18 @@ import django.forms
 from django.utils.translation import gettext_lazy as _
 
 import teams.models
+from core.forms import BaseTailwindModelForm
+from core.widgets import CheckboxInput
+from teams.models import Team
+
+
+class TeamCreationForm(BaseTailwindModelForm):
+    class Meta:
+        model = Team
+        exclude = [Team.tasks.field.name]
+        widgets = {
+            Team.is_open.field.name: CheckboxInput,
+        }
 
 
 class TeamForm(django.forms.ModelForm):

@@ -1,4 +1,5 @@
 import django.db.models
+import sorl
 from django.utils import timezone
 
 import core.models
@@ -63,6 +64,13 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         verbose_name = 'команда'
         verbose_name_plural = 'команды'
         default_related_name = 'team'
+
+    def get_avatar_300x300(self):
+        if self.avatar:
+            return sorl.thumbnail.get_thumbnail(
+                self.avatar, '300x300', crop='center', quality=65
+            )
+        return None
 
     def __str__(self):
         return self.name
