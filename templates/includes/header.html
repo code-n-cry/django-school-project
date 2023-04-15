@@ -35,9 +35,11 @@
                 <i class="fa fa-clock-o text-white pr-2" style="font-size: 1em" aria-hidden="true"></i>
                 <span class="text-sm">00:00:00</span>
               </div>
-              <a href="{% url 'homepage:home' %}" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">{% translate "Главная" %}</a>
-              <a href="{% url 'teams:list' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">{% translate "Команды" %}</a>
-            </div>
+              {% with request.resolver_match.view_name as view_name %}
+                <a href="{% url 'homepage:home' %}" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" {% if view_name == "homepage:home" %}aria-current="page" disabled{% endif %}>{% translate "Главная" %}</a>
+                <a href="{% url 'teams:list' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" {% if view_name == "teams:list" %}aria-current="page" disabled{% endif %}>{% translate "Команды" %}</a>
+              {% endwith %}
+              </div>
           </div>
         </div>
         <div class="absolute inset-y-0 right-0 hidden items-center sm:static sm:flex sm:inset-auto sm:ml-6 sm:pr-0">
