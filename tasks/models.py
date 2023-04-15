@@ -1,13 +1,13 @@
 import django.db.models
+from django.utils.translation import gettext_lazy as _
+
+import core.models
+import tasks.managers
 
 
-class Task(django.db.models.Model):
-    name = django.db.models.CharField(
-        verbose_name='название задачи',
-        help_text='как будет называться задача?',
-        max_length=150,
-        unique=True,
-    )
+class Task(core.models.NameWithDetailAbstractModel):
+    objects = tasks.managers.TasksManager()
+
     created_at = django.db.models.DateTimeField(
         verbose_name='дата создания',
         help_text='когда создана команда?',
@@ -30,3 +30,26 @@ class Task(django.db.models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Meeting(core.models.NameWithDetailAbstractModel):
+    planned_date = django.db.models.DateTimeField(
+        verbose_name='дата встречи',
+        help_text='когда пройдёт митап?',
+    )
+    status_choices = [
+        (0, _('Ожидается')),
+        (1, _('Идёт')),
+        (2, _('Закончилась')),
+    ]
+    status = django.db.models.PositiveSmallIntegerField(
+        verbose_name='статус',
+        help_text='текущий статус встречи',
+        choices=status_choices,
+        default=0,
+    )
+
+    class Meta:
+        verbose_name = 'встреча'
+        verbose_name_plural = 'встречи'
+        default_related_name = 'meeting'

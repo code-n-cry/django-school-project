@@ -6,20 +6,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{% static 'favicon/favicon.ico' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css" />
     <link type="text/css" href="{% static 'css/global.css' %}" rel="stylesheet">
-    <link type="text/css" href="{% static 'css/tailwind-output.css' %}" rel="stylesheet" />
+    <link type="text/css" href="{% static 'css/tailwind-output.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
     {% block title %}
       <title>Base template</title>
     {% endblock %}
   </head>
-  <body>
-    <div class="flex flex-col h-screen">
+  <body class="bg-neutral-800 dark">
+    <div class="flex flex-col h-full min-h-screen dark:text-white">
       {% include "includes/header.html" %}
-      <main class="mt-2 grow">
+      <main class="text-neutral-200 mt-2 h-full flex flex-col grow pb-20">
         {% block content %}{% endblock %}
       </main>
       {% include "includes/footer.html" %}
     </div>
   </body>
   <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
+  <script>
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    document.cookie = "django_timezone=" + timezone;
+  </script>
 </html>
