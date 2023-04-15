@@ -51,11 +51,6 @@ class PasswordResetCompleteView(TemplateView):
     template_name = 'users/password_confirm_done.html'
 
 
-class SignupView(FormView):
-    template_name = 'users/signup.html'
-    form_class = forms.UserCreationForm
-
-
 @method_decorator(login_required, name='dispatch')
 class ProfileView(django.views.generic.FormView):
     template_name = 'users/profile.html'
@@ -107,11 +102,11 @@ class ActivateNewView(View):
                     'Прошло больше 12 часов, ссылка уже не работает:('
                 ),
             )
-            return redirect('homepage:index')
+            return redirect('homepage:home')
         user.is_active = True
         user.save()
         messages.success(request, gettext_lazy('Вы активированы!'))
-        return redirect('homepage:index')
+        return redirect('homepage:home')
 
 
 class ActivateView(View):
@@ -130,7 +125,7 @@ class ActivateView(View):
                 request,
                 gettext_lazy('Прошла неделя, ссылка уже не работает:('),
             )
-            return redirect('homepage:index')
+            return redirect('homepage:home')
         user.is_active = True
         user.save()
         messages.success(request, 'Аккаунт восстановлен')
@@ -160,7 +155,7 @@ class SignUpView(FormView):
         django.core.mail.send_mail(
             gettext_lazy('Активация'),
             email_text,
-            settings.EMAIL,
+            settings.FROM_EMAIL,
             [form.cleaned_data['email']],
             fail_silently=False,
         )
@@ -169,7 +164,7 @@ class SignUpView(FormView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             messages.info(request, gettext_lazy('Вы уже авторизованы!'))
-            return redirect('homepage:index')
+            return redirect('homepage:home')
         return self.render_to_response(self.get_context_data(**kwargs))
 
 

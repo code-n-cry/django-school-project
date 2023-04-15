@@ -1,14 +1,17 @@
 import django.urls
 import django.views.generic
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 import teams.forms
 import teams.models
 
 
+@method_decorator(login_required, name='dispatch')
 class CreateTeamView(django.views.generic.FormView):
     template_name = 'teams/create.html'
     form_class = teams.forms.TeamCreationForm
-    success_url = django.urls.reverse_lazy('home:home')
+    success_url = django.urls.reverse_lazy('homepage:home')
 
     def form_valid(self, form):
         team = form.save()

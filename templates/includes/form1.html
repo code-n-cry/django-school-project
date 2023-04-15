@@ -1,5 +1,4 @@
 {% load i18n %}
-
 <div class="max-w-lg mx-auto">
   <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{% translate form_title|default:'Форма' %}</h2>
   {% for error in form.non_field_errors %}
@@ -10,7 +9,7 @@
         </svg>
       </div>
       <div>
-        <div class="text-lg font-medium">Ошибка</div>
+        <div class="text-lg font-medium">{% translate "Ошибка" %}</div>
         <p class="text-slate-500 dark:text-neutral-300">{{ error }}</p>
       </div>
       <div class="hover:cursor-pointer hover:scale-90 duration-75" onclick="this.parentElement.remove()">

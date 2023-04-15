@@ -1,7 +1,10 @@
-{% extends 'base.html' %}
-
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+  <title>{% translate "Вход" %}</title>
+{% endblock title %}
 {% block content %}
 <div class="mx-auto container">
-  {% include 'includes/form1.html' with form_title='Вход в систему' submit_text='Войти' additional_field='users/includes/forgot_password.html' %}
+  {% include "includes/form1.html" with form_title="Вход в систему" submit_text="Войти" additional_field="users/includes/forgot_password.html" %}
 </div>
 {% endblock %}

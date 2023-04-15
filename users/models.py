@@ -85,7 +85,7 @@ class User(AbstractUser):
             return sorl.thumbnail.get_thumbnail(
                 self.avatar, '300x300', crop='center', quality=65
             )
-        return {'url': static('img/Новый проект (4).jpg')}
+        return {'url': static('img/default.jpg')}
 
     def avatar_tmb(self):
         if self.avatar:
@@ -98,7 +98,8 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if self.avatar:
-            self.avatar = self.get_avatar_300x300()
+            self.avatar = self.get_avatar_300x300().url
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return self.username
