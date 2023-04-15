@@ -35,7 +35,6 @@ class User(AbstractUser):
         upload_to=avatar_image_path,
         verbose_name='аватарка',
         help_text='картинка профиля пользователя',
-        default=static('img/default.jpg'),
         null=True,
         blank=True,
     )
@@ -82,9 +81,11 @@ class User(AbstractUser):
         default_related_name = 'user'
 
     def get_avatar_300x300(self):
-        return sorl.thumbnail.get_thumbnail(
-            self.avatar, '300x300', crop='center', quality=65
-        )
+        if self.avatar:
+            return sorl.thumbnail.get_thumbnail(
+                self.avatar, '300x300', crop='center', quality=65
+            )
+        return {'url': static('img/Новый проект (4).jpg')}
 
     def avatar_tmb(self):
         if self.avatar:
@@ -95,7 +96,9 @@ class User(AbstractUser):
         return gettext_lazy('Нет аватарки')
 
     def save(self, *args, **kwargs):
-        self.avatar = self.get_avatar_300x300()
+        super().save(*args, **kwargs)
+        if self.avatar:
+            self.avatar = self.get_avatar_300x300()
 
     def __str__(self):
         return self.username
