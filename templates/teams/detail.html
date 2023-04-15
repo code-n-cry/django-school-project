@@ -14,6 +14,7 @@
         <p class="text-5xl overflow-ellipsis overflow-hidden">{{ team.name }}</p>
       </div>
       <div class="mt-1">
+        {% translate "Необходимые навыки" %}:
         <div class="flex space-x-3">
           {% for skill in team.skills.all %}
             <div class="px-2 py-1 border rounded dark:border-neutral-200">{{ skill.name }}</div>

@@ -29,6 +29,6 @@ class TeamDetailView(django.views.generic.DetailView):
 
 class TeamListView(django.views.generic.ListView):
     template_name = 'teams/list.html'
-    queryset = teams.models.Team.objects.all()
+    queryset = teams.models.Team.objects.opened()
     context_object_name = 'teams'
     http_method_names = ['get', 'head']
