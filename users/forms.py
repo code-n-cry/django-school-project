@@ -28,16 +28,6 @@ class SetPasswordForm(BaseTailwindForm, forms.SetPasswordForm):
     ...
 
 
-class UserCreationForm(BaseTailwindForm, forms.UserCreationForm):
-    class Meta(forms.UserCreationForm.Meta):
-        model = User
-        fields = (
-            User.username.field.name,
-            User.avatar.field.name,
-        )
-        widgets = {User.avatar.field.name: ImageInput}
-
-
 class StyledLoginForm(django.contrib.auth.forms.AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

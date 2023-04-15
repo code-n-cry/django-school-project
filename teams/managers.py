@@ -20,6 +20,12 @@ class TeamManager(django.db.models.Manager):
                 teams.models.Team.detail.field.name,
                 teams.models.Team.created_at.field.name,
                 teams.models.Team.avatar.field.name,
+                '__'.join(
+                    [
+                        teams.models.Team.skills.field.name,
+                        skills.models.Skill.name.field.name,
+                    ]
+                ),
             )
             .order_by(
                 teams.models.Team.name.field.name,
