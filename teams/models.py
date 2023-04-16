@@ -1,7 +1,7 @@
 import django.db.models
 import sorl
 from django.templatetags.static import static
-from django.utils import timezone
+from django.utils import timezone, translation
 
 import core.models
 import skills.models
@@ -58,7 +58,6 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         verbose_name='аватарка',
         help_text='картинка профиля команды',
         blank=True,
-        default=static('img/team_default.png'),
     )
 
     class Meta:
@@ -67,9 +66,24 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         default_related_name = 'team'
 
     def get_avatar_300x300(self):
-        return sorl.thumbnail.get_thumbnail(
-            self.avatar, '300x300', crop='center', quality=65
-        )
+        if self.avatar:
+            return sorl.thumbnail.get_thumbnail(
+                self.avatar, '300x300', crop='center', quality=65
+            )
+        return {'url': static('img/team_default.png')}
+
+    def avatar_tmb(self):
+        if self.avatar:
+            return django.utils.html.mark_safe(
+                f'<img src="{self.get_avatar_300x300().url}">'
+            )
+        self.avatar_tmb.short_description = 'превью'
+        return translation.gettext_lazy('Нет аватарки')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.avatar:
+            self.avatar = self.get_avatar_300x300()
 
     def __str__(self):
         return self.name

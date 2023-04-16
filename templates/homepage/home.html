@@ -19,8 +19,8 @@
         {% if forloop.first %}
           <p class="text-3xl py-3">{% translate "Команды, которыми вы управляете" %}:</p>
         {% endif %}
-        <div class="grid grid-cols-2 justify-items-end rounded-md bg-indigo-600 text-white my-2">
-          <div class="justify-self-start flex items-start p-0 text-white">
+        <div class="grid grid-cols-3 justify-items-end rounded-md bg-indigo-600 text-white my-2">
+          <div class="col-span-2 justify-self-start flex items-start p-0 text-white">
             <img class="h-6 w-6 rounded-full" src="{{ team.avatar }}" alt="">
             <a href="{% url "teams:team_detail" team.id %}" class="pl-3">{{ team.name }}</a>
           </div>
