@@ -170,7 +170,7 @@ class SignUpView(FormView):
         django.core.mail.send_mail(
             gettext_lazy('Активация'),
             email_text,
-            settings.EMAIL,
+            settings.FROM_EMAIL,
             [form.cleaned_data['email']],
             fail_silently=False,
         )

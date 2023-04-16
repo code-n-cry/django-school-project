@@ -8,7 +8,6 @@ from django.templatetags.static import static
 from django.utils.translation import gettext_lazy
 
 import skills.models
-import tasks.models
 import teams.models
 import users.managers
 
@@ -42,27 +41,6 @@ class User(AbstractUser):
         to=skills.models.Skill,
         verbose_name='навыки',
         help_text='Ваши навыки',
-        blank=True,
-    )
-    lead_teams = django.db.models.ManyToManyField(
-        teams.models.Team,
-        verbose_name='управляемые команды',
-        help_text='какими командами вы управляете?',
-        related_name='leads',
-        blank=True,
-    )
-    teams = django.db.models.ManyToManyField(
-        teams.models.Team,
-        verbose_name='команды',
-        help_text='в каких команда вы состоите?',
-        related_name='members',
-        blank=True,
-    )
-    tasks = django.db.models.ManyToManyField(
-        tasks.models.Task,
-        verbose_name='задачи',
-        help_text='задачи, назначенные вам',
-        related_name='to_users',
         blank=True,
     )
     failed_logins = django.db.models.IntegerField(
@@ -102,6 +80,38 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+
+class Member(django.db.models.Model):
+    is_lead = django.db.models.BooleanField(
+        default=False,
+        verbose_name='лид',
+        help_text='является ли участник лидом',
+    )
+    team = django.db.models.ForeignKey(
+        teams.models.Team,
+        verbose_name='команда',
+        help_text='команда, в которой состоит юзер',
+        on_delete=django.db.models.CASCADE,
+        related_name='members',
+    )
+    user = django.db.models.ForeignKey(
+        User,
+        verbose_name='пользователь',
+        help_text='юзер',
+        on_delete=django.db.models.CASCADE,
+        related_name='member',
+    )
+
+    class Meta:
+        constraints = [
+            django.db.models.UniqueConstraint(
+                name='unique_member', fields=['team', 'user']
+            )
+        ]
+        verbose_name = 'участник'
+        verbose_name_plural = 'участники'
+        default_related_name = 'member'
 
 
 class Invite(django.db.models.Model):
