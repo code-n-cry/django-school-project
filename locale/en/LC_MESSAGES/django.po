@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-15 16:17+0300\n"
+"POT-Creation-Date: 2023-04-16 19:37+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+
 #: .\skills\forms.py:11 .\tasks\forms.py:17 .\teams\forms.py:21
+#: .\templates\tasks\meeting_detail.html:9
 msgid "Название"
 msgstr "Name"
 
@@ -28,66 +30,59 @@ msgid "Укажите название навыка(уникальное, не �
 msgstr "Write down skill's name(unique, 25 chars or less)"
 
 #: .\tasks\forms.py:18 .\teams\forms.py:22
+#: .\templates\tasks\meeting_detail.html:10
 msgid "Описание"
 msgstr "Description"
 
 #: .\tasks\forms.py:19
-msgid "Пользователь(и)"
-msgstr "User(s)"
-
-#: .\tasks\forms.py:20
 msgid "Дедлайн"
 msgstr "Deadline"
 
-#: .\tasks\forms.py:23
+#: .\tasks\forms.py:22
 msgid "Укажите название задачи"
 msgstr "Set the task's name"
 
-#: .\tasks\forms.py:25
+#: .\tasks\forms.py:23
 msgid "Опишите подробнее, что надо сделать"
 msgstr "Describe task more detail"
 
-#: .\tasks\forms.py:28
-msgid "Кто будет выполнять задачу?"
-msgstr "Who will complete the task?"
-
-#: .\tasks\forms.py:31
+#: .\tasks\forms.py:25
 msgid "Дата, до которой надо выполнить задачу"
 msgstr "Date when task should be done"
 
-#: .\tasks\forms.py:45
+#: .\tasks\forms.py:39
 msgid "Тема"
 msgstr "Theme"
 
-#: .\tasks\forms.py:46
+#: .\tasks\forms.py:40
 msgid "Детали"
 msgstr "Details"
 
-#: .\tasks\forms.py:47
+#: .\tasks\forms.py:41
 msgid "Дата"
 msgstr "Date"
 
-#: .\tasks\forms.py:50
+#: .\tasks\forms.py:44
 msgid "Укажите тему встречи"
 msgstr "Set the meeting's theme"
 
-#: .\tasks\forms.py:52
+#: .\tasks\forms.py:46
 msgid "Опишите подробнее, что будете обсуждать"
 msgstr "Describe meeting's details"
 
-#: .\tasks\forms.py:55
+#: .\tasks\forms.py:49
 msgid "Дата, на которую будет назначена встреча"
 msgstr "Date when meeting will happen"
 
-#: .\tasks\models.py:41
+#: .\tasks\models.py:43
 msgid "Ожидается"
 msgstr "Waiting"
 
-#: .\tasks\models.py:42
+#: .\tasks\models.py:44
 msgid "Идёт"
 msgstr "In proccess"
 
-#: .\tasks\models.py:43
+#: .\tasks\models.py:45
 msgid "Закончилась"
 msgstr "Finished"
 
@@ -123,38 +118,74 @@ msgstr "Team's avatar"
 msgid "Что должен уметь участник команды?"
 msgstr "What should member of this team be able to do?"
 
-#: .\templates\home\home.html:5 .\templates\includes\header.html:38
+#: .\teams\models.py:78 .\users\models.py:97
+msgid "Нет аватарки"
+msgstr "No avatar"
+
+#: .\templates\homepage\home.html:5 .\templates\includes\header.html:35
 msgid "Главная"
 msgstr "Home"
+
+#: .\templates\homepage\home.html:10
+msgid "Открытые команды, в которые вы можете вступить"
+msgstr ""
+
+#: .\templates\homepage\home.html:12 .\templates\teams\list.html:5
+msgid "Открытые команды"
+msgstr "Opened teams"
+
+#: .\templates\homepage\home.html:24
+msgid "Команды, которыми вы управляете"
+msgstr ""
+
+#: .\templates\homepage\home.html:40
+msgid "Команды, в которых вы участник"
+msgstr ""
+
+#: .\templates\homepage\home.html:52
+msgid "Ваши встречи в этом месяце"
+msgstr ""
 
 #: .\templates\includes\form1.html:12
 msgid "Ошибка"
 msgstr "Error"
 
-#: .\templates\includes\header.html:39
+#: .\templates\includes\header.html:36
 msgid "Команды"
 msgstr "Teams"
 
-#: .\templates\includes\header.html:73 .\templates\includes\header.html:115
-#: .\templates\users\profile.html:5
+#: .\templates\includes\header.html:65 .\templates\includes\header.html:109
+#: .\templates\users\profile.html:5 .\templates\users\request_form.html:5
 msgid "Профиль"
 msgstr "Profile"
 
-#: .\templates\includes\header.html:81
+#: .\templates\includes\header.html:73
 msgid "Мои приглашения"
 msgstr "My invites"
 
-#: .\templates\includes\header.html:89 .\templates\includes\header.html:123
+#: .\templates\includes\header.html:81 .\templates\includes\header.html:117
 msgid "Выход"
 msgstr "Logout"
 
-#: .\templates\includes\header.html:95 .\templates\users\login.html:4
+#: .\templates\includes\header.html:88 .\templates\users\login.html:4
 msgid "Вход"
 msgstr "Login"
 
-#: .\templates\includes\header.html:96
+#: .\templates\includes\header.html:89
 msgid "Регистрация"
 msgstr "Register"
+
+#: .\templates\tasks\meeting_detail.html:5
+msgid "О встрече"
+msgstr "About this meeting"
+
+#: .\templates\tasks\meeting_detail.html:11
+msgid "Дата и время"
+msgstr "Date & time"
+
+#: .\templates\tasks\meeting_detail.html:13
+msgid "В команде"
+msgstr "Team"
 
 #: .\templates\teams\create.html:4
 msgid "Создание команды"
@@ -164,21 +195,45 @@ msgstr "Create team"
 msgid "О команде"
 msgstr "About"
 
-#: .\templates\teams\detail.html:17
+#: .\templates\teams\detail.html:20
 msgid "Необходимые навыки"
 msgstr "Required skills"
 
-#: .\templates\teams\detail.html:29
+#: .\templates\teams\detail.html:32
 msgid "Лиды команды"
 msgstr "Team's leads"
 
-#: .\templates\teams\detail.html:35
+#: .\templates\teams\detail.html:38
 msgid "Участники"
 msgstr "Members"
 
-#: .\templates\teams\list.html:5
-msgid "Открытые команды"
-msgstr "Opened teams"
+#: .\templates\teams\detail.html:48
+msgid "Пригласить пользователей"
+msgstr "Invite users"
+
+#: .\templates\teams\detail.html:54
+msgid "Посмотреть запросы на вступление"
+msgstr "Check out team requests"
+
+#: .\templates\teams\detail.html:60
+msgid "Запрос на вступление"
+msgstr "Request to this team"
+
+#: .\templates\teams\detail.html:67
+msgid "Редактировать информацию/назначить задания и встречи"
+msgstr "Edit info/create meeting or tasks"
+
+#: .\templates\teams\detail.html:75
+msgid "Извините, команда скрыта от чужих глаз"
+msgstr "Sorry, this team is hidden"
+
+#: .\templates\teams\edit.html:5
+msgid "Изменение команды"
+msgstr "Edit team"
+
+#: .\templates\teams\edit.html:11
+msgid "Назначить новую встречу"
+msgstr "Plan new meeting"
 
 #: .\templates\users\detail.html:5
 msgid "О пользователе"
@@ -231,6 +286,10 @@ msgstr "Check your email"
 msgid "На Вашу почту отправлена ссылка для изменения пароля"
 msgstr ""
 
+#: .\templates\users\request_form.html:24
+msgid "Отправить"
+msgstr "Send"
+
 #: .\templates\widgets\image_input.html:18
 msgid "Загрузите файл"
 msgstr "Load file"
@@ -271,9 +330,15 @@ msgstr "Password"
 msgid "Обязательное поле."
 msgstr "Required field."
 
-#: .\users\models.py:96
-msgid "Нет аватарки"
-msgstr "No avatar"
+#: .\users\forms.py:148
+#, fuzzy
+#| msgid "О команде"
+msgid "В команду:"
+msgstr "About"
+
+#: .\users\forms.py:151
+msgid "В какую команду отправите запрос?"
+msgstr ""
 
 #: .\users\views.py:102
 msgid "Прошло больше 12 часов, ссылка уже не работает:("
@@ -294,3 +359,10 @@ msgstr "Activation"
 #: .\users\views.py:166
 msgid "Вы уже авторизованы!"
 msgstr "You're already authorized!"
+
+
+#~ msgid "Пользователь(и)"
+#~ msgstr "User(s)"
+
+#~ msgid "Кто будет выполнять задачу?"
+#~ msgstr "Who will complete the task?"
