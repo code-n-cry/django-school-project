@@ -36,8 +36,8 @@
                 <span class="text-sm">00:00:00</span>
               </div>
               {% with request.resolver_match.view_name as view_name %}
-                <a href="{% url 'homepage:home' %}" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" {% if view_name == "homepage:home" %}aria-current="page" disabled{% endif %}>{% translate "Главная" %}</a>
-                <a href="{% url 'teams:list' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium" {% if view_name == "teams:list" %}aria-current="page" disabled{% endif %}>{% translate "Команды" %}</a>
+                <a href="{% url 'homepage:home' %}" class="rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-700 text-gray-300 {% if view_name == "homepage:home" %}bg-gray-900 text-white{% endif %}">{% translate "Главная" %}</a>
+                <a href="{% url 'teams:list' %}" class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium text-gray-300 {% if view_name == "teams:list" %}bg-gray-900 text-white{% endif %} ">{% translate "Команды" %}</a>
               {% endwith %}
               </div>
           </div>
@@ -94,8 +94,10 @@
               </ul>
             </div>
           {% else %}
-            <a href="{% url 'auth:login' %}" class="text-white rounded-md px-3 py-2 text-sm font-medium">{% translate "Вход" %}</a>
-            <a href="{% url 'auth:signup' %}" class="text-white rounded-md px-3 py-2 text-sm font-medium">{% translate "Регистрация" %}</a>
+          {% with request.resolver_match.view_name as view_name %}
+            <a href="{% url 'auth:login' %}" class="text-gray-300 rounded-md px-3 py-2 text-sm font-medium {% if view_name == "auth:login" %}bg-gray-900 text-white{% endif %}">{% translate "Вход" %}</a>
+            <a href="{% url 'auth:signup' %}" class="text-gray-300 rounded-md px-3 py-2 text-sm font-medium {% if view_name == "auth:signup" %}bg-gray-900 text-white{% endif %}">{% translate "Регистрация" %}</a>
+          {% endwith %}
           {% endif %}
         </div>
       </div>
