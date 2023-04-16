@@ -22,10 +22,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('teams', '0001_squashed_0005_delete_invite'),
-        ('teams', '__first__'),
+        ('teams', '0001_squashed_0004_alter_team_avatar'),
         ('tasks', '0001_squashed_0002_alter_meeting_status'),
-        ('tasks', '0002_alter_meeting_status'),
         ('auth', '0012_alter_user_first_name_max_length'),
         ('skills', '0001_initial'),
     ]

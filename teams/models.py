@@ -35,13 +35,10 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         null=True,
         blank=True,
     )
-    meetings = django.db.models.ForeignKey(
+    meetings = django.db.models.ManyToManyField(
         to=Meeting,
-        on_delete=django.db.models.CASCADE,
         verbose_name='встречи',
         help_text='запланированные командные встречи',
-        null=True,
-        blank=True,
     )
     is_open = django.db.models.BooleanField(
         default=True,

@@ -143,6 +143,14 @@ USE_I18N = True
 
 DATE_FORMAT = 'd-m-Y'
 
+DATETIME_FORMAT = '%Y-%m-%d %H:%M'
+
+DATETIME_INPUT_FORMATS = [
+    '%Y-%m-%d %H:%M',
+    '%m/%d/%Y %H:%M',
+    '%m/%d/%y %H:%M',
+]
+
 USE_L10N = False
 
 USE_TZ = True

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+  <title>{% translate 'О встрече' %}</title>
+{% endblock %}
+{% block content %}
+  <div class="mx-auto container">
+    <p class="text-white text-center text-xl">{% translate "Название" %}: {{ meeting.name }}</p>
+    <p class="text-white text-center text-xl break-normal">{% translate "Описание" %}: {{ meeting.detail }}</p>
+    <p class="text-white text-center text-xl">{% translate "Дата и время" %}: {{ meeting.planned_date|date:"d F Y" }}:{{ meeting.planned_date|time:"H:i" }}</p>
+    {% for team in meeting.team.all %}
+      <p class="text-white text-center text-xl">{% translate "В команде" %}: <a href="{% url 'teams:detail' team.pk %}" class="underline text-blue-600 hover:text-blue-200 visited:text-purple-600">{{ team.name }}</a></p>
+    {% endfor %}
+  </div>
+{% endblock %}
