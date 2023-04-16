@@ -61,7 +61,7 @@
                 data-te-ripple-color="light"
                 >
                 <span class="sr-only">Open user menu</span>
-                <img class="h-8 w-8 rounded-full" src="{{ request.user.avatar }}" alt="">
+                <img class="h-8 w-8 rounded-full" src="{{ request.user.get_avatar_300x300.url }}" alt="">
               </button>
               <ul
                 class="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"
@@ -94,8 +94,8 @@
               </ul>
             </div>
           {% else %}
-              <a href="{% url 'auth:login' %}" class="text-white rounded-md px-3 py-2 text-sm font-medium">{% translate "Вход" %}</a>
-              <a href="{% url 'auth:signup' %}" class="text-white rounded-md px-3 py-2 text-sm font-medium">{% translate "Регистрация" %}</a>
+            <a href="{% url 'auth:login' %}" class="text-white rounded-md px-3 py-2 text-sm font-medium">{% translate "Вход" %}</a>
+            <a href="{% url 'auth:signup' %}" class="text-white rounded-md px-3 py-2 text-sm font-medium">{% translate "Регистрация" %}</a>
           {% endif %}
         </div>
       </div>
