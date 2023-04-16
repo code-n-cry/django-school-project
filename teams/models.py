@@ -1,5 +1,6 @@
 import django.db.models
 import sorl
+from django.templatetags.static import static
 from django.utils import timezone
 
 import core.models
@@ -56,8 +57,8 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         upload_to=avatar_image_path,
         verbose_name='аватарка',
         help_text='картинка профиля команды',
-        null=True,
         blank=True,
+        default=static('img/team_default.png'),
     )
 
     class Meta:
@@ -66,11 +67,9 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         default_related_name = 'team'
 
     def get_avatar_300x300(self):
-        if self.avatar:
-            return sorl.thumbnail.get_thumbnail(
-                self.avatar, '300x300', crop='center', quality=65
-            )
-        return None
+        return sorl.thumbnail.get_thumbnail(
+            self.avatar, '300x300', crop='center', quality=65
+        )
 
     def __str__(self):
         return self.name
