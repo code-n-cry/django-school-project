@@ -7,15 +7,28 @@ app_name = 'users'
 
 urlpatterns = [
     django.urls.path(
-        'list/', users.views.UserListView.as_view(), name='user_list'
+        'list/',
+        users.views.UserListView.as_view(),
+        name='user_list',
     ),
     django.urls.path(
         '<int:pk>/',
         users.views.UserDetailView.as_view(),
         name='user_detail',
     ),
-    django.urls.path('me/', users.views.ProfileView.as_view(), name='profile'),
     django.urls.path(
-        'invites/', users.views.InvitesView.as_view(), name='invites'
+        'me/',
+        users.views.ProfileView.as_view(),
+        name='profile',
+    ),
+    django.urls.path(
+        'invites/',
+        users.views.InvitesView.as_view(),
+        name='invites',
+    ),
+    django.urls.path(
+        'requests/send/',
+        users.views.SendRequestView.as_view(),
+        name='send_request',
     ),
 ]

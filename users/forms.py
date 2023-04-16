@@ -135,13 +135,19 @@ class SignUpForm(
         }
 
 
-class InviteForm(django.forms.ModelForm):
+class InviteForm(BaseTailwindModelForm):
     class Meta:
         model = Invite
         fields = (Invite.to_user.field.name,)
 
 
-class RequestForm(django.forms.ModelForm):
+class RequestForm(BaseTailwindModelForm):
     class Meta:
         model = Request
         fields = (Request.to_team.field.name,)
+        labels = {Request.to_team.field.name: gettext_lazy('В команду:')}
+        help_texts = {
+            Request.to_team.field.name: gettext_lazy(
+                'В какую команду отправите запрос?'
+            )
+        }

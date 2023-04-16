@@ -1,8 +1,11 @@
+import django.shortcuts
 import django.urls
 import django.views.generic
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
+import tasks.forms
+import tasks.models
 import teams.forms
 import teams.models
 
@@ -12,12 +15,51 @@ class CreateTeamView(django.views.generic.FormView):
     template_name = 'teams/create.html'
     form_class = teams.forms.TeamCreationForm
     success_url = django.urls.reverse_lazy('homepage:home')
+    http_method_names = ['get', 'head', 'post']
 
     def form_valid(self, form):
         team = form.save()
         self.request.user.teams.add(team.pk)
         self.request.user.lead_teams.add(team.pk)
         return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class TeamEditView(django.views.generic.UpdateView):
+    model = teams.models.Team
+    template_name = 'teams/edit.html'
+    form_class = teams.forms.TeamCreationForm
+    meeting_form_class = tasks.forms.MeetingCreationForm
+    task_form_class = None
+    context_object_name = 'team'
+    http_method_names = ['get', 'head', 'post']
+
+    def get_success_url(self):
+        return django.urls.reverse(
+            'teams:detail', kwargs={'pk': self.object.pk}
+        )
+
+    def get_context_data(self, **kwargs):
+        self.object = self.get_object()
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form_class(instance=self.object)
+        context['meeting_form'] = tasks.forms.MeetingCreationForm()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(
+            request.POST, request.FILES, instance=self.object
+        )
+        meeting_form = self.meeting_form_class(request.POST)
+        context = self.get_context_data()
+        if form.is_valid():
+            form.save()
+        if meeting_form.is_valid():
+            meeting = meeting_form.save()
+            self.object.meetings.add(meeting)
+            self.object.save()
+        return self.render_to_response(context)
 
 
 class TeamDetailView(django.views.generic.DetailView):
@@ -32,3 +74,7 @@ class TeamListView(django.views.generic.ListView):
     queryset = teams.models.Team.objects.opened()
     context_object_name = 'teams'
     http_method_names = ['get', 'head']
+
+
+class TeamRequestsView(django.views.generic.ListView):
+    pass

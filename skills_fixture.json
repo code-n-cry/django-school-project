@@ -1,0 +1,10 @@
+[
+{
+    "model": "skills.skill",
+    "pk": 1,
+    "fields": {
+        "name": "python",
+        "unique_name": "рутhоn"
+    }
+}
+]
