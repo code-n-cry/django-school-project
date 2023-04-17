@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+  <title>{% translate "Создание задания" %}</title>
+{% endblock title %}
+{% block content %}
+ <div class="container mx-auto">
+  {% include "includes/form2.html" with form_title="Создание команды" submit_text="Создать" %}
+ </div>
+{% endblock %}

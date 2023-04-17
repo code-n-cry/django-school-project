@@ -3,24 +3,31 @@ from django.utils.translation import gettext_lazy as _
 
 import core.models
 import tasks.managers
+import users.models
 
 
 class Task(core.models.NameWithDetailAbstractModel):
     objects = tasks.managers.TasksManager()
 
+    completed_date = django.db.models.DateTimeField(
+        verbose_name='дата выполнения',
+        help_text='когда была выполнена задача?',
+        null=True,
+    )
     created_at = django.db.models.DateTimeField(
         verbose_name='дата создания',
-        help_text='когда создана команда?',
+        help_text='когда создано задание?',
         auto_now_add=True,
     )
     deadline_date = django.db.models.DateTimeField(
         verbose_name='дата дедлайна',
         help_text='до какого времени надо сдать задачу?',
     )
-    completed_date = django.db.models.DateTimeField(
-        verbose_name='дата выполнения',
-        help_text='когда была выполнена задача?',
-        null=True,
+    users = django.db.models.ManyToManyField(
+        users.models.User,
+        verbose_name='Пользователи',
+        related_name='tasks',
+        blank=True,
     )
 
     class Meta:
