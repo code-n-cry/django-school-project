@@ -25,3 +25,18 @@ class TaskCreateView(django.views.generic.FormView):
         kwargs = super().get_form_kwargs()
         kwargs['team_id'] = team_id
         return kwargs
+
+
+@method_decorator(login_required, name='dispatch')
+class MeetingDetailView(django.views.generic.DetailView):
+    model = tasks.models.Meeting
+    context_object_name = 'meeting'
+    template_name = 'tasks/meeting_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if request.user not in self.object.team.all()[0].members.all():
+            return django.shortcuts.redirect(
+                django.urls.reverse('homepage:home')
+            )
+        return super().get(request, *args, **kwargs)

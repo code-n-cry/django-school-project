@@ -1,57 +1,63 @@
 import django.forms
+from django.forms.widgets import DateTimeInput
 from django.utils.translation import gettext_lazy as _
 
 import core.forms
-import tasks.models
-import users.models
+from tasks.models import Meeting, Task
+from users.models import User
 
 
 class TaskCreationForm(core.forms.BaseTailwindModelForm):
     def __init__(self, team_id, *args, **kwargs):
         super(TaskCreationForm, self).__init__(*args, **kwargs)
-        self.fields[
-            tasks.models.Task.users.field.name
-        ].queryset = users.models.User.objects.filter(teams__in=[team_id])
+        self.fields[Task.users.field.name].queryset = User.objects.filter(
+            teams__in=[team_id]
+        )
 
     users = django.forms.ModelMultipleChoiceField(
-        queryset=users.models.User.objects.all(),
-        label=tasks.models.Task.users.field.verbose_name,
+        queryset=User.objects.all(),
+        label=Task.users.field.verbose_name,
         help_text=_('Кто будет выполнять задачу?'),
     )
 
     class Meta:
-        model = tasks.models.Task
+        model = Task
         fields = (
-            tasks.models.Task.name.field.name,
-            tasks.models.Task.detail.field.name,
-            tasks.models.Task.deadline_date.field.name,
+            Task.name.field.name,
+            Task.detail.field.name,
+            Task.deadline_date.field.name,
         )
         help_texts = {
-            tasks.models.Task.deadline_date.field.name: _(
+            Task.deadline_date.field.name: _(
                 'Дата, до которой надо выполнить задачу'
             ),
         }
 
 
-class MeetingCreationForm(django.forms.ModelForm):
+class MeetingCreationForm(core.forms.BaseTailwindModelForm):
     class Meta:
-        model = tasks.models.Meeting
+        model = Meeting
         fields = (
-            tasks.models.Meeting.name.field.name,
-            tasks.models.Meeting.detail.field.name,
-            tasks.models.Meeting.planned_date.field.name,
+            Meeting.name.field.name,
+            Meeting.detail.field.name,
+            Meeting.planned_date.field.name,
         )
         labels = {
-            tasks.models.Meeting.name.field.name: _('Тема'),
-            tasks.models.Meeting.detail.field.name: _('Детали'),
-            tasks.models.Meeting.planned_date.field.name: _('Дата'),
+            Meeting.name.field.name: _('Тема'),
+            Meeting.detail.field.name: _('Детали'),
+            Meeting.planned_date.field.name: _('Дата'),
         }
         help_texts = {
-            tasks.models.Meeting.name.field.name: _('Укажите тему встречи'),
-            tasks.models.Meeting.detail.field.name: _(
+            Meeting.name.field.name: _('Укажите тему встречи'),
+            Meeting.detail.field.name: _(
                 'Опишите подробнее, что будете обсуждать'
             ),
-            tasks.models.Meeting.planned_date.field.name: _(
+            Meeting.planned_date.field.name: _(
                 'Дата, на которую будет назначена встреча'
             ),
+        }
+        widgets = {
+            Meeting.planned_date.field.name: DateTimeInput(
+                format=('%Y-%m-%d %H:%M'), attrs={'type': 'datetime-local'}
+            )
         }

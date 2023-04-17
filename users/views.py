@@ -185,3 +185,18 @@ class UserDetailView(django.views.generic.DetailView):
 class UnauthorizedView(django.views.generic.TemplateView):
     template_name = None
     http_method_names = ['get', 'head']
+
+
+@method_decorator(login_required, name='dispatch')
+class SendRequestView(django.views.generic.FormView):
+    template_name = 'users/request_form.html'
+    success_url = '/'
+    form_class = users.forms.RequestForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            team_request = form.save(commit=False)
+            team_request.from_user = request.user
+            team_request.save()
+        return super().post(request, *args, **kwargs)

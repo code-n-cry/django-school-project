@@ -92,11 +92,41 @@ black . --skip-string-normalization --line-length=79
     | --------------- | ------- |
     | ``` python3 manage.py makemigrations ``` | ``` python manage.py makemigrations ``` |
   
-  - Применить все миграции:
-    | **Linux/MaxOS** | Windows |
-    | --------------- | ------- |
-    | ``` python3 manage.py migrate ``` | ``` python manage.py migrate ``` |
+- Применить все миграции, включая начальную:
+  | **Linux/MaxOS** | Windows |
+  | --------------- | ------- |
+  | ``` python3 manage.py migrate ``` | ``` python manage.py migrate ``` |
+
+## Front-end
+- Установка npm
+  Для красоты на экране необходимо скачать npm(node pocket manager) c сайта https://nodejs.org/en
+  Он позволит вам установить front-end фреймворк, который мы используем в проекте
+
+- Установка tailwind
+  Примените в консоли команду
+  ```Shell
+  npm install -D tailwindcss
+  ```
+
+- Инициализация стилей
+  В консоли необходимо прописать 
+  ```Shell
+  npm run tailwind:watch
+  ```
+  После появления в терминале записи "Done in ***ms" необходимо нажать Ctrl+C и завершить выполнение команды.
+
+- Для работы календаря: 
+  ```Shell
+  npm install -g bower
+  ```
+
+- Запустить сервер:
+  | **Linux/MaxOS** | Windows |
+  | --------------- | ------- |
+  | ``` python3 manage.py runserver ``` | ``` python manage.py runserver ``` |
   
+  Для этого необходимо находиться в одной директории с файлом manage.py(в консоли)
+
 ## ERD
 
 <img src="https://github.com/code-n-cry/django-school-project/blob/feature/Egor/erd.png">

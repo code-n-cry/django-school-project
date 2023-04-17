@@ -15,6 +15,7 @@ class NameWithDetailAbstractModel(models.Model):
         verbose_name='детали',
         help_text='более подробное описание',
         null=True,
+        blank=True,
     )
 
     class Meta:

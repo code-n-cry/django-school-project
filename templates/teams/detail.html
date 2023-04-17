@@ -5,60 +5,73 @@
   <title>{% translate "О команде" %}</title>
 {% endblock %}
 {% block content %}
-  <div class="mx-auto container block h-full flex-1 sm:flex">
-    <div class="mr-5 h-full sm:w-2/3">
-      <div>
-        {% if team.avatar %}
-          <div class="w-[300px] h-[200px] rounded mb-2 bg-center bg-no-repeat" style="background-image: url({{ team.get_avatar_300x300.url }});"></div>
-        {% endif %}
-        <p class="text-5xl overflow-ellipsis overflow-hidden">{{ team.name }}</p>
+  {% if team.is_open or request.user in team.members.all %}
+    <div class="grid justify-items-center">
+      <div class="self-center p-5">
+        <img class="h-12 w-12 rounded-full text-center" src="{{ team.get_avatar_300x300.url }}" alt="">
+        <p class="text-5xl text-center">{{ team.name }}</p>
       </div>
-      <div class="mt-1">
-        {% translate "Необходимые навыки" %}:
-        <div class="flex space-x-3">
-          {% for skill in team.skills.all %}
-            <div class="px-2 py-1 border rounded dark:border-neutral-200">{{ skill.name }}</div>
-          {% endfor %}
-        </div>
-      </div>
-      <p class="mt-5">{{ team.detail }}</p>
     </div>
-    <div class="mr-5 h-full sm:w-2/3">
-      <div class="pt-12 sm:border-l sm:pt-2 sm:w-1/3 sm:pl-5 border-neutral-500 h-auto">
+    <div class="mx-auto container block h-full content-center flex-1 sm:flex">
+      <div class="mr-5 h-full sm:w-2/3">
         <div>
-          <p>{% translate "Лиды команды" %}:</p>
-          {% for lead in team.leads.all %}
-            {{ lead.username }}
-          {% endfor %}
         </div>
-        <div class="mt-5">
-          <p>{% translate "Участники" %}: </p>
-          <div>
-            {% for member in team.members.all %}
-              {{ member.username }}
+        <div class="mt-1">
+          {% translate "Необходимые навыки" %}:
+          <div class="flex space-x-3">
+            {% for skill in team.skills.all %}
+              <div class="px-2 py-1 border rounded dark:border-neutral-200">{{ skill.name }}</div>
             {% endfor %}
           </div>
-          {% if request.user in team.leads.all and not team.is_open %}
+        </div>
+        <p class="mt-5">{{ team.detail }}</p>
+      </div>
+      <div class="mr-5 h-full sm:w-2/3">
+        <div class="pt-12 sm:border-l sm:pt-2 sm:w-1/3 sm:pl-5 border-neutral-500 h-auto">
+          <div>
+            <p>{% translate "Лиды команды" %}:</p>
+            {% for lead in team.leads.all %}
+              <a href="">{{ lead.username }}</a>
+            {% endfor %}
+          </div>
+          <div class="mt-5">
+            <p>{% translate "Участники" %}: </p>
+            <div>
+            {% for member in team.members.all %}
+              <a href="">{{ member.username }}</a>
+            {% endfor %}
+            </div>
+            {% if request.user in team.leads.all and not team.is_open %}
             <a
               type="button"
               class="mt-3 inline-block rounded px-3 py-1 text-m font-small leading-normal text-white border border-neutral-500 hover:border-transparent shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
               {% translate "Пригласить пользователей" %}
             </a>
-          {% elif request.user in team.leads.all and team.is_open %}
+            {% elif request.user in team.leads.all and team.is_open %}
             <a
               type="button"
               class="mt-3 inline-block rounded px-7 py-1 text-m font-small leading-normal text-white border border-neutral-500 hover:border-transparent shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
               {% translate "Посмотреть запросы на вступление" %}
             </a>
-          {% elif request.user not in team.leads.all and team.is_open %}
+            {% elif request.user not in team.members.all and team.is_open %}
             <a
-              type="button"
-              class="mt-3 inline-block rounded px-3 py-1 text-m font-small leading-normal text-white border border-neutral-500 hover:border-transparent shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+              href="{% url 'users:send_request' %}"
+              class="text-center mt-3 inline-block rounded px-3 py-1 text-m font-small leading-normal text-white border border-neutral-500 hover:border-transparent shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
               {% translate "Запрос на вступление" %}
             </a>
-          {% endif %}
+            {% endif %}
+            {% if request.user in team.leads.all %}
+            <a
+              href="{% url 'teams:edit' team.pk %}"
+              class="text-center mt-3 inline-block rounded px-3 py-1 text-m font-small leading-normal text-white border border-neutral-500 hover:border-transparent shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+              {% translate "Редактировать информацию/назначить задания и встречи" %}
+            </a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  {% else %}
+    <p class="text-center text-3xl text-white">{% translate "Извините, команда скрыта от чужих глаз" %}🙈</p>
+  {% endif %}
 {% endblock %}
