@@ -5,7 +5,14 @@
   <title>{% translate "Приглашения" %}</title>
 {% endblock %}
 {% block content %}
-  <div class="mx-auto container block h-full sm:flex">
-    --- приглашения
+  <div class="mx-auto container block h-full">
+    <h2>Приглашения: </h2>
+    <div class="flex w-full border rounded-sm dark:border-white p-5">
+      <div>Team name</div>
+      <div class="ml-auto">
+        <button>Yes</button>
+        <button>No</button>
+      </div>
+    </div>
   </div>
 {% endblock %}
