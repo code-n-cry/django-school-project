@@ -5,7 +5,6 @@ from django.utils import timezone
 import core.models
 import skills.models
 import teams.managers
-from tasks.models import Meeting, Task
 
 
 def avatar_image_path(instance, filename):
@@ -25,22 +24,6 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         verbose_name='дата создания',
         help_text='когда создана команда?',
         auto_now_add=True,
-    )
-    tasks = django.db.models.ForeignKey(
-        Task,
-        on_delete=django.db.models.CASCADE,
-        verbose_name='задания',
-        help_text='задания для команды',
-        null=True,
-        blank=True,
-    )
-    meetings = django.db.models.ForeignKey(
-        to=Meeting,
-        on_delete=django.db.models.CASCADE,
-        verbose_name='встречи',
-        help_text='запланированные командные встречи',
-        null=True,
-        blank=True,
     )
     is_open = django.db.models.BooleanField(
         default=True,

@@ -15,7 +15,11 @@ urlpatterns = [
         name='team_detail',
     ),
     django.urls.path('list/', teams.views.TeamListView.as_view(), name='list'),
-    django.urls.path('yours/', django.contrib.auth.decorators.login_required(
-        teams.views.UsersTeamListView.as_view()
-    ), name='yours'),
+    django.urls.path(
+        'yours/',
+        django.contrib.auth.decorators.login_required(
+            teams.views.UsersTeamListView.as_view()
+        ),
+        name='yours',
+    ),
 ]
