@@ -81,7 +81,7 @@ class HomeView(django.views.generic.TemplateView):
                 users_meetings, current_date.year, current_date.month
             ).formatmonth(with_year=True)
             context.update(lead_teams=lead_teams, other_teams=other_teams)
-        context.update(
-            opened_teams=opened_teams, calendar=html_calendar, **kwargs
-        )
+            context.update(
+                opened_teams=opened_teams, calendar=html_calendar, **kwargs
+            )
         return self.render_to_response(context)
