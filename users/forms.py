@@ -7,9 +7,10 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils.translation import gettext_lazy
 
+import teams.models
 from core.forms import BaseTailwindForm, BaseTailwindModelForm
 from core.widgets import CheckboxInput, ImageInput
-from users.models import Invite, Request, User
+from users.models import Invite, User
 
 
 class AuthenticationForm(BaseTailwindForm, forms.AuthenticationForm):
@@ -141,13 +142,12 @@ class InviteForm(BaseTailwindModelForm):
         fields = (Invite.to_user.field.name,)
 
 
-class RequestForm(BaseTailwindModelForm):
-    class Meta:
-        model = Request
-        fields = (Request.to_team.field.name,)
-        labels = {Request.to_team.field.name: gettext_lazy('В команду:')}
-        help_texts = {
-            Request.to_team.field.name: gettext_lazy(
-                'В какую команду отправите запрос?'
-            )
-        }
+class RequestForm(BaseTailwindForm):
+    to_team = django.forms.ModelChoiceField(
+        queryset=teams.models.Team.objects.opened().only(
+            teams.models.Team.id.field.name,
+            teams.models.Team.name.field.name,
+        ),
+        label=gettext_lazy('В команду:'),
+        help_text=gettext_lazy('В какую команду запрос?'),
+    )

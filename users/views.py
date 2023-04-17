@@ -196,7 +196,19 @@ class SendRequestView(django.views.generic.FormView):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            team_request = form.save(commit=False)
-            team_request.from_user = request.user
+            team_request = users.models.Request.objects.create(
+                from_user=request.user, to_team=form.cleaned_data['to_team']
+            )
             team_request.save()
         return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        if form.is_valid():
+            team = form.cleaned_data['to_team']
+            if self.request.user in team.members.all():
+                form.add_error(
+                    'to_team',
+                    gettext_lazy('Вы уже состоите в этой команде!'),
+                )
+                return super().form_invalid(form)
+        return super().form_valid(form)

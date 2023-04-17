@@ -20,6 +20,7 @@
     </div>
   {% endfor %}
   <form method="post" class="border rounded-md p-10 mt-6">
+    {% csrf_token %}
     {% for field in form %}
       <div class="col-span-full mb-6">
         <label class="block text-sm font-medium leading-6">{{ field.label }}</label>

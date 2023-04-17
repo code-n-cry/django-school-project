@@ -25,4 +25,9 @@ urlpatterns = [
         teams.views.TeamEditView.as_view(),
         name='edit',
     ),
+    path(
+        '<int:pk>/requests/',
+        teams.views.TeamRequestsView.as_view(),
+        name='requests',
+    ),
 ]
