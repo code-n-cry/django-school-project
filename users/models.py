@@ -8,7 +8,6 @@ from django.templatetags.static import static
 from django.utils.translation import gettext_lazy
 
 import skills.models
-import tasks.models
 import teams.models
 import users.managers
 
@@ -56,13 +55,6 @@ class User(AbstractUser):
         verbose_name='команды',
         help_text='в каких команда вы состоите?',
         related_name='members',
-        blank=True,
-    )
-    tasks = django.db.models.ManyToManyField(
-        tasks.models.Task,
-        verbose_name='задачи',
-        help_text='задачи, назначенные вам',
-        related_name='to_users',
         blank=True,
     )
     failed_logins = django.db.models.IntegerField(

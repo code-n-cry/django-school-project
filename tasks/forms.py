@@ -1,32 +1,32 @@
 import django.forms
 from django.utils.translation import gettext_lazy as _
 
+import core.forms
 import tasks.models
+import users.models
 
 
-class TaskCreationForm(django.forms.ModelForm):
+class TaskCreationForm(core.forms.BaseTailwindModelForm):
+    def __init__(self, team_id, *args, **kwargs):
+        super(TaskCreationForm, self).__init__(*args, **kwargs)
+        self.fields[
+            tasks.models.Task.users.field.name
+        ].queryset = users.models.User.objects.filter(teams__in=[team_id])
+
+    users = django.forms.ModelMultipleChoiceField(
+        queryset=users.models.User.objects.all(),
+        label=tasks.models.Task.users.field.verbose_name,
+        help_text=_('Кто будет выполнять задачу?'),
+    )
+
     class Meta:
         model = tasks.models.Task
         fields = (
             tasks.models.Task.name.field.name,
             tasks.models.Task.detail.field.name,
-            tasks.models.Task.to_users.field.name,
             tasks.models.Task.deadline_date.field.name,
         )
-        labels = {
-            tasks.models.Task.name.field.name: _('Название'),
-            tasks.models.Task.detail.field.name: _('Описание'),
-            tasks.models.Task.to_users.field.name: _('Пользователь(и)'),
-            tasks.models.Task.deadline_date.field.name: _('Дедлайн'),
-        }
         help_texts = {
-            tasks.models.Task.name.field.name: _('Укажите название задачи'),
-            tasks.models.Task.detail.field.name: _(
-                'Опишите подробнее, что надо сделать'
-            ),
-            tasks.models.Task.to_users.field.name: _(
-                'Кто будет выполнять задачу?'
-            ),
             tasks.models.Task.deadline_date.field.name: _(
                 'Дата, до которой надо выполнить задачу'
             ),
