@@ -67,20 +67,6 @@ black . --skip-string-normalization --line-length=79
   
   - **test-requirements.txt** - библиотеки, необходимые для тестирования
 
-- Разверните Tailwind
-  ```
-  npm init
-  npm ci
-  npm run tailwind:build
-  ```
-
-- Запустить сервер:
-  | **Linux/MaxOS** | Windows |
-  | --------------- | ------- |
-  | ``` python3 manage.py runserver ``` | ``` python manage.py runserver ``` |
-  
-  Для этого необходимо находиться в одной директории с файлом manage.py(в консоли)
-
 - Критичные для безопасности проекта и конфигурационные переменные находятся в файле example.env. Скопируйте его с помощью консольной команды
   ``` cp .env.example .env ```
 
@@ -98,26 +84,14 @@ black . --skip-string-normalization --line-length=79
   | ``` python3 manage.py migrate ``` | ``` python manage.py migrate ``` |
 
 ## Front-end
-- Установка npm
-  Для красоты на экране необходимо скачать npm(node pocket manager) c сайта https://nodejs.org/en
-  Он позволит вам установить front-end фреймворк, который мы используем в проекте
+- Установка node.js
+  Для красоты на экране необходимо скачать node c сайта https://nodejs.org/en
+  Он позволит вам установить css фреймворк, который мы используем в проекте
 
-- Установка tailwind
-  Примените в консоли команду
   ```Shell
-  npm install -D tailwindcss
-  ```
-
-- Инициализация стилей
-  В консоли необходимо прописать 
-  ```Shell
-  npm run tailwind:watch
-  ```
-  После появления в терминале записи "Done in ***ms" необходимо нажать Ctrl+C и завершить выполнение команды.
-
-- Для работы календаря: 
-  ```Shell
-  npm install -g bower
+  npm init
+  npm ci
+  npm run tailwind:build
   ```
 
 - Запустить сервер:
