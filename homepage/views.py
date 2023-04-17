@@ -68,20 +68,20 @@ class HomeView(django.views.generic.TemplateView):
                 )
             )
             current_date = timezone.now()
-            users_meetings = (
-                tasks.models.Meeting.objects.all().filter(
-                    planned_date__year=current_date.year,
-                    planned_date__month=current_date.month,
-                    team__id__in=lead_teams,
-                )
-            ).only(
-                tasks.models.Meeting.name.field.name,
-                tasks.models.Meeting.planned_date.field.name,
-            )
-            html_calendar = tasks.utils.Calendar(
-                users_meetings, current_date.year, current_date.month
-            ).formatmonth(with_year=True)
-            context.update(lead_teams=lead_teams, other_teams=other_teams)
+            # users_meetings = (
+            #     tasks.models.Meeting.objects.all().filter(
+            #         planned_date__year=current_date.year,
+            #         planned_date__month=current_date.month,
+            #         team__id__in=lead_teams,
+            #     )
+            # ).only(
+            #     tasks.models.Meeting.name.field.name,
+            #     tasks.models.Meeting.planned_date.field.name,
+            # )
+            # html_calendar = tasks.utils.Calendar(
+            #     users_meetings, current_date.year, current_date.month
+            # ).formatmonth(with_year=True)
+            # context.update(lead_teams=lead_teams, other_teams=other_teams)
         context.update(
             opened_teams=opened_teams, calendar=html_calendar, **kwargs
         )
