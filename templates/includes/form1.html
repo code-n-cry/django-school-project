@@ -1,40 +1,38 @@
 {% load i18n %}
-
 <div class="max-w-lg mx-auto">
-    <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{% translate form_title|default:'Форма' %}</h2>
-    {% for error in form.non_field_errors %}
-      <div class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4 mt-4 dark:bg-neutral-800 dark:text-white dark:border border-red-400">
-          <div class="">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 stroke-red-700">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-              </svg>
-          </div>
-          <div>
-            <div class="text-lg font-medium">Ошибка</div>
-            <p class="text-slate-500 dark:text-neutral-300">{{ error }}</p>
-          </div>
-          <div class="hover:cursor-pointer hover:scale-90 duration-75" onclick="this.parentElement.remove()">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>              
-          </div>
+  <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{% translate form_title|default:'Форма' %}</h2>
+  {% for error in form.non_field_errors %}
+    <div class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4 mt-4 dark:bg-neutral-800 dark:text-white dark:border border-red-400">
+      <div class="">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 stroke-red-700">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+        </svg>
       </div>
-    {% endfor %}
-    <form method="post" class="border rounded-md p-10 mt-6">
-      {% csrf_token %}
-      {% for field in form %}
+      <div>
+        <div class="text-lg font-medium">{% translate "Ошибка" %}</div>
+        <p class="text-slate-500 dark:text-neutral-300">{{ error }}</p>
+      </div>
+      <div class="hover:cursor-pointer hover:scale-90 duration-75" onclick="this.parentElement.remove()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>              
+      </div>
+    </div>
+  {% endfor %}
+  <form method="post" class="border rounded-md p-10 mt-6">
+    {% for field in form %}
       <div class="col-span-full mb-6">
-        <label class="block text-sm font-medium leading-6">{{field.label}}</label>
-          {{field}}
-        <div class="text-slate-500 text-sm">{{field.help_text}}</div>
+        <label class="block text-sm font-medium leading-6">{{ field.label }}</label>
+          {{ field }}
+        <div class="text-slate-500 text-sm">{{ field.help_text }}</div>
           {% for error in field.errors %}
-            <p class="text-red-700 text-sm">{{error}}</p>
+            <p class="text-red-700 text-sm">{{ error }}</p>
           {% endfor %}
       </div>
-      {% endfor %}
-      {% if additional_field %}
-        {% include additional_field %}
-      {% endif %}
-      <button class="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{% translate submit_text|default:'Подтвердить' %}</button>
-    </form>
+    {% endfor %}
+    {% if additional_field %}
+      {% include additional_field %}
+    {% endif %}
+    <button class="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{% translate submit_text|default:"Подтвердить" %}</button>
+  </form>
 </div>

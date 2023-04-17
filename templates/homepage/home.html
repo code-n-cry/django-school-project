@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+  <title>{% translate 'Главная' %}</title>
+{% endblock %}
+{% block content %}
+  <div class="mx-auto container">
+    {% if request.user.is_authenticated %}
+      <p class="text-center text-3xl pb-3 break-normal">{% translate "Открытые команды, в которые вы можете вступить" %}:</p>
+    {% else %}
+      <p class="text-center text-3xl pb-3">{% translate "Открытые команды" %}:</p>
+    {% endif %}
+    <div class="flex space-x-4 flex-wrap w-full">
+      {% for team in opened_teams %}
+        <div class="w-1/3">
+          {% include "includes/command_card.html" with team=team show_detail="true" %}
+        </div>
+      {% endfor %}
+    </div>
+    {% if request.user.is_authenticated %}
+      {% for team in lead_teams %}
+        {% if forloop.first %}
+          <p class="text-center text-3xl py-3">{% translate "Команды, которыми вы управляете" %}:</p>
+        {% endif %}
+        <div class="grid grid-cols-3 justify-items-end rounded-md bg-indigo-600 text-white my-2">
+          <div class="col-span-2 justify-self-start flex items-start p-1 text-white">
+            <img class="h-8 w-8 rounded-full" src="{{ team.get_avatar_300x300.url }}" alt="">
+            <a href="{% url "teams:detail" team.id %}" class="pl-3">{{ team.name }}</a>
+          </div>
+          <div class=" flex items-end text-white p-1">
+            {% for skill in team.skills.all %}
+              <div class="text-center border rounded dark:border-neutral-100 px-3">{{ skill.name }}</div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+      {% for team in other_teams %}
+        {% if forloop.first %}
+          <p class="text-center text-3xl py-3">{% translate "Команды, в которых вы участник" %}:</p>
+        {% endif %}
+        <div class="grid grid-cols-2 justify-items-end rounded-md bg-indigo-600 text-white my-2">
+          <div class="justify-self-start flex items-start p-0 text-white">
+            <img class="h-8 w-8 rounded-full" src="{{ team.avatar }}" alt="">
+            <a href="{% url "teams:detail" team.id %}" class="pl-3">{{ team.name }}</a>
+          </div>
+          <div class="justify-self-end flex items-end text-white">
+            <div class="text-center border rounded dark:border-neutral-100 justify-self-end px-3">{{ team.skills__name }}</div>
+          </div>
+        </div>
+      {% endfor %}
+      <p class="text-center text-3xl pb-3 pt-3 break-normal">{% translate "Ваши встречи в этом месяце" %}:</p>
+      <table border="0" cellpadding="0" cellspacing="0" class="calendar p-3">
+        {{ calendar|safe }}
+      </table>
+    {% endif %}
+  </div>
+  
+{% endblock %}

@@ -10,7 +10,9 @@ from teams.models import Team
 class TeamCreationForm(BaseTailwindModelForm):
     class Meta:
         model = Team
-        exclude = [Team.tasks.field.name, Team.meetings.field.name]
+        exclude = [
+            Team.tasks.field.name,
+        ]
         widgets = {
             Team.is_open.field.name: CheckboxInput,
             Team.avatar.field.name: ImageInput,
@@ -50,4 +52,7 @@ class TeamForm(django.forms.ModelForm):
             teams.models.Team.skills.field.name: _(
                 'Что должен уметь участник команды?'
             ),
+        }
+        widgets = {
+            Team.is_open.field.name: CheckboxInput,
         }

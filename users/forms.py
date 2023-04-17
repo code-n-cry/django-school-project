@@ -28,16 +28,6 @@ class SetPasswordForm(BaseTailwindForm, forms.SetPasswordForm):
     ...
 
 
-class UserCreationForm(BaseTailwindForm, forms.UserCreationForm):
-    class Meta(forms.UserCreationForm.Meta):
-        model = User
-        fields = (
-            User.username.field.name,
-            User.avatar.field.name,
-        )
-        widgets = {User.avatar.field.name: ImageInput}
-
-
 class StyledLoginForm(django.contrib.auth.forms.AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -145,13 +135,19 @@ class SignUpForm(
         }
 
 
-class InviteForm(django.forms.ModelForm):
+class InviteForm(BaseTailwindModelForm):
     class Meta:
         model = Invite
         fields = (Invite.to_user.field.name,)
 
 
-class RequestForm(django.forms.ModelForm):
+class RequestForm(BaseTailwindModelForm):
     class Meta:
         model = Request
         fields = (Request.to_team.field.name,)
+        labels = {Request.to_team.field.name: gettext_lazy('В команду:')}
+        help_texts = {
+            Request.to_team.field.name: gettext_lazy(
+                'В какую команду отправите запрос?'
+            )
+        }

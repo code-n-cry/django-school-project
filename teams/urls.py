@@ -7,19 +7,23 @@ app_name = 'teams'
 
 urlpatterns = [
     django.urls.path(
-        'create/', teams.views.CreateTeamView.as_view(), name='create'
+        'create/',
+        teams.views.CreateTeamView.as_view(),
+        name='create',
     ),
     django.urls.path(
         '<int:pk>/',
         teams.views.TeamDetailView.as_view(),
-        name='team_detail',
+        name='detail',
     ),
-    django.urls.path('list/', teams.views.TeamListView.as_view(), name='list'),
     django.urls.path(
-        'yours/',
-        django.contrib.auth.decorators.login_required(
-            teams.views.UsersTeamListView.as_view()
-        ),
-        name='yours',
+        '',
+        teams.views.TeamListView.as_view(),
+        name='list',
+    ),
+    django.urls.path(
+        '<int:pk>/edit/',
+        teams.views.TeamEditView.as_view(),
+        name='edit',
     ),
 ]

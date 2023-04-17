@@ -1,4 +1,6 @@
 import django.db.models
+import django.urls
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 import core.models
@@ -66,3 +68,17 @@ class Meeting(core.models.NameWithDetailAbstractModel):
         verbose_name = 'встреча'
         verbose_name_plural = 'встречи'
         default_related_name = 'meeting'
+
+    @property
+    def get_html_paragraph(self):
+        planned_date = timezone.localtime(self.planned_date)
+        planned_date = planned_date.strftime('%H:%M')
+        meeting_link = django.urls.reverse(
+            'meetings:detail', kwargs={'pk': self.pk}
+        )
+        style = 'underline text-blue-600 hover:text-blue-800'
+        html_content = [
+            f'<p class="text-white text-center">{planned_date} ',
+            f'<a class="{style}" href="{meeting_link}">{self.name}</a></p>',
+        ]
+        return ''.join(html_content)

@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <header class="h-50">
   <nav class="bg-gray-800">
     <div class="mx-auto sm:container">
@@ -30,23 +31,15 @@
         <div class="flex flex-1 items-center text-white sm:items-stretch sm:justify-start">
           <div class="hidden sm:block">
             <div class="flex justify-center items-center space-x-4">
-              <div class="px-3 border-white border-2 rounded-md cursor-pointer">
-                <i class="fa fa-clock-o text-white pr-2" style="font-size: 1em" aria-hidden="true"></i>
-                <span class="text-sm">00:00:00</span>
+              {% with request.resolver_match.view_name as view_name %}
+                <a href="{% url 'homepage:home' %}" class="rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-700 text-gray-300 {% if view_name == "homepage:home" %}bg-gray-900 text-white{% endif %}">{% translate "Главная" %}</a>
+                <a href="{% url 'teams:list' %}" class="hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium text-gray-300 {% if view_name == "teams:list" %}bg-gray-900 text-white{% endif %} ">{% translate "Команды" %}</a>
+              {% endwith %}
               </div>
-              <a href="{% url 'homepage:index' %}" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium" aria-current="page">Главная</a>
-              <a href="{% url 'teams:list' %}" class="text-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Команды</a>
-            </div>
           </div>
         </div>
         <div class="absolute inset-y-0 right-0 hidden items-center sm:static sm:flex sm:inset-auto sm:ml-6 sm:pr-0">
           {% if request.user.is_authenticated %}
-            <button type="button" class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 mr-5">
-              <span class="sr-only">View notifications</span>
-              <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-              </svg>
-            </button>
             <div class="relative" data-te-dropdown-ref>
               <button
                 class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
@@ -69,7 +62,7 @@
                     class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
                     href="{% url 'users:profile' %}"
                     data-te-dropdown-item-ref
-                    >Профиль</a
+                    >{% translate "Профиль" %}</a
                   >
                 </li>
                 <li>
@@ -77,7 +70,7 @@
                     class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
                     href="#"
                     data-te-dropdown-item-ref
-                    >Мои приглашения</a
+                    >{% translate "Мои приглашения" %}</a
                   >
                 </li>
                 <li>
@@ -85,14 +78,16 @@
                     class="block w-full whitespace-nowrap bg-transparent px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
                     href="{% url 'auth:logout' %}"
                     data-te-dropdown-item-ref
-                    >Выход</a
+                    >{% translate "Выход" %}</a
                   >
                 </li>
               </ul>
             </div>
-            {% else %}
-            <a href="{% url 'auth:login' %}" class="text-white rounded-md px-3 py-2 text-sm font-medium">Вход</a>
-            <a href="{% url 'auth:signup' %}" class="text-white rounded-md px-3 py-2 text-sm font-medium">Регистрация</a>
+          {% else %}
+          {% with request.resolver_match.view_name as view_name %}
+            <a href="{% url 'auth:login' %}" class="text-gray-300 rounded-md px-3 py-2 text-sm font-medium {% if view_name == "auth:login" %}bg-gray-900 text-white{% endif %}">{% translate "Вход" %}</a>
+            <a href="{% url 'auth:signup' %}" class="text-gray-300 rounded-md px-3 py-2 text-sm font-medium {% if view_name == "auth:signup" %}bg-gray-900 text-white{% endif %}">{% translate "Регистрация" %}</a>
+          {% endwith %}
           {% endif %}
         </div>
       </div>
@@ -111,7 +106,7 @@
               class="text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-zinc-400"
               href="#"
               data-te-nav-link-ref
-              >Профиль</a
+              >{% translate "Профиль" %}</a
             >
           </li>
           <li class="mb-4 lg:mb-0 lg:pr-2" data-te-nav-item-ref>
@@ -119,7 +114,7 @@
               class="text-neutral-500 hover:text-neutral-700 focus:text-neutral-700 disabled:text-black/30 dark:text-neutral-200 dark:hover:text-neutral-300 dark:focus:text-neutral-300 lg:px-2 [&.active]:text-black/90 dark:[&.active]:text-neutral-400"
               href="#"
               data-te-nav-link-ref
-              >Выход</a
+              >{% translate "Выход" %}</a
             >
           </li>
         </ul>

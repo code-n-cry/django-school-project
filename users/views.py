@@ -6,7 +6,7 @@ import django.utils.timezone
 import django.views.generic
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import views
+from django.contrib.auth import get_user_model, views
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -51,47 +51,32 @@ class PasswordResetCompleteView(TemplateView):
     template_name = 'users/password_confirm_done.html'
 
 
-class SignupView(FormView):
-    template_name = 'users/signup.html'
-    form_class = forms.UserCreationForm
-
-
 @method_decorator(login_required, name='dispatch')
-class ProfileView(FormView):
+class ProfileView(django.views.generic.FormView):
     template_name = 'users/profile.html'
-    form_class = forms.ProfileForm
-    success_url = '.'
+    model = get_user_model()
+    form_class = users.forms.ProfileForm
+    http_method_names = ['get', 'head', 'post']
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.request.user
-        return kwargs
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(instance=request.user)
+        extra_context = {'form': form}
+        context = self.get_context_data(**kwargs)
+        context.update(extra_context)
+        return self.render_to_response(context)
 
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
-
-
-# << develop, пока под вопросом
-# @method_decorator(login_required, name='dispatch')
-# class ProfileView(django.views.generic.UpdateView):
-#     template_name = None
-#     model = users.models.User
-#     form_class = users.forms.ProfileForm
-#     http_method_names = ['get', 'head', 'post']
-
-#     def post(self, request, *args, **kwargs):
-#         form = self.form_class(
-#             request.POST, request.FILES, instance=request.user
-#         )
-#         if form.is_valid():
-#             if request.FILES:
-#                 request.user.avatar = request.FILES['avatar']
-#             form.save()
-#         extra_context = {'form': form}
-#         context = self.get_context_data(**kwargs)
-#         context.update(extra_context)
-#         return self.render_to_response(context)
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(
+            request.POST, request.FILES, instance=request.user
+        )
+        if form.is_valid():
+            if request.FILES:
+                request.user.avatar = request.FILES['avatar']
+            form.save()
+        extra_context = {'form': form}
+        context = self.get_context_data(**kwargs)
+        context.update(extra_context)
+        return self.render_to_response(context)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -117,11 +102,11 @@ class ActivateNewView(View):
                     'Прошло больше 12 часов, ссылка уже не работает:('
                 ),
             )
-            return redirect('homepage:index')
+            return redirect('homepage:home')
         user.is_active = True
         user.save()
         messages.success(request, gettext_lazy('Вы активированы!'))
-        return redirect('homepage:index')
+        return redirect('homepage:home')
 
 
 class ActivateView(View):
@@ -140,7 +125,7 @@ class ActivateView(View):
                 request,
                 gettext_lazy('Прошла неделя, ссылка уже не работает:('),
             )
-            return redirect('homepage:index')
+            return redirect('homepage:home')
         user.is_active = True
         user.save()
         messages.success(request, 'Аккаунт восстановлен')
@@ -179,7 +164,7 @@ class SignUpView(FormView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             messages.info(request, gettext_lazy('Вы уже авторизованы!'))
-            return redirect('homepage:index')
+            return redirect('homepage:home')
         return self.render_to_response(self.get_context_data(**kwargs))
 
 
@@ -200,3 +185,18 @@ class UserDetailView(django.views.generic.DetailView):
 class UnauthorizedView(django.views.generic.TemplateView):
     template_name = None
     http_method_names = ['get', 'head']
+
+
+@method_decorator(login_required, name='dispatch')
+class SendRequestView(django.views.generic.FormView):
+    template_name = 'users/request_form.html'
+    success_url = '/'
+    form_class = users.forms.RequestForm
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            team_request = form.save(commit=False)
+            team_request.from_user = request.user
+            team_request.save()
+        return super().post(request, *args, **kwargs)
