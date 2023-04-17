@@ -2,3 +2,4 @@
 skip-string-normalization = 1
 line-length = 79
 target-version = ['py39']
+exclude = '/(\.direnv|\.eggs|\.git|\.hg|\.mypy_cache|\.nox|\.tox|\.venv|venv|\.svn|\.ipynb_checkpoints|_build|buck-out|build|dist|__pypackages__)|migrations/'
