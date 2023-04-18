@@ -45,7 +45,6 @@ class Meeting(core.models.NameWithDetailAbstractModel):
         verbose_name='команда',
         related_name='meetings',
         on_delete=django.db.models.CASCADE,
-        null=True,
     )
     planned_date = django.db.models.DateTimeField(
         verbose_name='дата встречи',

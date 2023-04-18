@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('teams', '0002_auto_20230418_0916'),
-        ('tasks', '0001_squashed_0002_auto_20230416_1505'),
+        ('tasks', '0001_squashed_0003_auto_20230418_0916'),
         ('auth', '0012_alter_user_first_name_max_length'),
         ('skills', '0001_initial'),
         ('teams', '0001_squashed_0003_alter_team_detail'),
