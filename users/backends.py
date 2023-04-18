@@ -30,7 +30,7 @@ class EmailBackend(ModelBackend):
                 user.failed_logins += 1
                 user.last_failed_login_date = django.utils.timezone.now()
                 user.save()
-                if user.profile.failed_logins >= settings.MAX_LOGIN_AMOUNT:
+                if user.failed_logins >= settings.MAX_LOGIN_AMOUNT:
                     user.is_active = False
                     user.save()
                     email_text = gettext_lazy(

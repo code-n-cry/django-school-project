@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+  <title>{% translate "Запросы в команду" %} {{ team_id }}</title>
+{% endblock %}
+{% block content %}
+  <div class="mx-auto container block h-full sm:flex">
+    <p class="text-white text-center text-3xl break-normal">{% translate "Все запросы на вступление в Вашу команду" %}</p>
+    <div class="flex space-x-4 flex-wrap w-full">
+      {% for team_request in requests %}
+        {{ team_request }}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
