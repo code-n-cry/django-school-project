@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, views
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy
 from django.views import View
@@ -94,14 +94,19 @@ class InvitesView(django.views.generic.ListView):
         )
 
 
+class InviteBaseDetailView(django.views.generic.DetailView):
+    def get_queryset(self):
+        return users.models.Invite.objects.filter(
+            pk=self.kwargs['pk'], to_user=self.request.user.pk
+        )
+
+
 @method_decorator(login_required, name='dispatch')
-class InviteAcceptView(django.views.generic.View):
+class InviteAcceptView(InviteBaseDetailView):
     http_method_names = ['get']
 
-    def get(self, *args, invite_id, **kwargs):
-        invite = get_object_or_404(
-            users.models.Invite, pk=invite_id, to_user=self.request.user.pk
-        )
+    def get(self, *args, **kwargs):
+        invite = self.get_object()
         users.models.Member.objects.create(
             user=self.request.user, team=invite.from_team
         )
@@ -110,13 +115,11 @@ class InviteAcceptView(django.views.generic.View):
 
 
 @method_decorator(login_required, name='dispatch')
-class InviteRejectView(django.views.generic.View):
+class InviteRejectView(InviteBaseDetailView):
     http_method_names = ['get']
 
-    def get(self, *args, invite_id, **kwargs):
-        invite = get_object_or_404(
-            users.models.Invite, pk=invite_id, to_user=self.request.user.pk
-        )
+    def get(self, *args, **kwargs):
+        invite = self.get_object()
         invite.delete()
         return redirect('users:invites')
 
