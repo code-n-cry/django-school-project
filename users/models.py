@@ -8,7 +8,6 @@ from django.templatetags.static import static
 from django.utils.translation import gettext_lazy
 
 import skills.models
-import tasks.models
 import teams.models
 import users.managers
 
@@ -51,6 +50,7 @@ class User(AbstractUser):
         related_name='to_users',
         blank=True,
     )
+
     failed_logins = django.db.models.IntegerField(
         verbose_name='количество неудачных входов с момента удачного',
         help_text='сколько раз был провален вход в аккаунт',

@@ -7,7 +7,19 @@ from core.widgets import CheckboxInput, ImageInput
 from teams.models import Team
 
 
-class TeamCreationForm(BaseTailwindModelForm, django.forms.ModelForm):
+class TeamCreationForm(BaseTailwindModelForm):
+    class Meta:
+        model = Team
+        exclude = [
+            Team.tasks.field.name,
+        ]
+        widgets = {
+            Team.is_open.field.name: CheckboxInput,
+            Team.avatar.field.name: ImageInput,
+        }
+
+
+class TeamForm(django.forms.ModelForm):
     class Meta:
         model = teams.models.Team
         fields = (
