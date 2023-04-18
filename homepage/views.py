@@ -23,7 +23,7 @@ class HomeView(django.views.generic.TemplateView):
             )
             lead_teams = (
                 teams.models.Team.objects.all()
-                .filter(id__in=request.user.lead_teams.all())
+                .filter(id__in=request.user.teams.all().filter(is_lead=True))
                 .prefetch_related(
                     django.db.models.Prefetch(
                         teams.models.Team.skills.field.name,
@@ -45,7 +45,7 @@ class HomeView(django.views.generic.TemplateView):
             )
             other_teams = (
                 teams.models.Team.objects.all()
-                .exclude(id__in=request.user.lead_teams.all())
+                .exclude(id__in=lead_teams)
                 .filter(id__in=request.user.teams.all())
                 .order_by(teams.models.Team.name.field.name)
                 .prefetch_related(
@@ -80,8 +80,10 @@ class HomeView(django.views.generic.TemplateView):
             html_calendar = tasks.utils.Calendar(
                 users_meetings, current_date.year, current_date.month
             ).formatmonth(with_year=True)
-            context.update(lead_teams=lead_teams, other_teams=other_teams)
             context.update(
-                opened_teams=opened_teams, calendar=html_calendar, **kwargs
+                lead_teams=lead_teams,
+                other_teams=other_teams,
+                calendar=html_calendar,
             )
+        context.update(opened_teams=opened_teams, **kwargs)
         return self.render_to_response(context)

@@ -1,4 +1,3 @@
-import django.contrib.auth.decorators
 import django.urls
 
 import teams.views
@@ -25,5 +24,10 @@ urlpatterns = [
         '<int:pk>/edit/',
         teams.views.TeamEditView.as_view(),
         name='edit',
+    ),
+    django.urls.path(
+        '<int:pk>/requests/',
+        teams.views.TeamRequestsView.as_view(),
+        name='requests',
     ),
 ]

@@ -54,5 +54,6 @@ class TeamForm(django.forms.ModelForm):
             ),
         }
         widgets = {
+            Team.avatar.field.name: ImageInput,
             Team.is_open.field.name: CheckboxInput,
         }
