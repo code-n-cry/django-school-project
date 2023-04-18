@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model, views
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy
 from django.views import View
@@ -80,8 +80,35 @@ class ProfileView(django.views.generic.FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-class InvitesView(TemplateView):
+class InvitesView(django.views.generic.ListView):
+    context_object_name = 'invites'
     template_name = 'users/invites.html'
+
+    def get_queryset(self):
+        return (
+            users.models.Invite.objects.filter(to_user=self.request.user.pk)
+            .select_related(users.models.Invite.from_team.field.name)
+            .only('from_team__name')
+        )
+
+@method_decorator(login_required, name='dispatch')
+class InviteAcceptView(django.views.generic.View):
+    http_method_names = ['get']
+
+    def get(self, *args, invite_id, **kwargs):
+        invite = get_object_or_404(users.models.Invite, pk=invite_id, to_user=self.request.user.pk)
+        invite.delete()
+        return redirect('homepage:home')
+
+
+@method_decorator(login_required, name='dispatch')
+class InviteRejectView(django.views.generic.View):
+    http_method_names = ['get']
+
+    def get(self, *args, invite_id, **kwargs):
+        invite = get_object_or_404(users.models.Invite, pk=invite_id, to_user=self.request.user.pk)
+        invite.delete()
+        return redirect('homepage:home')
 
 
 class ActivateNewView(View):
