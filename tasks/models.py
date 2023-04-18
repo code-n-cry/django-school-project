@@ -28,7 +28,7 @@ class Task(core.models.NameWithDetailAbstractModel):
         auto_now_add=True,
     )
     deadline_date = django.db.models.DateTimeField(
-        verbose_name='дата дедлайна',
+        verbose_name='дата дедлайна (формат: год-месяц-день)',
         help_text='до какого времени надо сдать задачу?',
     )
     users = django.db.models.ManyToManyField(
