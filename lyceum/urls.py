@@ -10,6 +10,7 @@ urlpatterns = [
     path('users/', include('users.urls.users')),
     path('auth/', include('django.contrib.auth.urls')),
     path('meetings/', include('tasks.urls.meetings')),
+    path('tasks/', include('tasks.urls.tasks')),
     path('teams/', include('teams.urls')),
     path('i18n/', include('django.conf.urls.i18n')),
 ]
