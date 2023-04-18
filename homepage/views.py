@@ -23,7 +23,7 @@ class HomeView(django.views.generic.TemplateView):
             )
             lead_teams = (
                 teams.models.Team.objects.all()
-                .filter(id__in=request.user.lead_teams.all())
+                .filter(id__in=request.user.teams.all().filter(is_lead=True))
                 .prefetch_related(
                     django.db.models.Prefetch(
                         teams.models.Team.skills.field.name,
@@ -45,7 +45,7 @@ class HomeView(django.views.generic.TemplateView):
             )
             other_teams = (
                 teams.models.Team.objects.all()
-                .exclude(id__in=request.user.lead_teams.all())
+                .exclude(id__in=lead_teams)
                 .filter(id__in=request.user.teams.all())
                 .order_by(teams.models.Team.name.field.name)
                 .prefetch_related(

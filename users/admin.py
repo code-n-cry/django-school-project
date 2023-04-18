@@ -2,7 +2,11 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
 
-from users.models import Invite, User
+from users.models import Invite, Member, User
+
+
+class MemberInline(admin.TabularInline):
+    model = Member
 
 
 class CustomUserAdminForm(UserChangeForm):
@@ -19,13 +23,12 @@ class CustomUserAdmin(UserAdmin):
             {
                 'fields': (
                     User.avatar.field.name,
-                    User.lead_teams.field.name,
-                    User.teams.field.name,
                     User.skills.field.name,
                 )
             },
         ),
     )
+    inlines = (MemberInline,)
 
 
 admin.site.register(User, CustomUserAdmin)

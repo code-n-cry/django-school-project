@@ -21,8 +21,10 @@ class CreateTeamView(django.views.generic.FormView):
 
     def form_valid(self, form):
         team = form.save()
-        self.request.user.teams.add(team.pk)
-        self.request.user.lead_teams.add(team.pk)
+        member = users.models.Member.objects.create(
+            is_lead=True, team=team, user=self.request.user
+        )
+        member.save()
         return super().form_valid(form)
 
 

@@ -1,15 +1,21 @@
 import django.db.models
 import django.urls
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 
 import core.models
 import tasks.managers
+import teams.models
 
 
 class Task(core.models.NameWithDetailAbstractModel):
     objects = tasks.managers.TasksManager()
 
+    team = django.db.models.ForeignKey(
+        to=teams.models.Team,
+        verbose_name='команда',
+        related_name='tasks',
+        on_delete=django.db.models.CASCADE,
+    )
     created_at = django.db.models.DateTimeField(
         verbose_name='дата создания',
         help_text='когда создана команда?',
@@ -22,7 +28,6 @@ class Task(core.models.NameWithDetailAbstractModel):
     completed_date = django.db.models.DateTimeField(
         verbose_name='дата выполнения',
         help_text='когда была выполнена задача?',
-        null=True,
     )
 
     class Meta:
@@ -35,20 +40,16 @@ class Task(core.models.NameWithDetailAbstractModel):
 
 
 class Meeting(core.models.NameWithDetailAbstractModel):
+    team = django.db.models.ForeignKey(
+        to=teams.models.Team,
+        verbose_name='команда',
+        related_name='meetings',
+        on_delete=django.db.models.CASCADE,
+        null=True,
+    )
     planned_date = django.db.models.DateTimeField(
         verbose_name='дата встречи',
         help_text='когда пройдёт митап?',
-    )
-    status_choices = [
-        (0, _('Ожидается')),
-        (1, _('Идёт')),
-        (2, _('Закончилась')),
-    ]
-    status = django.db.models.PositiveSmallIntegerField(
-        verbose_name='статус',
-        help_text='текущий статус встречи',
-        choices=status_choices,
-        default=0,
     )
 
     class Meta:
