@@ -3,11 +3,23 @@ from django.utils.translation import gettext_lazy as _
 
 import teams.models
 from core.forms import BaseTailwindModelForm
-from core.widgets import CheckboxInput
+from core.widgets import CheckboxInput, ImageInput
 from teams.models import Team
 
 
-class TeamCreationForm(BaseTailwindModelForm, django.forms.ModelForm):
+class TeamCreationForm(BaseTailwindModelForm):
+    class Meta:
+        model = Team
+        exclude = [
+            Team.tasks.field.name,
+        ]
+        widgets = {
+            Team.is_open.field.name: CheckboxInput,
+            Team.avatar.field.name: ImageInput,
+        }
+
+
+class TeamForm(django.forms.ModelForm):
     class Meta:
         model = teams.models.Team
         fields = (
@@ -42,5 +54,6 @@ class TeamCreationForm(BaseTailwindModelForm, django.forms.ModelForm):
             ),
         }
         widgets = {
+            Team.avatar.field.name: ImageInput,
             Team.is_open.field.name: CheckboxInput,
         }
