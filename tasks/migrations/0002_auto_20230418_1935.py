@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('tasks', '0001_squashed_0002_alter_meeting_team'),
@@ -15,16 +14,29 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='task',
             name='users',
-            field=models.ManyToManyField(blank=True, related_name='tasks', to=settings.AUTH_USER_MODEL, verbose_name='Пользователи'),
+            field=models.ManyToManyField(
+                blank=True,
+                related_name='tasks',
+                to=settings.AUTH_USER_MODEL,
+                verbose_name='Пользователи',
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='completed_date',
-            field=models.DateTimeField(help_text='когда была выполнена задача?', null=True, verbose_name='дата выполнения'),
+            field=models.DateTimeField(
+                help_text='когда была выполнена задача?',
+                null=True,
+                verbose_name='дата выполнения',
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='created_at',
-            field=models.DateTimeField(auto_now_add=True, help_text='когда создано задание?', verbose_name='дата создания'),
+            field=models.DateTimeField(
+                auto_now_add=True,
+                help_text='когда создано задание?',
+                verbose_name='дата создания',
+            ),
         ),
     ]

@@ -91,12 +91,15 @@ class InvitesView(django.views.generic.ListView):
             .only('from_team__name')
         )
 
+
 @method_decorator(login_required, name='dispatch')
 class InviteAcceptView(django.views.generic.View):
     http_method_names = ['get']
 
     def get(self, *args, invite_id, **kwargs):
-        invite = get_object_or_404(users.models.Invite, pk=invite_id, to_user=self.request.user.pk)
+        invite = get_object_or_404(
+            users.models.Invite, pk=invite_id, to_user=self.request.user.pk
+        )
         invite.delete()
         return redirect('homepage:home')
 
@@ -106,7 +109,9 @@ class InviteRejectView(django.views.generic.View):
     http_method_names = ['get']
 
     def get(self, *args, invite_id, **kwargs):
-        invite = get_object_or_404(users.models.Invite, pk=invite_id, to_user=self.request.user.pk)
+        invite = get_object_or_404(
+            users.models.Invite, pk=invite_id, to_user=self.request.user.pk
+        )
         invite.delete()
         return redirect('homepage:home')
 
