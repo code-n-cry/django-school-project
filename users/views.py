@@ -88,7 +88,9 @@ class InvitesView(django.views.generic.ListView):
         return (
             users.models.Invite.objects.filter(to_user=self.request.user.pk)
             .select_related(users.models.Invite.from_team.field.name)
-            .only('from_team__name')
+            .only(
+                '__'.join([users.models.Invite.from_team.field.name, 'name'])
+            )
         )
 
 
@@ -100,8 +102,11 @@ class InviteAcceptView(django.views.generic.View):
         invite = get_object_or_404(
             users.models.Invite, pk=invite_id, to_user=self.request.user.pk
         )
+        users.models.Member.objects.create(
+            user=self.request.user, team=invite.from_team
+        )
         invite.delete()
-        return redirect('homepage:home')
+        return redirect('users:invites')
 
 
 @method_decorator(login_required, name='dispatch')
@@ -113,7 +118,7 @@ class InviteRejectView(django.views.generic.View):
             users.models.Invite, pk=invite_id, to_user=self.request.user.pk
         )
         invite.delete()
-        return redirect('homepage:home')
+        return redirect('users:invites')
 
 
 class ActivateNewView(View):
