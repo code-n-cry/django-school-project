@@ -51,7 +51,12 @@ class MeetingDetailView(django.views.generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if request.user not in self.object.team.all()[0].members.all():
+        is_user_member = (
+            teams.models.Team.objects.all()
+            .filter(pk=self.object.pk, members__in=request.user.teams.all())
+            .exists()
+        )
+        if is_user_member:
             return django.shortcuts.redirect(
                 django.urls.reverse('homepage:home')
             )

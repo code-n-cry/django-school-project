@@ -15,7 +15,7 @@ import users.models
 @method_decorator(login_required, name='dispatch')
 class CreateTeamView(django.views.generic.FormView):
     template_name = 'teams/create.html'
-    form_class = teams.forms.TeamCreationForm
+    form_class = teams.forms.TeamForm
     success_url = django.urls.reverse_lazy('homepage:home')
     http_method_names = ['get', 'head', 'post']
 
@@ -32,7 +32,7 @@ class CreateTeamView(django.views.generic.FormView):
 class TeamEditView(django.views.generic.UpdateView):
     model = teams.models.Team
     template_name = 'teams/edit.html'
-    form_class = teams.forms.TeamCreationForm
+    form_class = teams.forms.TeamForm
     meeting_form_class = tasks.forms.MeetingCreationForm
     task_form_class = None
     context_object_name = 'team'
@@ -73,22 +73,27 @@ class TeamDetailView(django.views.generic.DetailView):
     http_method_names = ['get', 'head']
 
     def get_context_data(self, **kwargs):
-        is_request_user_lead = (
-            teams.models.Team.objects.all()
-            .exclude(members__is_lead=False)
-            .filter(members__id__in=self.request.user.teams.all())
-            .exists()
-        )
-        is_request_user_member = (
-            teams.models.Team.objects.closed()
-            .filter(members__id__in=self.request.user.teams.all())
-            .exists()
-        )
-        return super().get_context_data(
-            is_lead=is_request_user_lead,
-            is_member=is_request_user_member,
-            **kwargs,
-        )
+        if self.request.user.is_authenticated:
+            is_request_user_lead = (
+                teams.models.Team.objects.all()
+                .exclude(members__is_lead=False)
+                .filter(
+                    members__id__in=self.request.user.teams.all(),
+                    id=self.get_object().id,
+                )
+                .exists()
+            )
+            is_request_user_member = (
+                teams.models.Team.objects.closed()
+                .filter(members__id__in=self.request.user.teams.all())
+                .exists()
+            )
+            return super().get_context_data(
+                is_lead=is_request_user_lead,
+                is_member=is_request_user_member,
+                **kwargs,
+            )
+        return super().get_context_data(**kwargs)
 
 
 class TeamListView(django.views.generic.ListView):
@@ -152,6 +157,7 @@ class RequestAcceptView(django.views.generic.View):
     http_method_names = ['get', 'head']
 
     def get(self, *args, **kwargs):
+        print(self.request.user)
         team = get_object_or_404(
             teams.models.Team.objects.opened(), pk=kwargs['team_id']
         )

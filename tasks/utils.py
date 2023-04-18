@@ -1,5 +1,8 @@
 from calendar import HTMLCalendar
 
+import django.urls
+from django.utils import timezone
+
 
 class Calendar(HTMLCalendar):
     def __init__(self, queryset, year=None, month=None):
@@ -9,10 +12,26 @@ class Calendar(HTMLCalendar):
         super().__init__()
 
     def formatday(self, day):
-        meetings_per_day = self.queryset.filter(planned_date__day=day)
         day_events = []
-        for meeting in meetings_per_day:
-            day_events.append(f'<li>{meeting.get_html_paragraph}</li>')
+        style = 'underline text-blue-600 hover:text-blue-800'
+        for meeting in self.queryset:
+            planned_date = timezone.localtime(meeting['planned_date'])
+            if planned_date.day == day:
+                planned_date = planned_date.strftime('%H:%M')
+                meeting_link = django.urls.reverse(
+                    'meetings:detail', kwargs={'pk': meeting['id']}
+                )
+                day_events.append(
+                    ''.join(
+                        [
+                            '<li>',
+                            f'<p class="text-white text-center">{planned_date} ',
+                            f'<a class="{style}" href="{meeting_link}">',
+                            meeting['name'],
+                            '</a></p></li>',
+                        ]
+                    )
+                )
         if day != 0:
             return (
                 f'<td><span class="date">{day}</span><ul>'

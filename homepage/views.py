@@ -15,11 +15,10 @@ class HomeView(django.views.generic.TemplateView):
     def get(self, request, *args, **kwargs):
         opened_teams = teams.models.Team.objects.opened()
         context = self.get_context_data()
-        html_calendar = None
         if request.user.is_authenticated:
             opened_teams = (
                 teams.models.Team.objects.opened()
-                .exclude(id__in=request.user.teams.all())
+                .exclude(members__id__in=request.user.teams.all())
                 .filter(skills__id__in=request.user.skills.all())
             )
             lead_teams = (
@@ -74,7 +73,8 @@ class HomeView(django.views.generic.TemplateView):
                     planned_date__month=current_date.month,
                     team__id__in=lead_teams,
                 )
-            ).only(
+            ).values(
+                tasks.models.Meeting.id.field.name,
                 tasks.models.Meeting.name.field.name,
                 tasks.models.Meeting.planned_date.field.name,
             )
