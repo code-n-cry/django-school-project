@@ -72,6 +72,24 @@ class TeamDetailView(django.views.generic.DetailView):
     context_object_name = 'team'
     http_method_names = ['get', 'head']
 
+    def get_context_data(self, **kwargs):
+        is_request_user_lead = (
+            teams.models.Team.objects.all()
+            .exclude(members__is_lead=False)
+            .filter(members__id__in=self.request.user.teams.all())
+            .exists()
+        )
+        is_request_user_member = (
+            teams.models.Team.objects.closed()
+            .filter(members__id__in=self.request.user.teams.all())
+            .exists()
+        )
+        return super().get_context_data(
+            is_lead=is_request_user_lead,
+            is_member=is_request_user_member,
+            **kwargs,
+        )
+
 
 class TeamListView(django.views.generic.ListView):
     template_name = 'teams/list.html'
@@ -96,7 +114,13 @@ class TeamRequestsView(django.views.generic.TemplateView):
             .filter(pk=self.kwargs['pk'])
             .first()
         )
-        if not team or request.user not in team.leads.all():
+        is_request_user_lead = (
+            teams.models.Team.objects.all()
+            .exclude(members__is_lead=False)
+            .filter(members__id__in=self.request.user.teams.all())
+            .exists()
+        )
+        if not team or not is_request_user_lead:
             return redirect(django.urls.reverse('homepage:home'))
         team_requests = (
             users.models.Request.objects.all()
@@ -121,3 +145,60 @@ class TeamRequestsView(django.views.generic.TemplateView):
         context = self.get_context_data(**kwargs)
         context.update(requests=team_requests)
         return self.render_to_response(context)
+
+
+@method_decorator(login_required, name='dispatch')
+class RequestAcceptView(django.views.generic.View):
+    http_method_names = ['get', 'head']
+
+    def get(self, *args, **kwargs):
+        team = get_object_or_404(
+            teams.models.Team.objects.opened(), pk=kwargs['team_id']
+        )
+        is_request_user_lead = (
+            teams.models.Team.objects.opened()
+            .exclude(members__is_lead=False)
+            .filter(members__id__in=self.request.user.teams.all())
+            .exists()
+        )
+        if is_request_user_lead:
+            request = get_object_or_404(
+                users.models.Request, pk=kwargs['request_id'], to_team=team
+            )
+            users.models.Member.objects.create(
+                user=request.from_user, team=team
+            )
+            request.delete()
+            return redirect(
+                django.urls.reverse(
+                    'teams:requests', kwargs={'pk': kwargs['team_id']}
+                )
+            )
+        return redirect('homepage:home')
+
+
+@method_decorator(login_required, name='dispatch')
+class RequestRejectView(django.views.generic.View):
+    http_method_names = ['get', 'head']
+
+    def get(self, *args, **kwargs):
+        team = get_object_or_404(
+            teams.models.Team.objects.opened(), pk=kwargs['team_id']
+        )
+        is_request_user_lead = (
+            teams.models.Team.objects.opened()
+            .exclude(members__is_lead=False)
+            .filter(members__id__in=self.request.user.teams.all())
+            .exists()
+        )
+        if is_request_user_lead:
+            request = get_object_or_404(
+                users.models.Request, pk=kwargs['request_id'], to_team=team
+            )
+            request.delete()
+            return redirect(
+                django.urls.reverse(
+                    'teams:requests', kwargs={'pk': kwargs['team_id']}
+                )
+            )
+        return redirect('homepage:home')
