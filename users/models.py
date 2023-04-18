@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy
 import skills.models
 import teams.models
 import users.managers
+from tasks.models import Task
 
 
 def avatar_image_path(instance, filename):
@@ -43,6 +44,14 @@ class User(AbstractUser):
         help_text='Ваши навыки',
         blank=True,
     )
+    tasks = django.db.models.ManyToManyField(
+        Task,
+        verbose_name='задачи',
+        help_text='задачи, назначенные вам',
+        related_name='to_users',
+        blank=True,
+    )
+
     failed_logins = django.db.models.IntegerField(
         verbose_name='количество неудачных входов с момента удачного',
         help_text='сколько раз был провален вход в аккаунт',
@@ -101,7 +110,7 @@ class Member(django.db.models.Model):
         verbose_name='пользователь',
         help_text='юзер',
         on_delete=django.db.models.CASCADE,
-        related_name='member',
+        related_name='teams',
     )
 
     class Meta:
