@@ -5,8 +5,10 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
-    replaces = [('tasks', '0002_auto_20230418_1935'), ('tasks', '0003_alter_task_deadline_date')]
+    replaces = [
+        ('tasks', '0002_auto_20230418_1935'),
+        ('tasks', '0003_alter_task_deadline_date'),
+    ]
 
     dependencies = [
         ('tasks', '0001_squashed_0002_alter_meeting_team'),
@@ -17,21 +19,37 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='task',
             name='users',
-            field=models.ManyToManyField(blank=True, related_name='tasks', to=settings.AUTH_USER_MODEL, verbose_name='Пользователи'),
+            field=models.ManyToManyField(
+                blank=True,
+                related_name='tasks',
+                to=settings.AUTH_USER_MODEL,
+                verbose_name='Пользователи',
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='completed_date',
-            field=models.DateTimeField(help_text='когда была выполнена задача?', null=True, verbose_name='дата выполнения'),
+            field=models.DateTimeField(
+                help_text='когда была выполнена задача?',
+                null=True,
+                verbose_name='дата выполнения',
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='created_at',
-            field=models.DateTimeField(auto_now_add=True, help_text='когда создано задание?', verbose_name='дата создания'),
+            field=models.DateTimeField(
+                auto_now_add=True,
+                help_text='когда создано задание?',
+                verbose_name='дата создания',
+            ),
         ),
         migrations.AlterField(
             model_name='task',
             name='deadline_date',
-            field=models.DateTimeField(help_text='до какого времени надо сдать задачу?', verbose_name='дата дедлайна (формат: год-месяц-день)'),
+            field=models.DateTimeField(
+                help_text='до какого времени надо сдать задачу?',
+                verbose_name='дата дедлайна (формат: год-месяц-день)',
+            ),
         ),
     ]
