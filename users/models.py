@@ -8,9 +8,9 @@ from django.templatetags.static import static
 from django.utils.translation import gettext_lazy
 
 import skills.models
-import tasks.models
 import teams.models
 import users.managers
+from tasks.models import Task
 
 
 def avatar_image_path(instance, filename):
@@ -45,7 +45,7 @@ class User(AbstractUser):
         blank=True,
     )
     tasks = django.db.models.ManyToManyField(
-        tasks.models.Task,
+        Task,
         verbose_name='задачи',
         help_text='задачи, назначенные вам',
         related_name='to_users',
