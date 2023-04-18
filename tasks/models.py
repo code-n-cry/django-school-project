@@ -5,11 +5,17 @@ from django.utils import timezone
 import core.models
 import tasks.managers
 import teams.models
+import users.models
 
 
 class Task(core.models.NameWithDetailAbstractModel):
     objects = tasks.managers.TasksManager()
 
+    completed_date = django.db.models.DateTimeField(
+        verbose_name='дата выполнения',
+        help_text='когда была выполнена задача?',
+        null=True,
+    )
     team = django.db.models.ForeignKey(
         to=teams.models.Team,
         verbose_name='команда',
@@ -18,16 +24,18 @@ class Task(core.models.NameWithDetailAbstractModel):
     )
     created_at = django.db.models.DateTimeField(
         verbose_name='дата создания',
-        help_text='когда создана команда?',
+        help_text='когда создано задание?',
         auto_now_add=True,
     )
     deadline_date = django.db.models.DateTimeField(
-        verbose_name='дата дедлайна',
+        verbose_name='дата дедлайна (формат: год-месяц-день)',
         help_text='до какого времени надо сдать задачу?',
     )
-    completed_date = django.db.models.DateTimeField(
-        verbose_name='дата выполнения',
-        help_text='когда была выполнена задача?',
+    users = django.db.models.ManyToManyField(
+        users.models.User,
+        verbose_name='Пользователи',
+        related_name='tasks',
+        blank=True,
     )
 
     class Meta:

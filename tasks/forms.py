@@ -1,11 +1,25 @@
+import django.forms
 from django.forms.widgets import DateTimeInput
 from django.utils.translation import gettext_lazy as _
 
-from core.forms import BaseTailwindModelForm
+import core.forms
 from tasks.models import Meeting, Task
+from users.models import User
 
 
-class TaskCreationForm(BaseTailwindModelForm):
+class TaskCreationForm(core.forms.BaseTailwindModelForm):
+    def __init__(self, team_id, *args, **kwargs):
+        super(TaskCreationForm, self).__init__(*args, **kwargs)
+        self.fields[Task.users.field.name].queryset = User.objects.filter(
+            teams__in=[team_id]
+        )
+
+    users = django.forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        label=Task.users.field.verbose_name,
+        help_text=_('Кто будет выполнять задачу?'),
+    )
+
     class Meta:
         model = Task
         fields = (
@@ -13,21 +27,14 @@ class TaskCreationForm(BaseTailwindModelForm):
             Task.detail.field.name,
             Task.deadline_date.field.name,
         )
-        labels = {
-            Task.name.field.name: _('Название'),
-            Task.detail.field.name: _('Описание'),
-            Task.deadline_date.field.name: _('Дедлайн'),
-        }
         help_texts = {
-            Task.name.field.name: _('Укажите название задачи'),
-            Task.detail.field.name: _('Опишите подробнее, что надо сделать'),
             Task.deadline_date.field.name: _(
                 'Дата, до которой надо выполнить задачу'
             ),
         }
 
 
-class MeetingCreationForm(BaseTailwindModelForm):
+class MeetingCreationForm(core.forms.BaseTailwindModelForm):
     class Meta:
         model = Meeting
         fields = (

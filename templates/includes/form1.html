@@ -26,9 +26,9 @@
         <label class="block text-sm font-medium leading-6">{{ field.label }}</label>
           {{ field }}
         <div class="text-slate-500 text-sm">{{ field.help_text }}</div>
-          {% for error in field.errors %}
-            <p class="text-red-700 text-sm">{{ error }}</p>
-          {% endfor %}
+        {% for error in field.errors %}
+          <p class="text-red-700 text-sm">{{ error }}</p>
+        {% endfor %}
       </div>
     {% endfor %}
     {% if additional_field %}
