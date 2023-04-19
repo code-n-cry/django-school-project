@@ -14,6 +14,7 @@ from django.utils.translation import gettext_lazy
 from django.views import View
 from django.views.generic import FormView
 
+import tasks.models
 import users.forms
 import users.models
 
@@ -139,7 +140,7 @@ class ActivateView(View):
         return redirect('auth:login')
 
 
-class SignUpView(FormView):
+class SignUpView(django.views.generic.FormView):
     model = users.models.User
     template_name = 'users/signup.html'
     form_class = users.forms.SignUpForm
@@ -191,6 +192,13 @@ class UserDetailView(django.views.generic.DetailView):
     queryset = users.models.User.objects.public()
     context_object_name = 'user'
     http_method_names = ['get', 'head']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        users_tasks = tasks.models.Task.objects.filter(users=self.request.user)
+        context['all_tasks_count'] = len(users_tasks)
+        return context
 
 
 class UnauthorizedView(django.views.generic.TemplateView):

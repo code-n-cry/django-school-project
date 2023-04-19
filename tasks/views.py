@@ -1,4 +1,5 @@
 import zoneinfo
+from datetime import datetime
 
 import django.urls
 import django.views.generic
@@ -48,6 +49,22 @@ class TaskCreateView(django.views.generic.FormView):
         task.users.set(users)
         task.save()
         return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class TaskDoneView(django.views.generic.DetailView):
+    http_method_names = ['get']
+
+    def get_queryset(self):
+        return tasks.models.Task.objects.filter(
+            pk=self.kwargs['pk'], users=self.request.user.pk
+        )
+
+    def get(self, request, *args, **kwargs):
+        task = self.get_object()
+        task.completed_date = datetime.now()
+        task.save()
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 @method_decorator(login_required, name='dispatch')

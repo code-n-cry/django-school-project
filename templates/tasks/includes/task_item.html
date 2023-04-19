@@ -1,0 +1,15 @@
+{% load i18n %}
+<div class="rounded-sm py-2 px-4 mb-2 border dark:border-white">
+  <div class="flex items-center">
+    <div class="mr-auto">
+      {% if show_team_name %}
+        <p class="text-sm mb-1 dark:text-gray-300">{{ task.team.name }}</p>
+      {% endif %}
+      <p class="text-xl">{{ task.name }}</p>
+      <p class="text-sm">{{ task.detail }}</p>
+    </div>
+    <a href="{% url 'tasks:done' task.pk %}">
+      {% include 'includes/button.html' with text="Готово" %}
+    </a>
+  </div>
+</div>

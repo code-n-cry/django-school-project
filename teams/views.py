@@ -105,6 +105,33 @@ class TeamDetailView(django.views.generic.DetailView):
             obj = self.queryset.none()
         return obj
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        team = self.object
+        if self.request.user.is_authenticated:
+            if self.request.user.pk in [
+                member.user_id for member in team.members.all()
+            ]:
+                user_tasks = tasks.models.Task.objects.filter(
+                    users=self.request.user.pk, team=team
+                ).only('name', 'detail', 'completed_date')
+
+                context['all_tasks_count'] = len(user_tasks)
+                context['done_tasks_count'] = len(
+                    [task for task in user_tasks if task.completed_date]
+                )
+                # not completed tasks
+                context['tasks'] = [
+                    task for task in user_tasks if not task.completed_date
+                ]
+            if self.request.user.pk in [
+                member.user_id
+                for member in team.members.all()
+                if member.is_lead
+            ]:
+                context['is_lead'] = True
+        return context
+
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         member = None
