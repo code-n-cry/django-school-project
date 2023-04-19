@@ -16,17 +16,16 @@ from django.views import View
 import tasks.models
 import users.forms
 import users.models
-from users import forms
 
 
 class LoginView(views.LoginView):
     template_name = 'users/login.html'
-    form_class = forms.AuthenticationForm
+    form_class = users.forms.AuthenticationForm
 
 
 class PasswordChangeView(views.PasswordChangeView):
     template_name = 'users/password_change.html'
-    form_class = forms.PasswordChangeForm
+    form_class = users.forms.PasswordChangeForm
 
 
 class PasswordChangeDoneView(django.views.generic.TemplateView):
@@ -35,7 +34,7 @@ class PasswordChangeDoneView(django.views.generic.TemplateView):
 
 class PasswordResetView(views.PasswordResetView):
     template_name = 'users/password_reset.html'
-    form_class = forms.PasswordResetForm
+    form_class = users.forms.PasswordResetForm
 
 
 class PasswordResetDoneView(django.views.generic.TemplateView):
@@ -44,7 +43,7 @@ class PasswordResetDoneView(django.views.generic.TemplateView):
 
 class PasswordResetConfirmView(views.PasswordResetConfirmView):
     template_name = 'users/password_confirm.html'
-    form_class = forms.SetPasswordForm
+    form_class = users.forms.SetPasswordForm
 
 
 class PasswordResetCompleteView(django.views.generic.TemplateView):
