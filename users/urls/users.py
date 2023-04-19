@@ -27,6 +27,16 @@ urlpatterns = [
         name='invites',
     ),
     django.urls.path(
+        'invites/<int:pk>/yes',
+        users.views.InviteAcceptView.as_view(),
+        name='invite_accept',
+    ),
+    django.urls.path(
+        'invites/<int:pk>/no',
+        users.views.InviteRejectView.as_view(),
+        name='invite_reject',
+    ),
+    django.urls.path(
         'requests/send/',
         users.views.SendRequestView.as_view(),
         name='send_request',
