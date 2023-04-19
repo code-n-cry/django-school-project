@@ -78,58 +78,25 @@ class TeamDetailView(django.views.generic.DetailView):
     context_object_name = 'team'
     http_method_names = ['get', 'head']
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        result = queryset.filter(is_open=True)
-        if self.request.user.is_authenticated:
-            result = queryset.filter(members__user=self.request.user)
-        return result.prefetch_related(
-            django.db.models.Prefetch(
-                teams.models.Team.members.rel.related_name,
-                queryset=users.models.Member.objects.all(),
-            ),
-            django.db.models.Prefetch(
-                '__'.join(
-                    [
-                        teams.models.Team.members.rel.related_name,
-                        users.models.Member.user.field.name,
-                    ]
-                )
-            ),
-        )
-
-    def get_object(self, queryset=None):
-        try:
-            obj = super().get_object(queryset)
-        except django.http.Http404:
-            obj = self.queryset.none()
-        return obj
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        team = self.object
+        team = self.get_object()
         if self.request.user.is_authenticated:
-            if self.request.user.pk in [
-                member.user_id for member in team.members.all()
-            ]:
+            if team.members.filter(user=self.request.user).exists():
                 user_tasks = tasks.models.Task.objects.filter(
-                    users=self.request.user.pk, team=team
-                ).only('name', 'detail', 'completed_date')
-
-                context['all_tasks_count'] = len(user_tasks)
-                context['done_tasks_count'] = len(
-                    [task for task in user_tasks if task.completed_date]
+                    users__in=self.request.user, team=team
+                ).only(
+                    tasks.models.Task.name.field.name,
+                    tasks.models.Task.detail.field.name,
+                    tasks.models.Task.completed_date.field.name,
                 )
-                # not completed tasks
-                context['tasks'] = [
-                    task for task in user_tasks if not task.completed_date
-                ]
-            if self.request.user.pk in [
-                member.user_id
-                for member in team.members.all()
-                if member.is_lead
-            ]:
-                context['is_lead'] = True
+                context['all_tasks_count'] = user_tasks.count()
+                context['done_tasks_count'] = user_tasks.filter(
+                    completed_date__is_null=False
+                ).count()
+                context['tasks'] = user_tasks.filter(
+                    completed_date__is_null=True
+                )
         return context
 
     def get(self, request, *args, **kwargs):
