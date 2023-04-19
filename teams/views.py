@@ -74,6 +74,7 @@ class TeamEditView(django.views.generic.UpdateView):
 
 class TeamDetailView(django.views.generic.DetailView):
     template_name = 'teams/detail.html'
+    queryset = teams.models.Team.objects.all()
     context_object_name = 'team'
     http_method_names = ['get', 'head']
 
