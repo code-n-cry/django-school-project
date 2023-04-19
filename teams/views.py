@@ -84,18 +84,18 @@ class TeamDetailView(django.views.generic.DetailView):
         if self.request.user.is_authenticated:
             if team.members.filter(user=self.request.user).exists():
                 user_tasks = tasks.models.Task.objects.filter(
-                    users__in=self.request.user, team=team
+                    users=self.request.user, team=team
                 ).only(
                     tasks.models.Task.name.field.name,
                     tasks.models.Task.detail.field.name,
                     tasks.models.Task.completed_date.field.name,
                 )
-                context['all_tasks_count'] = user_tasks.count()
-                context['done_tasks_count'] = user_tasks.filter(
-                    completed_date__is_null=False
-                ).count()
+                context['all_tasks_count'] = len(user_tasks)
+                context['done_tasks_count'] = len(
+                    user_tasks.filter(completed_date__isnull=False)
+                )
                 context['tasks'] = user_tasks.filter(
-                    completed_date__is_null=True
+                    completed_date__isnull=True
                 )
         return context
 

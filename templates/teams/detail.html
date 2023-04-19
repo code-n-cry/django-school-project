@@ -5,7 +5,7 @@
   <title>{% translate "О команде" %}</title>
 {% endblock %}
 {% block content %}
-  {% if team %}
+  {% if team.is_open or member %}
     <div class="flex justify-center items-center">
       <div class="flex items-center max-w-full py-5 px-7">
         <img class="h-28 w-30 rounded object-cover mr-5" src="{{ team.get_avatar_300x300.url }}" alt="">
