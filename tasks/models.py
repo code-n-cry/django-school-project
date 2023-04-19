@@ -1,11 +1,10 @@
 import django.db.models
 import django.urls
-from django.utils import timezone
+from django.contrib.auth import get_user_model
 
 import core.models
 import tasks.managers
 import teams.models
-import users.models
 
 
 class Task(core.models.NameWithDetailAbstractModel):
@@ -15,6 +14,7 @@ class Task(core.models.NameWithDetailAbstractModel):
         verbose_name='дата выполнения',
         help_text='когда была выполнена задача?',
         null=True,
+        blank=True,
     )
     team = django.db.models.ForeignKey(
         to=teams.models.Team,
@@ -32,7 +32,7 @@ class Task(core.models.NameWithDetailAbstractModel):
         help_text='до какого времени надо сдать задачу?',
     )
     users = django.db.models.ManyToManyField(
-        users.models.User,
+        to=get_user_model(),
         verbose_name='Пользователи',
         related_name='tasks',
         blank=True,
@@ -63,17 +63,3 @@ class Meeting(core.models.NameWithDetailAbstractModel):
         verbose_name = 'встреча'
         verbose_name_plural = 'встречи'
         default_related_name = 'meeting'
-
-    @property
-    def get_html_paragraph(self):
-        planned_date = timezone.localtime(self.planned_date)
-        planned_date = planned_date.strftime('%H:%M')
-        meeting_link = django.urls.reverse(
-            'meetings:detail', kwargs={'pk': self.pk}
-        )
-        style = 'underline text-blue-600 hover:text-blue-800'
-        html_content = [
-            f'<p class="text-white text-center">{planned_date} ',
-            f'<a class="{style}" href="{meeting_link}">{self.name}</a></p>',
-        ]
-        return ''.join(html_content)

@@ -5,7 +5,7 @@
   <title>{% translate "Изменение команды" %}</title>
 {% endblock %}
 {% block content %}
-  <div class="container">
+  <div class="mx-auto container">
     {% csrf_token %}
     {% include "includes/form2.html" with form_title="Изменение команды" submit_text="Изменить" %}
     <p class="text-center text-white text-2xl">{% translate "Назначить новую встречу" %}:</p>
@@ -26,7 +26,6 @@
       {% endif %}
       <button class="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{% translate submit_text|default:"Назначить" %}</button>
     </form>
-
     {{ task_form }}
   </div>
 {% endblock %}

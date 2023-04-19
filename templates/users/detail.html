@@ -7,37 +7,28 @@
 {% block content %}
   <div class="mx-auto container">
     <div class="flex">
-      <div class="w-36 h-44 bg-slate-600 rounded mr-3 bg-center" style="background-image: url({{ user.get_avatar_300x300.url }});">
+      <div class="w-36 h-44 bg-slate-600 rounded mr-3 bg-center" style="background-image: url({{ user.get_avatar_300x300.url }}); backgorund-position: center; background-size: cover;">
       </div>
       <div>
         <p class="text-3xl">{{ user.username }}</p>
-        <p class="text-4xl">{{ user.first_name }} {{ user.last_name }}</p>
-        <p class="text-xl">{{ user.email }}</p>
-        <p>Программист</p>
+        <p class="text-3xl">{{ user.first_name }} {{ user.last_name }}</p>
+        <p class="text-3xl">{{ user.email }}</p>
+        <p class="text-sm mt-1">{% translate "Кол-во выполненных заданий" %}: {{ all_tasks_count }}</p>
       </div>
     </div>
     <div class="mt-5">
+      <p class="text-3xl">{% translate "Что умеет" %}:</p>
       <div class="flex space-x-3">
-        <div class="p-3 border border-white rounded">C++</div>
-        <div class="p-3 border border-white rounded">C++</div>
-        <div class="p-3 border border-white rounded">C#</div>
+        {% for skill in user.skills.all %}
+          <div class="p-3 border border-white rounded">{{ skill.name }}</div>
+        {% endfor %}
       </div>
       <div class="mt-6">
-        <p class="text-3xl">Лид в командах</p>
+        <p class="text-3xl">{% translate "Команды" %}:</p>
         <div class="mt-5 flex space-x-4 flex-wrap w-full">
-          {% for team in user.lead_teams.all %}
+          {% for user_team in user.teams.all %}
             <div class="w-1/4">
-              {% include "includes/command_card.html" with team=team %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="mt-8">
-        <p class="text-3xl">Команды</p>
-        <div class="mt-5 flex space-x-4 flex-wrap w-full">
-          {% for team in user.teams.all %}
-            <div class="w-1/4">
-              {% include "includes/command_card.html" with team=team.team %}
+              {% include "includes/command_card.html" with team=user_team.team show_detail=true %}
             </div>
           {% endfor %}
         </div>
