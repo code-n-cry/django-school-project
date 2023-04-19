@@ -35,4 +35,9 @@ urlpatterns = [
         teams.views.TeamRequestsView.as_view(),
         name='requests',
     ),
+    django.urls.path(
+        '<int:pk>/members/',
+        teams.views.TeamMembersView.as_view(),
+        name='members',
+    ),
 ]

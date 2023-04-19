@@ -94,6 +94,14 @@ class TeamDetailView(django.views.generic.DetailView):
                     ]
                 )
             ),
+            Prefetch(
+                '__'.join(
+                    [
+                        teams.models.Team.members.rel.related_name,
+                        users.models.Member.user.field.name,
+                    ]
+                )
+            ),
         )
 
     def get_object(self, queryset=None):
@@ -163,7 +171,7 @@ class TeamRequestsView(django.views.generic.TemplateView):
 
 
 @method_decorator(login_required, name='dispatch')
-class YoursTeamsView(TeamListView):
+class YoursTeamsView(django.views.generic.ListView):
     template_name = 'teams/yours.html'
     queryset = teams.models.Team.objects.all()
     context_object_name = 'teams'
@@ -188,3 +196,44 @@ class YoursTeamsView(TeamListView):
                 )
             )
         )
+
+
+@method_decorator(login_required, name='dispatch')
+class TeamMembersView(django.views.generic.DetailView):
+    template_name = 'teams/members.html'
+    queryset = teams.models.Team.objects.all()
+    context_object_name = 'members'
+    http_method_names = ['get', 'head']
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        result = queryset.filter(is_open=True)
+        if self.request.user.is_authenticated:
+            result |= queryset.filter(members__user=self.request.user)
+        return result.prefetch_related(
+            Prefetch(teams.models.Team.members.rel.related_name),
+            Prefetch(
+                '__'.join(
+                    [
+                        teams.models.Team.members.rel.related_name,
+                        users.models.Member.user.field.name,
+                    ]
+                )
+            ),
+        )
+
+    def get_object(self, queryset=None):
+        return super().get_object(queryset).members.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        members = context.get('members')
+        member = None
+        if (
+            members is not None
+            and self.request.user.id
+            in members.values_list(users.models.Member.user.field.name)
+        ):
+            member = members.get(user=self.request.user)
+        context.update(user_member=member)
+        return context
