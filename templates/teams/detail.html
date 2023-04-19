@@ -18,7 +18,7 @@
           <p>{% translate "Выполнено заданий" %}: {{ done_tasks_count }} из {{ all_tasks_count }}</p>
         {% endif %}
         {% if tasks %}
-          <div class="mb-3">
+          <div class="mt-2 mb-3">
             {% for task in tasks %}
               {% include 'tasks/includes/task_item.html' with task=task %}
             {% endfor %}

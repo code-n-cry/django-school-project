@@ -117,10 +117,11 @@ class TeamDetailView(django.views.generic.DetailView):
                 ).only('name', 'detail', 'is_completed')
                 context['all_tasks_count'] = len(user_tasks)
                 context['done_tasks_count'] = len(
-                    [task for task in user_tasks if not task.is_completed]
+                    [task for task in user_tasks if task.is_completed]
                 )
+                # not completed tasks
                 context['tasks'] = [
-                    task for task in user_tasks if task.is_completed
+                    task for task in user_tasks if not task.is_completed
                 ]
             if self.request.user.pk in [
                 member.user_id
