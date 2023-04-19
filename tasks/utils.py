@@ -3,6 +3,7 @@ import zoneinfo
 from calendar import LocaleHTMLCalendar
 
 import django.urls
+from django.conf import settings
 from django.utils import timezone
 
 
@@ -15,7 +16,7 @@ class Calendar(LocaleHTMLCalendar):
         try:
             super().__init__(locale=language)
         except locale.Error:
-            super().__init__(locale='POSIX')
+            super().__init__(locale=settings.LOCALE_NAME)
 
     def formatday(self, day):
         day_events = []
