@@ -37,7 +37,7 @@
         <div class="mt-5 flex space-x-4 flex-wrap w-full">
           {% for team in user.teams.all %}
             <div class="w-1/4">
-              {% include "includes/command_card.html" with team=team %}
+              {% include "includes/command_card.html" with team=team.team %}
             </div>
           {% endfor %}
         </div>

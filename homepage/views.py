@@ -15,6 +15,7 @@ class HomeView(django.views.generic.TemplateView):
     def get(self, request, *args, **kwargs):
         opened_teams = teams.models.Team.objects.opened()
         context = self.get_context_data()
+        html_calendar = None
         if request.user.is_authenticated:
             opened_teams = (
                 teams.models.Team.objects.opened()

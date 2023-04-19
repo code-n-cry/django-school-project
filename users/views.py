@@ -80,8 +80,48 @@ class ProfileView(django.views.generic.FormView):
 
 
 @method_decorator(login_required, name='dispatch')
-class InvitesView(TemplateView):
+class InvitesView(django.views.generic.ListView):
+    context_object_name = 'invites'
     template_name = 'users/invites.html'
+
+    def get_queryset(self):
+        return (
+            users.models.Invite.objects.filter(to_user=self.request.user.pk)
+            .select_related(users.models.Invite.from_team.field.name)
+            .only(
+                '__'.join([users.models.Invite.from_team.field.name, 'name'])
+            )
+        )
+
+
+class InviteBaseDetailView(django.views.generic.DetailView):
+    def get_queryset(self):
+        return users.models.Invite.objects.filter(
+            pk=self.kwargs['pk'], to_user=self.request.user.pk
+        )
+
+
+@method_decorator(login_required, name='dispatch')
+class InviteAcceptView(InviteBaseDetailView):
+    http_method_names = ['get']
+
+    def get(self, *args, **kwargs):
+        invite = self.get_object()
+        users.models.Member.objects.create(
+            user=self.request.user, team=invite.from_team
+        )
+        invite.delete()
+        return redirect('users:invites')
+
+
+@method_decorator(login_required, name='dispatch')
+class InviteRejectView(InviteBaseDetailView):
+    http_method_names = ['get']
+
+    def get(self, *args, **kwargs):
+        invite = self.get_object()
+        invite.delete()
+        return redirect('users:invites')
 
 
 class ActivateNewView(View):
