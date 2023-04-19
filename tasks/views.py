@@ -62,7 +62,6 @@ class TaskDoneView(django.views.generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         task = self.get_object()
-        task.is_completed = True
         task.completed_date = datetime.now()
         task.save()
         return redirect(request.META.get('HTTP_REFERER'))
