@@ -1,5 +1,5 @@
-import zoneinfo
 import locale
+import zoneinfo
 from calendar import LocaleHTMLCalendar
 
 import django.urls
@@ -7,15 +7,15 @@ from django.utils import timezone
 
 
 class Calendar(LocaleHTMLCalendar):
-    def __init__(self, request, queryset, locale, year=None, month=None):
+    def __init__(self, request, queryset, language, year=None, month=None):
         self.request = request
         self.queryset = queryset
         self.year = year
         self.month = month
         try:
-            super().__init__(locale=locale)
+            super().__init__(locale=language)
         except locale.Error:
-            super().__init__(locale='en_US.UTF-8')
+            super().__init__(locale='')
 
     def formatday(self, day):
         day_events = []
