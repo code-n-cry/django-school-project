@@ -21,6 +21,14 @@
       {% endfor %}
     </div>
     {% if request.user.is_authenticated %}
+    {% if tasks %}
+        <div class="mb-3">
+          <p class="text-center text-3xl py-3">{% translate "Ваши задания" %}:</p>
+          {% for task in tasks %}
+            {% include 'tasks/includes/task_item.html' with task=task show_team_name=True %}
+          {% endfor %}
+        </div>
+      {% endif %}
       {% for team in lead_teams %}
         {% if forloop.first %}
           <p class="text-center text-3xl py-3">{% translate "Команды, которыми вы управляете" %}:</p>

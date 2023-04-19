@@ -87,10 +87,14 @@ class HomeView(django.views.generic.TemplateView):
                 current_date.year,
                 current_date.month,
             ).formatmonth(with_year=True)
+            user_tasks = tasks.models.Task.objects.filter(
+                users=self.request.user.pk, completed_date__isnull=True
+            )
             context.update(
                 lead_teams=lead_teams,
                 other_teams=other_teams,
                 calendar=html_calendar,
+                tasks=user_tasks,
             )
         context.update(opened_teams=opened_teams, **kwargs)
         return self.render_to_response(context)

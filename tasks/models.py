@@ -14,6 +14,7 @@ class Task(core.models.NameWithDetailAbstractModel):
         verbose_name='дата выполнения',
         help_text='когда была выполнена задача?',
         null=True,
+        blank=True,
     )
     team = django.db.models.ForeignKey(
         to=teams.models.Team,
