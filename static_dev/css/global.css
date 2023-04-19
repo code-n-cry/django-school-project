@@ -8,10 +8,6 @@ html {
   color-scheme: dark !important;
 }
 
-body {
-  font-family: sans-serif;
-}
-
 .btn {
   outline: none;
   color: black;
@@ -28,7 +24,9 @@ body {
   margin: auto;
 }
 
-.form input, .form select, .form textarea {
+.form input,
+.form select,
+.form textarea {
   border-radius: 5px;
   border: 1px solid #17a2b8;
   outline: none;
@@ -49,7 +47,8 @@ body {
   font-size: 13px;
 }
 
-.calendar tr, .calendar td {
+.calendar tr,
+.calendar td {
   border: 1px solid black;
 }
 
@@ -81,6 +80,7 @@ ul {
 a {
   color: #17a2b8;
 }
+
 /* dark scrollbar */
 ::-webkit-scrollbar {
   background-color: #252829;
