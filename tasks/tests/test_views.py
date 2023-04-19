@@ -3,10 +3,8 @@ from http import HTTPStatus
 
 import django.urls
 from django.contrib.auth import get_user_model
-from django.http.cookie import SimpleCookie
 from django.test import Client, TestCase
 
-import tasks.models
 import teams.models
 import users.models
 
