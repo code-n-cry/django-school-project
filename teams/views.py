@@ -78,12 +78,25 @@ class TeamDetailView(django.views.generic.DetailView):
         context = super().get_context_data(**kwargs)
         team = self.object
         if self.request.user.is_authenticated:
-            if self.request.user.pk in map(
-                lambda team: team.user_id, team.members.all()
-            ):
-                context['tasks'] = tasks.models.Task.objects.filter(
-                    users=self.request.user.pk, team=team, is_completed=False
+            if self.request.user.pk in [
+                member.user_id for member in team.members.all()
+            ]:
+                user_tasks = tasks.models.Task.objects.filter(
+                    users=self.request.user.pk, team=team
+                ).only('name', 'detail', 'is_completed')
+                context['all_tasks_count'] = len(user_tasks)
+                context['done_tasks_count'] = len(
+                    [task for task in user_tasks if not task.is_completed]
                 )
+                context['tasks'] = [
+                    task for task in user_tasks if task.is_completed
+                ]
+            if self.request.user.pk in [
+                member.user_id
+                for member in team.members.all()
+                if member.is_lead
+            ]:
+                context['is_lead'] = True
         return context
 
 
