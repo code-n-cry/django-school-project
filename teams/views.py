@@ -162,6 +162,7 @@ class TeamRequestsView(django.views.generic.TemplateView):
         return self.render_to_response(context)
 
 
+@method_decorator(login_required, name='dispatch')
 class YoursTeamsView(TeamListView):
     template_name = 'teams/yours.html'
     queryset = teams.models.Team.objects.all()
