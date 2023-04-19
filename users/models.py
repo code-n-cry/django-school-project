@@ -5,7 +5,6 @@ import django.utils.html
 import sorl
 from django.contrib.auth.models import AbstractUser
 from django.templatetags.static import static
-from django.utils.translation import gettext_lazy
 
 import skills.models
 import teams.models
@@ -61,26 +60,12 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.avatar:
-            self.avatar = self.get_avatar_300x300()
-
     def get_avatar_300x300(self):
         if self.avatar:
             return sorl.thumbnail.get_thumbnail(
                 self.avatar, '300x300', crop='center', quality=65
             )
-
         return {'url': static('img/avatar_default.jpg')}
-
-    def avatar_tmb(self):
-        if self.avatar:
-            return django.utils.html.mark_safe(
-                f'<img src="{self.get_avatar_300x300().url}">'
-            )
-        self.avatar_tmb.short_description = 'превью'
-        return gettext_lazy('Нет аватарки')
 
 
 class Member(django.db.models.Model):

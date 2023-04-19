@@ -107,6 +107,7 @@
                     </li>
                   </ul>
                 </div>
+                <a href="{% url 'users:user_list' %}" class="rounded-md px-3 py-2 text-sm font-medium hover:bg-gray-700 text-gray-300 {% if view_name == "users:user_list" %}bg-gray-900 text-white{% endif %}">{% translate "Пользователи" %}</a>
               {% endwith %}
               </div>
           </div>

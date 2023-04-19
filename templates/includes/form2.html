@@ -30,9 +30,9 @@
           {% if field.name == 'avatar' %}
             {% with request.resolver_match.view_name as view_name %}
               {% if view_name == "users:profile" %}
-                {% if user.avatar %}{{ user.avatar_tmb }}{% endif %}
+                {% if user.avatar %}<img class="w-50 h-50" src="{{ user.get_avatar_300x300.url }}">{% endif %}
               {% elif view_name == "teams:edit" %}
-                {% if team.avatar %}{{ team.avatar_tmb }}{% endif %}
+                {% if team.avatar %}<img class="w-50 h-50" src="{{ team.get_avatar_300x300.url }}">{% endif %}
               {% endif %}
             {% endwith %}
           {% endif %}

@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.forms',
     'ckeditor',
     'debug_toolbar',
-    'django_cleanup.apps.CleanupConfig',
     'django_dump_load_utf8',
     'sorl.thumbnail',
     'skills.apps.SkillsConfig',
@@ -50,6 +49,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'homepage.apps.HomepageConfig',
     'core.apps.CoreConfig',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

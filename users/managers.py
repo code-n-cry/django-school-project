@@ -2,6 +2,7 @@ import django.contrib.auth.models
 import django.db.models
 
 import users.models
+import skills.models
 
 
 class ActiveUserManager(django.contrib.auth.models.UserManager):
@@ -42,11 +43,22 @@ class ActiveUserManager(django.contrib.auth.models.UserManager):
             .filter(
                 is_active=True,
                 is_visible=True,
+            ).prefetch_related(
+                django.db.models.Prefetch(
+                    users.models.User.skills.field.name,
+                    queryset=skills.models.Skill.objects.all(),
+                )
             )
             .only(
                 users.models.User.id.field.name,
                 users.models.User.username.field.name,
                 users.models.User.email.field.name,
                 users.models.User.avatar.field.name,
+                '__'.join(
+                    [
+                        users.models.User.skills.field.name,
+                        skills.models.Skill.name.field.name,
+                    ]
+                ),
             )
         )
