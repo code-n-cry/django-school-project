@@ -12,7 +12,6 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy
 from django.views import View
-from django.views.generic import FormView
 
 import tasks.models
 import users.forms
