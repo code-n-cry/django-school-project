@@ -173,7 +173,8 @@ class SignUpView(django.views.generic.FormView):
                 [form.cleaned_data['email']],
                 fail_silently=False,
             )
-            form.save(commit=True)
+            form.save()
+            return redirect(self.success_url)
         context = self.get_context_data()
         context.update(form=form)
         return self.render_to_response(context, **kwargs)
@@ -194,9 +195,10 @@ class UserDetailView(django.views.generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        users_tasks = tasks.models.Task.objects.filter(users=self.request.user)
-        context['all_tasks_count'] = len(users_tasks)
+        users_tasks = tasks.models.Task.objects.filter(
+            users=self.request.user, completed_date__isnull=False
+        )
+        context.update(all_tasks_count=users_tasks)
         return context
 
 
