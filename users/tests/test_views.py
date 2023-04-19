@@ -1,9 +1,6 @@
 import django.db.utils
 import django.urls
-import mock
-import pytz
-from django.test import Client, TestCase, override_settings
-from django.utils import timezone
+from django.test import Client, TestCase
 
 import users.forms
 import users.models
