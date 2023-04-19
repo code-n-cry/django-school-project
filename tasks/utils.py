@@ -1,18 +1,52 @@
-from calendar import HTMLCalendar
+import locale
+import zoneinfo
+from calendar import LocaleHTMLCalendar
+
+import django.urls
+from django.utils import timezone
 
 
-class Calendar(HTMLCalendar):
-    def __init__(self, queryset, year=None, month=None):
+class Calendar(LocaleHTMLCalendar):
+    def __init__(self, request, queryset, language, year=None, month=None):
+        self.request = request
         self.queryset = queryset
         self.year = year
         self.month = month
-        super().__init__()
+        try:
+            locale.setlocale(0, language)
+        except locale.Error:
+            language = None
+        super().__init__(locale=language)
 
     def formatday(self, day):
-        meetings_per_day = self.queryset.filter(planned_date__day=day)
         day_events = []
-        for meeting in meetings_per_day:
-            day_events.append(f'<li>{meeting.get_html_paragraph}</li>')
+        style = 'underline text-[#e8d461] hover:text-[#dec952]'
+        user_timezone = None
+        if 'django_timezone' in self.request.COOKIES.keys():
+            user_timezone = zoneinfo.ZoneInfo(
+                self.request.COOKIES['django_timezone']
+            )
+        for meeting in self.queryset:
+            planned_date = timezone.localtime(
+                meeting['planned_date'],
+                timezone=user_timezone,
+            )
+            if planned_date.day == day:
+                planned_date = planned_date.strftime('%H:%M')
+                meeting_link = django.urls.reverse(
+                    'meetings:detail', kwargs={'pk': meeting['id']}
+                )
+                day_events.append(
+                    ''.join(
+                        [
+                            '<li><p class="text-white text-center">',
+                            f'{planned_date}',
+                            f'<a class="{style}" href="{meeting_link}">',
+                            meeting['name'],
+                            '</a></p></li>',
+                        ]
+                    )
+                )
         if day != 0:
             return (
                 f'<td><span class="date">{day}</span><ul>'
