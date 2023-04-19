@@ -1,6 +1,7 @@
 import django.shortcuts
 import django.urls
 import django.views.generic
+import django.db.models
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
@@ -47,7 +48,7 @@ class TeamEditView(django.views.generic.UpdateView):
         self.object = self.get_object()
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class(instance=self.object)
-        context['meeting_form'] = tasks.forms.MeetingCreationForm()
+        context['meeting_form'] = self.meeting_form_class()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -60,9 +61,9 @@ class TeamEditView(django.views.generic.UpdateView):
         if form.is_valid():
             form.save()
         if meeting_form.is_valid():
-            meeting = meeting_form.save()
-            self.object.meetings.add(meeting)
-            self.object.save()
+            meeting = meeting_form.save(commit=False)
+            meeting.team = self.object
+            meeting.save()
         return self.render_to_response(context)
 
 
@@ -72,28 +73,40 @@ class TeamDetailView(django.views.generic.DetailView):
     context_object_name = 'team'
     http_method_names = ['get', 'head']
 
-    def get_context_data(self, **kwargs):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        result = queryset.filter(is_open=True)
         if self.request.user.is_authenticated:
-            is_request_user_lead = (
-                teams.models.Team.objects.all()
-                .exclude(members__is_lead=False)
-                .filter(
-                    members__id__in=self.request.user.teams.all(),
-                    id=self.get_object().id,
+            result = queryset.filter(members__user=self.request.user)
+        return result.prefetch_related(
+            django.db.models.Prefetch(
+                teams.models.Team.members.rel.related_name,
+                queryset=users.models.Member.objects.all(),
+            ),
+            django.db.models.Prefetch(
+                '__'.join(
+                    [
+                        teams.models.Team.members.rel.related_name,
+                        users.models.Member.user.field.name,
+                    ]
                 )
-                .exists()
-            )
-            is_request_user_member = (
-                teams.models.Team.objects.closed()
-                .filter(members__id__in=self.request.user.teams.all())
-                .exists()
-            )
-            return super().get_context_data(
-                is_lead=is_request_user_lead,
-                is_member=is_request_user_member,
-                **kwargs,
-            )
-        return super().get_context_data(**kwargs)
+            ),
+        )
+
+    def get_object(self, queryset=None):
+        try:
+            obj = super().get_object(queryset)
+        except django.http.Http404:
+            obj = self.queryset.none()
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        member = None
+        if self.object and request.user.is_authenticated:
+            member = self.object.members.filter(user=request.user).first()
+        context = self.get_context_data(object=self.object, member=member)
+        return self.render_to_response(context)
 
 
 class TeamListView(django.views.generic.ListView):
@@ -121,8 +134,7 @@ class TeamRequestsView(django.views.generic.TemplateView):
         )
         is_request_user_lead = (
             teams.models.Team.objects.all()
-            .exclude(members__is_lead=False)
-            .filter(members__id__in=self.request.user.teams.all())
+            .filter(members__user=self.request.user, members__is_lead=True)
             .exists()
         )
         if not team or not is_request_user_lead:
@@ -157,14 +169,12 @@ class RequestAcceptView(django.views.generic.View):
     http_method_names = ['get', 'head']
 
     def get(self, *args, **kwargs):
-        print(self.request.user)
         team = get_object_or_404(
             teams.models.Team.objects.opened(), pk=kwargs['team_id']
         )
         is_request_user_lead = (
-            teams.models.Team.objects.opened()
-            .exclude(members__is_lead=False)
-            .filter(members__id__in=self.request.user.teams.all())
+            teams.models.Team.objects.all()
+            .filter(members__user=self.request.user, members__is_lead=True)
             .exists()
         )
         if is_request_user_lead:
@@ -192,9 +202,8 @@ class RequestRejectView(django.views.generic.View):
             teams.models.Team.objects.opened(), pk=kwargs['team_id']
         )
         is_request_user_lead = (
-            teams.models.Team.objects.opened()
-            .exclude(members__is_lead=False)
-            .filter(members__id__in=self.request.user.teams.all())
+            teams.models.Team.objects.all()
+            .filter(members__user=self.request.user, members__is_lead=True)
             .exists()
         )
         if is_request_user_lead:

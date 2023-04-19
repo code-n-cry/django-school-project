@@ -35,6 +35,8 @@
             </div>
           </div>
         </div>
+      {% empty %}
+      <p class="text-white text-center text-2xl break-normal py-3">{% translate "Пока что запросов нет" %}</p>
       {% endfor %}
     </div>
   </div>
