@@ -1,7 +1,7 @@
 import django.db.models
 import sorl
 from django.templatetags.static import static
-from django.utils import timezone, translation
+from django.utils import timezone
 
 import core.models
 import skills.models
