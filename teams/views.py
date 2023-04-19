@@ -82,10 +82,6 @@ class TeamDetailView(django.views.generic.DetailView):
     context_object_name = 'team'
     http_method_names = ['get', 'head']
 
-<<<<<<< HEAD
-=======
-    
->>>>>>> 5f718f0c7c1328d599119a0a7b958d156588947d
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         team = self.get_object()
