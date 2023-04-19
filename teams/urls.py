@@ -26,6 +26,11 @@ urlpatterns = [
         name='edit',
     ),
     django.urls.path(
+        'yours/',
+        teams.views.YoursTeamsView.as_view(),
+        name='yours',
+    ),
+    django.urls.path(
         '<int:pk>/requests/',
         teams.views.TeamRequestsView.as_view(),
         name='requests',

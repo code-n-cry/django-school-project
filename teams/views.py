@@ -1,7 +1,9 @@
+import zoneinfo
+
+import django.db.models
 import django.shortcuts
 import django.urls
 import django.views.generic
-import django.db.models
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
@@ -62,6 +64,9 @@ class TeamEditView(django.views.generic.UpdateView):
             form.save()
         if meeting_form.is_valid():
             meeting = meeting_form.save(commit=False)
+            meeting.planned_date = meeting.planned_date.replace(
+                tzinfo=zoneinfo.ZoneInfo(request.COOKIES['django_timezone'])
+            )
             meeting.team = self.object
             meeting.save()
         return self.render_to_response(context)
@@ -217,3 +222,31 @@ class RequestRejectView(django.views.generic.View):
                 )
             )
         return redirect('homepage:home')
+
+
+@method_decorator(login_required, name='dispatch')
+class YoursTeamsView(TeamListView):
+    template_name = 'teams/yours.html'
+    queryset = teams.models.Team.objects.all()
+    context_object_name = 'teams'
+    http_method_names = ['get', 'head']
+
+    def get_queryset(self):
+        order_by_field = '__'.join(
+            [
+                teams.models.Team.members.rel.related_name,
+                users.models.Member.is_lead.field.name,
+            ]
+        )
+        return (
+            super()
+            .get_queryset()
+            .filter(members__user=self.request.user)
+            .order_by(f'-{order_by_field}')
+            .prefetch_related(
+                django.db.models.Prefetch(
+                    teams.models.Team.members.rel.related_name,
+                    queryset=users.models.Member.objects.all(),
+                )
+            )
+        )

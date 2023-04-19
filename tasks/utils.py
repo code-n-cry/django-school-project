@@ -1,21 +1,28 @@
-from calendar import HTMLCalendar
+import zoneinfo
+from calendar import LocaleHTMLCalendar
 
 import django.urls
 from django.utils import timezone
 
 
-class Calendar(HTMLCalendar):
-    def __init__(self, queryset, year=None, month=None):
+class Calendar(LocaleHTMLCalendar):
+    def __init__(self, request, queryset, locale, year=None, month=None):
+        self.request = request
         self.queryset = queryset
         self.year = year
         self.month = month
-        super().__init__()
+        super().__init__(locale=locale)
 
     def formatday(self, day):
         day_events = []
-        style = 'underline text-blue-600 hover:text-blue-800'
+        style = 'underline text-[#e8d461] hover:text-[#dec952]'
         for meeting in self.queryset:
-            planned_date = timezone.localtime(meeting['planned_date'])
+            planned_date = timezone.localtime(
+                meeting['planned_date'],
+                timezone=zoneinfo.ZoneInfo(
+                    self.request.COOKIES['django_timezone']
+                ),
+            )
             if planned_date.day == day:
                 planned_date = planned_date.strftime('%H:%M')
                 meeting_link = django.urls.reverse(
@@ -24,8 +31,8 @@ class Calendar(HTMLCalendar):
                 day_events.append(
                     ''.join(
                         [
-                            '<li>',
-                            f'<p class="text-white text-center">{planned_date} ',
+                            '<li><p class="text-white text-center">',
+                            f'{planned_date}',
                             f'<a class="{style}" href="{meeting_link}">',
                             meeting['name'],
                             '</a></p></li>',

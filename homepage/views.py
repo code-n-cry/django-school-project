@@ -1,7 +1,7 @@
 import django.db.models
 import django.urls
 import django.views.generic
-from django.utils import timezone
+from django.utils import timezone, translation
 
 import skills.models
 import tasks.models
@@ -18,12 +18,14 @@ class HomeView(django.views.generic.TemplateView):
         if request.user.is_authenticated:
             opened_teams = (
                 teams.models.Team.objects.opened()
-                .exclude(members__id__in=request.user.teams.all())
-                .filter(skills__id__in=request.user.skills.all())
+                .exclude(members__in=request.user.teams.all())
+                .filter(skills__in=request.user.skills.all())
             )
             lead_teams = (
                 teams.models.Team.objects.all()
-                .filter(id__in=request.user.teams.all().filter(is_lead=True))
+                .filter(
+                    members__in=request.user.teams.all().filter(is_lead=True)
+                )
                 .prefetch_related(
                     django.db.models.Prefetch(
                         teams.models.Team.skills.field.name,
@@ -46,7 +48,7 @@ class HomeView(django.views.generic.TemplateView):
             other_teams = (
                 teams.models.Team.objects.all()
                 .exclude(id__in=lead_teams)
-                .filter(id__in=request.user.teams.all())
+                .filter(members__in=request.user.teams.all())
                 .order_by(teams.models.Team.name.field.name)
                 .prefetch_related(
                     django.db.models.Prefetch(
@@ -71,7 +73,7 @@ class HomeView(django.views.generic.TemplateView):
                 tasks.models.Meeting.objects.all().filter(
                     planned_date__year=current_date.year,
                     planned_date__month=current_date.month,
-                    team__id__in=lead_teams,
+                    team__members__in=request.user.teams.all(),
                 )
             ).values(
                 tasks.models.Meeting.id.field.name,
@@ -79,7 +81,11 @@ class HomeView(django.views.generic.TemplateView):
                 tasks.models.Meeting.planned_date.field.name,
             )
             html_calendar = tasks.utils.Calendar(
-                users_meetings, current_date.year, current_date.month
+                request,
+                users_meetings,
+                translation.get_language() + '.UTF-8',
+                current_date.year,
+                current_date.month,
             ).formatmonth(with_year=True)
             context.update(
                 lead_teams=lead_teams,
