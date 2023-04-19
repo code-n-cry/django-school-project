@@ -15,7 +15,7 @@ class Calendar(LocaleHTMLCalendar):
         try:
             super().__init__(locale=language)
         except locale.Error:
-            super().__init__(locale='')
+            super().__init__(locale='POSIX')
 
     def formatday(self, day):
         day_events = []
