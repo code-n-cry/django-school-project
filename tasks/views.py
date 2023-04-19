@@ -1,7 +1,7 @@
 import django.urls
 import django.views.generic
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 
 import tasks.forms
@@ -41,6 +41,22 @@ class TaskCreateView(django.views.generic.FormView):
         task.users.set(users)
         task.save()
         return super().form_valid(form)
+
+
+@method_decorator(login_required, name='dispatch')
+class TaskDoneView(django.views.generic.DetailView):
+    http_method_names = ['get']
+
+    def get_queryset(self):
+        return tasks.models.Task.objects.filter(
+            pk=self.kwargs['pk'], users=self.request.user.pk
+        )
+
+    def get(self, request, *args, **kwargs):
+        task = self.get_object()
+        task.is_completed = True
+        task.save()
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 @method_decorator(login_required, name='dispatch')

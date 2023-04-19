@@ -11,10 +11,15 @@ import users.models
 class Task(core.models.NameWithDetailAbstractModel):
     objects = tasks.managers.TasksManager()
 
+    is_completed = django.db.models.BooleanField(
+        verbose_name='задание выполнено',
+        default=False,
+    )
     completed_date = django.db.models.DateTimeField(
         verbose_name='дата выполнения',
         help_text='когда была выполнена задача?',
         null=True,
+        blank=True,
     )
     team = django.db.models.ForeignKey(
         to=teams.models.Team,

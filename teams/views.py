@@ -68,9 +68,23 @@ class TeamEditView(django.views.generic.UpdateView):
 
 class TeamDetailView(django.views.generic.DetailView):
     template_name = 'teams/detail.html'
-    queryset = teams.models.Team.objects.all()
+    queryset = teams.models.Team.objects.all().prefetch_related(
+        'members__user'
+    )
     context_object_name = 'team'
     http_method_names = ['get', 'head']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        team = self.object
+        if self.request.user.is_authenticated:
+            if self.request.user.pk in map(
+                lambda team: team.user_id, team.members.all()
+            ):
+                context['tasks'] = tasks.models.Task.objects.filter(
+                    users=self.request.user.pk, team=team, is_completed=False
+                )
+        return context
 
 
 class TeamListView(django.views.generic.ListView):

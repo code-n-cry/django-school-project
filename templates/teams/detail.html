@@ -8,14 +8,19 @@
   {% if team.is_open or request.user in team.members.all %}
     <div class="flex justify-center items-center">
       <div class="flex items-center max-w-full py-5 px-7">
-        <img class="h-28 w-24 rounded mr-5" src="{{ team.get_avatar_300x300.url }}" alt="">
-        <p class="text-5xl text-center overflow-hidden overflow-ellipsis">{{ team.name }}</p>
+        <img class="h-28 w-30 rounded object-cover mr-5" src="{{ team.get_avatar_300x300.url }}" alt="">
+        <p class="text-5xl leading-normal text-center overflow-hidden overflow-ellipsis">{{ team.name }}</p>
       </div>
     </div>
     <div class="mx-auto container block h-full content-center flex-1 sm:flex">
       <div class="mr-5 h-full sm:w-2/3">
-        <div>
-        </div>
+        {% if tasks %}
+          <div class="mb-3">
+            {% for task in tasks %}
+              {% include 'tasks/includes/task_item.html' with task=task %}
+            {% endfor %}
+          </div>
+        {% endif %}
         <div class="mt-1">
           {% translate "Необходимые навыки" %}:
           <div class="flex space-x-3">
@@ -31,15 +36,15 @@
           <div>
             <p>{% translate "Лиды команды" %}:</p>
             {% for lead in team.leads.all %}
-              <a href="">{{ lead.username }}</a>
+              <a href="">{{ lead.user.username }}</a>
             {% endfor %}
           </div>
           <div class="mt-5">
             <p>{% translate "Участники" %}: </p>
             <div>
-            {% for member in team.members.all %}
-              <a href="">{{ member.username }}</a>
-            {% endfor %}
+              {% for member in team.members.all %}
+                <a href="">{{ member.user.username }}</a>
+              {% endfor %}
             </div>
             {% if request.user in team.leads.all and not team.is_open %}
             <a

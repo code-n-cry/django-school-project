@@ -28,11 +28,11 @@
         <div class="w-full">
             {% for field in form %}
             <div class="mb-3 col-span-full">
-                <label for="{{ field.auto_id }}" class="block text-sm font-medium">{{field.label}}</label>
+                <label for="{{ field.auto_id }}" class="block text-sm font-medium">{{ field.label }}</label>
                 <div class="mt-1">
                     {{field}}
                 </div>
-                <p class="mt-1 text-sm">{{field.help_text}}</p>
+                <p class="mt-1 text-sm">{{ field.help_text }}</p>
             </div>
             {% endfor %}
         </div>

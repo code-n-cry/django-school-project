@@ -10,4 +10,5 @@ urlpatterns = [
         tasks.views.TaskCreateView.as_view(),
         name='create',
     ),
+    path('<int:pk>/done', tasks.views.TaskDoneView.as_view(), name='done'),
 ]
