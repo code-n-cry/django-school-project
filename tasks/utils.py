@@ -16,12 +16,15 @@ class Calendar(LocaleHTMLCalendar):
     def formatday(self, day):
         day_events = []
         style = 'underline text-[#e8d461] hover:text-[#dec952]'
+        user_timezone = None
+        if 'django_timezone' in self.request.COOKIES.keys():
+            user_timezone = zoneinfo.ZoneInfo(
+                self.request.COOKIES['django_timezone']
+            )
         for meeting in self.queryset:
             planned_date = timezone.localtime(
                 meeting['planned_date'],
-                timezone=zoneinfo.ZoneInfo(
-                    self.request.COOKIES['django_timezone']
-                ),
+                timezone=user_timezone,
             )
             if planned_date.day == day:
                 planned_date = planned_date.strftime('%H:%M')

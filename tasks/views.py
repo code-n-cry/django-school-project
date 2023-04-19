@@ -1,7 +1,9 @@
+import zoneinfo
+
 import django.urls
 import django.views.generic
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django.utils import timezone, translation
 from django.utils.decorators import method_decorator
 
@@ -19,12 +21,13 @@ class TaskCreateView(django.views.generic.FormView):
     success_url = '.'
 
     def dispatch(self, request, *args, **kwargs):
-        get_object_or_404(
-            teams.models.Team,
+        is_user_lead = teams.models.Team.objects.filter(
             pk=kwargs['team_id'],
-            members__user=self.request.user.pk,
+            members__user=self.request.user,
             members__is_lead=True,
-        )
+        ).exists()
+        if not is_user_lead:
+            return redirect('homepage:home')
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
@@ -39,6 +42,9 @@ class TaskCreateView(django.views.generic.FormView):
         task = tasks.models.Task.objects.create(
             **cleaned_data, team_id=self.kwargs['team_id']
         )
+        task.deadline_date = task.deadline_date.replace(
+            tzinfo=zoneinfo.ZoneInfo(self.request.COOKIES['django_timezone'])
+        )
         task.users.set(users)
         task.save()
         return super().form_valid(form)
@@ -52,12 +58,10 @@ class MeetingDetailView(django.views.generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        is_user_member = (
-            teams.models.Team.objects.all()
-            .filter(pk=self.object.pk, members__in=request.user.teams.all())
-            .exists()
-        )
-        if is_user_member:
+        is_user_member = self.object.team.members.filter(
+            user=request.user
+        ).exists()
+        if not is_user_member:
             return django.shortcuts.redirect(
                 django.urls.reverse('homepage:home')
             )

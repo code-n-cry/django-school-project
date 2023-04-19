@@ -1,7 +1,7 @@
 [
 {
     "model": "tasks.meeting",
-    "pk": 2,
+    "pk": 1,
     "fields": {
         "name": "Провал дедлайна",
         "detail": "Обсуждаем, что мы сделали не так",
@@ -11,7 +11,7 @@
 },
 {
     "model": "tasks.meeting",
-    "pk": 3,
+    "pk": 2,
     "fields": {
         "name": "Созвон 2",
         "detail": "Просто созвон",
@@ -21,7 +21,7 @@
 },
 {
     "model": "tasks.meeting",
-    "pk": 4,
+    "pk": 3,
     "fields": {
         "name": "Созвон 3",
         "detail": "Просто созвон",

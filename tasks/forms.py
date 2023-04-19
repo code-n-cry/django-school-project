@@ -35,6 +35,11 @@ class TaskCreationForm(core.forms.BaseTailwindModelForm):
             ),
             Task.users.field.name: _('Кто будет выполнять задачу?'),
         }
+        widgets = {
+            Task.deadline_date.field.name: DateTimeInput(
+                format=('%Y-%m-%d %H:%M'), attrs={'type': 'datetime-local'}
+            )
+        }
 
 
 class MeetingCreationForm(core.forms.BaseTailwindModelForm):
