@@ -5,7 +5,7 @@
   <title>{% translate "О команде" %}</title>
 {% endblock %}
 {% block content %}
-  {% if team %}
+  {% if team.is_open or member %}
     <div class="flex justify-center items-center">
       <div class="flex items-center max-w-full py-5 px-7">
         <img class="h-28 w-30 rounded object-cover mr-5" src="{{ team.get_avatar_300x300.url }}" alt="">
@@ -44,18 +44,12 @@
             </div>
           {% endif %}
           <div>
-            <p>{% translate "Лиды команды" %}:</p>
-            {% for lead in team.leads.all %}
-              <a href="">{{ lead.user.username }}</a>
+            <p>{% translate "Участники" %}: </p>
+            {% for team_member in team.members.all %}
+              <a href="{% url 'users:user_detail' team_member.user.pk %}">{{ team_member.user.username }} {% if team_member.is_lead %} ({% translate 'лид команды' %}) {% endif %}</a>
             {% endfor %}
           </div>
           <div class="mt-5">
-            <div>
-              <p>{% translate "Участники" %}: </p>
-              {% for team_member in team.members.all %}
-                <a href="{% url 'users:user_detail' team_member.user.pk %}">{{ team_member.user.username }} {% if team_member.is_lead %} ({% translate 'лид команды' %}) {% endif %}</a><br>
-              {% endfor %}
-            </div>
             {% if member and member.is_lead and not team.is_open %}
               <a
                 type="button"
@@ -65,11 +59,10 @@
             {% elif member and member.is_lead and team.is_open %}
               <a
                 type="button"
-                class="mt-3 inline-block rounded px-7 py-1 text-m font-small leading-normal text-white border border-neutral-500 hover:border-transparent shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
-                href="{% url 'teams:requests' team.pk %}">
+                class="mt-3 inline-block rounded px-7 py-1 text-m font-small leading-normal text-white border border-neutral-500 hover:border-transparent shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
                 {% translate "Посмотреть запросы на вступление" %}
-              </a>
-            {% elif not member and team.is_open and request.user.is_authenticated %}
+             </a>
+            {% elif not member and team.is_open %}
               <a
                 href="{% url 'users:send_request' %}"
                 class="text-center mt-3 inline-block rounded px-3 py-1 text-m font-small leading-normal text-white border border-neutral-500 hover:border-transparent shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
