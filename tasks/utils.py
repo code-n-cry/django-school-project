@@ -3,7 +3,6 @@ import zoneinfo
 from calendar import LocaleHTMLCalendar
 
 import django.urls
-from django.conf import settings
 from django.utils import timezone
 
 
@@ -14,9 +13,9 @@ class Calendar(LocaleHTMLCalendar):
         self.year = year
         self.month = month
         try:
-            locale.setlocale(language)
+            locale.setlocale(0, language)
         except locale.Error:
-            language = settings.LOCALE_NAME
+            language = None
         super().__init__(locale=language)
 
     def formatday(self, day):
