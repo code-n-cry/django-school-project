@@ -48,6 +48,14 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
         verbose_name_plural = 'команды'
         default_related_name = 'team'
 
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.avatar:
+            self.avatar = self.get_avatar_300x300()
+
     def get_avatar_300x300(self):
         if self.avatar:
             return sorl.thumbnail.get_thumbnail(
@@ -62,11 +70,3 @@ class Team(core.models.UniqueNameWithDetailAbstractModel):
             )
         self.avatar_tmb.short_description = 'превью'
         return translation.gettext_lazy('Нет аватарки')
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.avatar:
-            self.avatar = self.get_avatar_300x300()
-
-    def __str__(self):
-        return self.name

@@ -58,6 +58,14 @@ class User(AbstractUser):
         verbose_name_plural = 'пользователи'
         default_related_name = 'user'
 
+    def __str__(self):
+        return self.username
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.avatar:
+            self.avatar = self.get_avatar_300x300()
+
     def get_avatar_300x300(self):
         if self.avatar:
             return sorl.thumbnail.get_thumbnail(
@@ -73,14 +81,6 @@ class User(AbstractUser):
             )
         self.avatar_tmb.short_description = 'превью'
         return gettext_lazy('Нет аватарки')
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.avatar:
-            self.avatar = self.get_avatar_300x300()
-
-    def __str__(self):
-        return self.username
 
 
 class Member(django.db.models.Model):

@@ -1,6 +1,6 @@
 import django.db.models
 import django.urls
-import django.views.generic
+from django.views.generic import TemplateView
 from django.utils import timezone, translation
 
 import skills.models
@@ -9,7 +9,7 @@ import tasks.utils
 import teams.models
 
 
-class HomeView(django.views.generic.TemplateView):
+class HomeView(TemplateView):
     template_name = 'homepage/home.html'
 
     def get(self, request, *args, **kwargs):
