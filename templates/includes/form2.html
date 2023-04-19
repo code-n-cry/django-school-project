@@ -26,13 +26,22 @@
     </div>
     <div class="w-full">
       {% for field in form %}
-      <div class="mb-3 col-span-full">
-        <label for="{{ field.auto_id }}" class="block text-sm font-medium">{{ field.label }}</label>
-        <div class="mt-1">
-          {{ field }}
+        <div class="mb-3 col-span-full">
+          {% if field.name == 'avatar' %}
+            {% with request.resolver_match.view_name as view_name %}
+              {% if view_name == "users:profile" %}
+                {% if user.avatar %}<img class="w-50 h-50" src="{{ user.get_avatar_300x300.url }}">{% endif %}
+              {% elif view_name == "teams:edit" %}
+                {% if team.avatar %}<img class="w-50 h-50" src="{{ team.get_avatar_300x300.url }}">{% endif %}
+              {% endif %}
+            {% endwith %}
+          {% endif %}
+          <label for="{{ field.auto_id }}" class="block text-sm font-medium">{{ field.label }}</label>
+          <div class="mt-1">
+            {{ field }}
+          </div>
+          <p class="mt-1 text-sm">{{ field.help_text }}</p>
         </div>
-        <p class="mt-1 text-sm">{{ field.help_text }}</p>
-      </div>
       {% endfor %}
     </div>
   </div>

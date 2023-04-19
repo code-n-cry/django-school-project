@@ -6,7 +6,7 @@ import django.utils.timezone
 import django.views.generic
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model, views
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
@@ -16,38 +16,6 @@ from django.views import View
 import tasks.models
 import users.forms
 import users.models
-
-
-class LoginView(views.LoginView):
-    template_name = 'users/login.html'
-    form_class = users.forms.AuthenticationForm
-
-
-class PasswordChangeView(views.PasswordChangeView):
-    template_name = 'users/password_change.html'
-    form_class = users.forms.PasswordChangeForm
-
-
-class PasswordChangeDoneView(django.views.generic.TemplateView):
-    template_name = 'users/password_change_done.html'
-
-
-class PasswordResetView(views.PasswordResetView):
-    template_name = 'users/password_reset.html'
-    form_class = users.forms.PasswordResetForm
-
-
-class PasswordResetDoneView(django.views.generic.TemplateView):
-    template_name = 'users/password_reset_done.html'
-
-
-class PasswordResetConfirmView(views.PasswordResetConfirmView):
-    template_name = 'users/password_confirm.html'
-    form_class = users.forms.SetPasswordForm
-
-
-class PasswordResetCompleteView(django.views.generic.TemplateView):
-    template_name = 'users/password_confirm_done.html'
 
 
 @method_decorator(login_required, name='dispatch')
@@ -154,7 +122,7 @@ class ActivateView(View):
     def get(self, request, username, *args, **kwargs):
         user = users.models.User.objects.filter(
             username=username,
-            profile__last_failed_login_date__range=[
+            last_failed_login_date__range=[
                 django.utils.timezone.now() - datetime.timedelta(weeks=1),
                 django.utils.timezone.now(),
             ],
@@ -178,37 +146,41 @@ class SignUpView(django.views.generic.FormView):
     success_url = django.urls.reverse_lazy('auth:login')
     http_method_names = ['get', 'head', 'post']
 
-    def form_valid(self, form):
-        email_text = ''.join(
-            [
-                'Ваша ссылка для активации: ',
-                self.request.build_absolute_uri(
-                    django.urls.reverse(
-                        'auth:activate_new',
-                        kwargs={'username': form.cleaned_data['username']},
-                    )
-                ),
-            ]
-        )
-        form.save()
-        django.core.mail.send_mail(
-            gettext_lazy('Активация'),
-            email_text,
-            settings.FROM_EMAIL,
-            [form.cleaned_data['email']],
-            fail_silently=False,
-        )
-        return super().form_valid(form)
-
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             messages.info(request, gettext_lazy('Вы уже авторизованы!'))
             return redirect('homepage:home')
         return self.render_to_response(self.get_context_data(**kwargs))
 
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            email_text = ''.join(
+                [
+                    'Ваша ссылка для активации: ',
+                    self.request.build_absolute_uri(
+                        django.urls.reverse(
+                            'auth:activate_new',
+                            kwargs={'username': form.cleaned_data['username']},
+                        )
+                    ),
+                ]
+            )
+            django.core.mail.send_mail(
+                gettext_lazy('Активация'),
+                email_text,
+                settings.FROM_EMAIL,
+                [form.cleaned_data['email']],
+                fail_silently=False,
+            )
+            form.save(commit=True)
+        context = self.get_context_data()
+        context.update(form=form)
+        return self.render_to_response(context, **kwargs)
+
 
 class UserListView(django.views.generic.ListView):
-    template_name = None
+    template_name = 'users/list.html'
     queryset = users.models.User.objects.public()
     context_object_name = 'users'
     http_method_names = ['get', 'head']
