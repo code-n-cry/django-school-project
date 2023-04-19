@@ -1,7 +1,7 @@
 import django.db.models
 import django.urls
-from django.views.generic import TemplateView
 from django.utils import timezone, translation
+from django.views.generic import TemplateView
 
 import skills.models
 import tasks.models

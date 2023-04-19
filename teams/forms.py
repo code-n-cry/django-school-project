@@ -1,12 +1,12 @@
-import django.forms
 from django.utils.translation import gettext_lazy as _
 
+import core.forms
 import teams.models
 from core.widgets import CheckboxInput, ImageInput
 from teams.models import Team
 
 
-class TeamForm(django.forms.ModelForm):
+class TeamForm(core.forms.BaseTailwindModelForm):
     class Meta:
         model = teams.models.Team
         fields = (

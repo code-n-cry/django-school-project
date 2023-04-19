@@ -6,49 +6,16 @@ import django.utils.timezone
 import django.views.generic
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model, views
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy
 from django.views import View
-from django.views.generic import FormView, TemplateView
+from django.views.generic import FormView
 
 import users.forms
 import users.models
-from users import forms
-
-
-class LoginView(views.LoginView):
-    template_name = 'users/login.html'
-    form_class = forms.AuthenticationForm
-
-
-class PasswordChangeView(views.PasswordChangeView):
-    template_name = 'users/password_change.html'
-    form_class = forms.PasswordChangeForm
-
-
-class PasswordChangeDoneView(TemplateView):
-    template_name = 'users/password_change_done.html'
-
-
-class PasswordResetView(views.PasswordResetView):
-    template_name = 'users/password_reset.html'
-    form_class = forms.PasswordResetForm
-
-
-class PasswordResetDoneView(TemplateView):
-    template_name = 'users/password_reset_done.html'
-
-
-class PasswordResetConfirmView(views.PasswordResetConfirmView):
-    template_name = 'users/password_confirm.html'
-    form_class = forms.SetPasswordForm
-
-
-class PasswordResetCompleteView(TemplateView):
-    template_name = 'users/password_confirm_done.html'
 
 
 @method_decorator(login_required, name='dispatch')
@@ -209,7 +176,7 @@ class SignUpView(FormView):
 
 
 class UserListView(django.views.generic.ListView):
-    template_name = None
+    template_name = 'users/list.html'
     queryset = users.models.User.objects.public()
     context_object_name = 'users'
     http_method_names = ['get', 'head']

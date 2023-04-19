@@ -61,14 +61,14 @@ urlpatterns = [
         'reset/<str:uidb64>/<str:token>/',
         django.contrib.auth.views.PasswordResetConfirmView.as_view(
             form_class=users.forms.StyledSetPassword,
-            template_name='users/password_reset_confirm.html',
+            template_name='users/password_confirm.html',
         ),
         name='password_reset_confirm',
     ),
     django.urls.path(
         'reset/done/',
         django.contrib.auth.views.PasswordResetCompleteView.as_view(
-            template_name='users/password_reset_complete.html',
+            template_name='users/password_confirm_done.html',
         ),
         name='password_reset_complete',
     ),
