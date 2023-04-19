@@ -1,8 +1,8 @@
 import django.contrib.auth.models
 import django.db.models
 
-import users.models
 import skills.models
+import users.models
 
 
 class ActiveUserManager(django.contrib.auth.models.UserManager):
@@ -43,7 +43,8 @@ class ActiveUserManager(django.contrib.auth.models.UserManager):
             .filter(
                 is_active=True,
                 is_visible=True,
-            ).prefetch_related(
+            )
+            .prefetch_related(
                 django.db.models.Prefetch(
                     users.models.User.skills.field.name,
                     queryset=skills.models.Skill.objects.all(),

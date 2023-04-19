@@ -13,7 +13,7 @@ env = environ.Env(
     ALLOWED_HOSTS=(list, ['*']),
     FROM_EMAIL=(str, 'noreply@example.com'),
     MAX_LOGIN_AMOUNT=(int, 5),
-    USER_ACTIVE_DEFAULT=(bool, False),
+    USER_ACTIVE_DEFAULT=(bool, True),
 )
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
