@@ -12,7 +12,6 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy
 from django.views import View
-from django.views.generic import FormView, TemplateView
 
 import users.forms
 import users.models
@@ -29,7 +28,7 @@ class PasswordChangeView(views.PasswordChangeView):
     form_class = forms.PasswordChangeForm
 
 
-class PasswordChangeDoneView(TemplateView):
+class PasswordChangeDoneView(django.views.generic.TemplateView):
     template_name = 'users/password_change_done.html'
 
 
@@ -38,7 +37,7 @@ class PasswordResetView(views.PasswordResetView):
     form_class = forms.PasswordResetForm
 
 
-class PasswordResetDoneView(TemplateView):
+class PasswordResetDoneView(django.views.generic.TemplateView):
     template_name = 'users/password_reset_done.html'
 
 
@@ -47,7 +46,7 @@ class PasswordResetConfirmView(views.PasswordResetConfirmView):
     form_class = forms.SetPasswordForm
 
 
-class PasswordResetCompleteView(TemplateView):
+class PasswordResetCompleteView(django.views.generic.TemplateView):
     template_name = 'users/password_confirm_done.html'
 
 
@@ -172,7 +171,7 @@ class ActivateView(View):
         return redirect('auth:login')
 
 
-class SignUpView(FormView):
+class SignUpView(django.views.generic.FormView):
     model = users.models.User
     template_name = 'users/signup.html'
     form_class = users.forms.SignUpForm
