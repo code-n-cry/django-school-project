@@ -1,7 +1,10 @@
+import zoneinfo
+
 import django.urls
 import django.views.generic
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import redirect
+from django.utils import timezone, translation
 from django.utils.decorators import method_decorator
 
 import tasks.forms
@@ -18,12 +21,13 @@ class TaskCreateView(django.views.generic.FormView):
     success_url = '.'
 
     def dispatch(self, request, *args, **kwargs):
-        get_object_or_404(
-            teams.models.Team,
+        is_user_lead = teams.models.Team.objects.filter(
             pk=kwargs['team_id'],
-            members__user=self.request.user.pk,
+            members__user=self.request.user,
             members__is_lead=True,
-        )
+        ).exists()
+        if not is_user_lead:
+            return redirect('homepage:home')
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
@@ -37,6 +41,9 @@ class TaskCreateView(django.views.generic.FormView):
         users = cleaned_data.pop('users')
         task = tasks.models.Task.objects.create(
             **cleaned_data, team_id=self.kwargs['team_id']
+        )
+        task.deadline_date = task.deadline_date.replace(
+            tzinfo=zoneinfo.ZoneInfo(self.request.COOKIES['django_timezone'])
         )
         task.users.set(users)
         task.save()
@@ -67,8 +74,42 @@ class MeetingDetailView(django.views.generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
-        if request.user not in self.object.team.all()[0].members.all():
+        is_user_member = self.object.team.members.filter(
+            user=request.user
+        ).exists()
+        if not is_user_member:
             return django.shortcuts.redirect(
                 django.urls.reverse('homepage:home')
             )
         return super().get(request, *args, **kwargs)
+
+
+@method_decorator(login_required, name='dispatch')
+class YourMeetingsView(django.views.generic.TemplateView):
+    template_name = 'tasks/your_meetings.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        current_date = timezone.now()
+        users_meetings = (
+            tasks.models.Meeting.objects.all().filter(
+                planned_date__year=current_date.year,
+                planned_date__month=current_date.month,
+                team__members__in=request.user.teams.all(),
+            )
+        ).values(
+            tasks.models.Meeting.id.field.name,
+            tasks.models.Meeting.name.field.name,
+            tasks.models.Meeting.planned_date.field.name,
+        )
+        html_calendar = tasks.utils.Calendar(
+            request,
+            users_meetings,
+            translation.get_language() + '.UTF-8',
+            current_date.year,
+            current_date.month,
+        ).formatmonth(with_year=True)
+        context.update(
+            calendar=html_calendar,
+        )
+        return self.render_to_response(context, **kwargs)

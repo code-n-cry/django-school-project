@@ -2,14 +2,41 @@
 {% load static %}
 {% load i18n %}
 {% block title %}
-  <title>{% translate "Запросы в команду" %} {{ team_id }}</title>
+  <title>{% translate "Запросы в команду" %} {{ pk }}</title>
 {% endblock %}
 {% block content %}
-  <div class="mx-auto container block h-full sm:flex">
-    <p class="text-white text-center text-3xl break-normal">{% translate "Все запросы на вступление в Вашу команду" %}</p>
-    <div class="flex space-x-4 flex-wrap w-full">
+  <div class="mx-auto container">
+    <p class="text-white text-center text-3xl break-normal">{% translate "Все запросы на вступление в Вашу команду" %}:</p>
+    <div class="flex flex-col items-center">
       {% for team_request in requests %}
-        {{ team_request }}
+        <div class="grid grid-cols-5 rounded-md bg-indigo-600 text-white my-2 py-2">
+          <div class="col-span-2 justify-self-start flex items-start px-4 text-white">
+            <p class="px-1.5">{% translate "Запрос на вступление от пользователя " %}
+               <a href="{% url 'users:user_detail' team_request.from_user.id%}" class="underline text-[#dec98a] hover:text-[#d4bc77] visited:text-[#ebbf3d]"> {{ team_request.from_user.username }}</a>
+            </p>
+            <div class="col flex items-end text-white px-5">
+              {% for skill in team_request.from_user.skills.all %}
+                <div class="text-center border rounded dark:border-neutral-100 px-3">{{ skill.name }}</div>
+              {% endfor %}
+            </div>
+            <div class="col flex text-white px-3">
+              <a
+                href="{% url 'teams:request_accept' team_id=pk request_id=team_request.pk %}"
+                class="inline-block cursor-pointer rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                {% translate "Принять" %}
+              </a>
+            </div>
+            <div class="col flex text-white px-3">
+              <a
+                href="{% url 'teams:request_reject' team_id=pk request_id=team_request.pk %}"
+                class="inline-block cursor-pointer rounded bg-danger-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-danger-900 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-danger-900 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-danger-900 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                {% translate "Отклонить" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+      <p class="text-white text-center text-2xl break-normal py-3">{% translate "Пока что запросов нет" %}</p>
       {% endfor %}
     </div>
   </div>

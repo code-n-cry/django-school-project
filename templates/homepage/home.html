@@ -16,6 +16,8 @@
         <div class="w-1/3">
           {% include "includes/command_card.html" with team=team show_detail="true" %}
         </div>
+      {% empty %}
+        <p class="text-center text-3xl pb-3">{% translate "Не нашли ничего для вас " %}:(</p>
       {% endfor %}
     </div>
     {% if request.user.is_authenticated %}
@@ -36,7 +38,7 @@
             <img class="h-8 w-8 rounded-full" src="{{ team.get_avatar_300x300.url }}" alt="">
             <a href="{% url "teams:detail" team.id %}" class="pl-3">{{ team.name }}</a>
           </div>
-          <div class=" flex items-end text-white p-1">
+          <div class="flex items-end text-white p-1">
             {% for skill in team.skills.all %}
               <div class="text-center border rounded dark:border-neutral-100 px-3">{{ skill.name }}</div>
             {% endfor %}
