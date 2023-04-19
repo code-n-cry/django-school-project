@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}
+  <title>{% translate "Участники команды" %}</title>
+{% endblock %}
+{% block content %}
+  <div class="mx-auto container block h-full sm:flex">
+    <div class="flex space-x-4 flex-wrap w-full">
+      {% for member in members %}
+        <div class="w-full">
+            {% include 'includes/user_card.html' %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

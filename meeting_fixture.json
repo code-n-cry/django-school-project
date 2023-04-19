@@ -1,0 +1,32 @@
+[
+{
+    "model": "tasks.meeting",
+    "pk": 1,
+    "fields": {
+        "name": "Провал дедлайна",
+        "detail": "Обсуждаем, что мы сделали не так",
+        "team": 1,
+        "planned_date": "2023-04-23T17:04:00Z"
+    }
+},
+{
+    "model": "tasks.meeting",
+    "pk": 2,
+    "fields": {
+        "name": "Созвон 2",
+        "detail": "Просто созвон",
+        "team": 1,
+        "planned_date": "2006-04-17T17:04:00Z"
+    }
+},
+{
+    "model": "tasks.meeting",
+    "pk": 3,
+    "fields": {
+        "name": "Созвон 3",
+        "detail": "Просто созвон",
+        "team": 1,
+        "planned_date": "2023-04-18T05:43:00Z"
+    }
+}
+]

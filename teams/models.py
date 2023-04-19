@@ -1,30 +1,46 @@
 import django.db.models
+import sorl
+from django.templatetags.static import static
+from django.utils import timezone
 
-import tasks.models
+import core.models
+import skills.models
+import teams.managers
 
 
-class Team(django.db.models.Model):
-    name = django.db.models.CharField(
-        verbose_name='название команды',
-        help_text='как будет называться команда?',
-        max_length=150,
-        unique=True,
+def avatar_image_path(instance, filename):
+    return ''.join(
+        [
+            f'uploads/teams/{instance.id}-',
+            timezone.now().strftime('%Y-%d-%m-%H%M%S'),
+            f'/{filename}',
+        ]
     )
+
+
+class Team(core.models.UniqueNameWithDetailAbstractModel):
+    objects = teams.managers.TeamManager()
+
     created_at = django.db.models.DateTimeField(
         verbose_name='дата создания',
         help_text='когда создана команда?',
         auto_now_add=True,
     )
-    tasks = django.db.models.ForeignKey(
-        tasks.models.Task,
-        on_delete=django.db.models.CASCADE,
-        verbose_name='задания',
-        help_text='задания для команды',
-    )
     is_open = django.db.models.BooleanField(
         default=True,
         verbose_name='открытость',
         help_text='показывается ли ваша команда в поиске?',
+    )
+    skills = django.db.models.ManyToManyField(
+        to=skills.models.Skill,
+        verbose_name='требуемые навыки',
+        help_text='какие навыки нужны команде?',
+    )
+    avatar = django.db.models.ImageField(
+        upload_to=avatar_image_path,
+        verbose_name='аватарка',
+        help_text='картинка профиля команды',
+        blank=True,
     )
 
     class Meta:
@@ -32,19 +48,12 @@ class Team(django.db.models.Model):
         verbose_name_plural = 'команды'
         default_related_name = 'team'
 
-
-class Invite(django.db.models.Model):
-    to_team = django.db.models.ForeignKey(
-        Team,
-        on_delete=django.db.models.CASCADE,
-        verbose_name='команда',
-        help_text='в какую команду приглашение?',
-    )
-
-    class Meta:
-        verbose_name = 'приглашение'
-        verbose_name_plural = 'приглашения'
-        default_related_name = 'invite'
-
     def __str__(self):
-        return f'Приглашение в команду {self.to_team.name.field}'
+        return self.name
+
+    def get_avatar_300x300(self):
+        if self.avatar:
+            return sorl.thumbnail.get_thumbnail(
+                self.avatar, '300x300', crop='center', quality=65
+            )
+        return {'url': static('img/team_default.png')}

@@ -1,21 +1,32 @@
+import os
 from pathlib import Path
+
+import environ
+from django.utils.translation import gettext_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+env = environ.Env(
+    interpolate=True,
+    SECRET_KEY=(str, 'not-a-secret'),
+    DEBUG=(bool, False),
+    ALLOWED_HOSTS=(list, ['*']),
+    FROM_EMAIL=(str, 'noreply@example.com'),
+    MAX_LOGIN_AMOUNT=(int, 5),
+    USER_ACTIVE_DEFAULT=(bool, True),
+)
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = (
-    'django-insecure-7#23egp36j-6_ey7ss8&3da1nqm3e5v-sb1v7bifs^7pu@cyb='
-)
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -30,12 +41,15 @@ INSTALLED_APPS = [
     'django.forms',
     'ckeditor',
     'debug_toolbar',
-    'django_cleanup.apps.CleanupConfig',
     'django_dump_load_utf8',
     'sorl.thumbnail',
+    'skills.apps.SkillsConfig',
     'tasks.apps.TasksConfig',
     'teams.apps.TeamsConfig',
     'users.apps.UsersConfig',
+    'homepage.apps.HomepageConfig',
+    'core.apps.CoreConfig',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'lyceum.middleware.middlewares.TimezoneMiddleware',
 ]
 
 ROOT_URLCONF = 'lyceum.urls'
@@ -54,7 +69,7 @@ ROOT_URLCONF = 'lyceum.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +81,8 @@ TEMPLATES = [
         },
     },
 ]
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 WSGI_APPLICATION = 'lyceum.wsgi.application'
 
@@ -112,6 +129,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+USER_ACTIVE_DEFAULT = env('USER_ACTIVE_DEFAULT')
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -124,10 +143,22 @@ USE_I18N = True
 
 DATE_FORMAT = 'd-m-Y'
 
+DATETIME_FORMAT = '%Y-%m-%d %H:%M'
+
+DATETIME_INPUT_FORMATS = [
+    '%Y-%m-%d %H:%M',
+    '%m/%d/%Y %H:%M',
+    '%m/%d/%y %H:%M',
+]
+
 USE_L10N = False
 
 USE_TZ = True
 
+
+MAX_LOGIN_AMOUNT = env('MAX_LOGIN_AMOUNT')
+
+AUTHENTICATION_BACKENDS = ('users.backends.EmailBackend',)
 
 LOGIN_URL = '/auth/login/'
 
@@ -137,6 +168,10 @@ LOGOUT_REDIRECT_URL = '/auth/login/'
 
 AUTH_USER_MODEL = 'users.User'
 
+LANGUAGES = [
+    ('ru', gettext_lazy('Russian')),
+    ('en', gettext_lazy('English')),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -152,9 +187,13 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale/'),)
+
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 
 EMAIL_FILE_PATH = BASE_DIR / 'send_mail'
+
+FROM_EMAIL = env('FROM_EMAIL')
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
