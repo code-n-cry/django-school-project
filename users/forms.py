@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from django.utils.translation import gettext_lazy
+from django.utils.translation import gettext_lazy as _
 
 import teams.models
 from core.forms import BaseTailwindForm, BaseTailwindModelForm
@@ -68,6 +68,22 @@ class ProfileForm(BaseTailwindModelForm):
             User.is_visible.field.name,
             User.avatar.field.name,
         )
+        labels = {
+            User.username.field.name: _('Юзернейм'),
+            User.first_name.field.name: _('Имя'),
+            User.last_name.field.name: _('Фамилия'),
+            User.email.field.name: _('E-mail'),
+            User.is_visible.field.name: _('Видимость профиля'),
+            User.avatar.field.name: _('Аватар'),
+        }
+        help_texts = {
+            User.username.field.name: _('Имя, отображаемое на сайте'),
+            User.first_name.field.name: _('Ваше имя(никто не увидит)'),
+            User.last_name.field.name: _('Ваша фамилия(никто не увидит)'),
+            User.email.field.name: _('Ваш email'),
+            User.is_visible.field.name: _('Будет ли видна информация о вас?'),
+            User.avatar.field.name: _('Изображение в вашем профиле'),
+        }
         widgets = {
             User.avatar.field.name: ImageInput,
             User.is_visible.field.name: CheckboxInput,
@@ -80,14 +96,10 @@ class ProfileForm(BaseTailwindModelForm):
             ).exists()
             if user_with_same_email:
                 raise ValidationError(
-                    gettext_lazy(
-                        'Пользователь с такой почтой уже зарегистрирован!'
-                    )
+                    _('Пользователь с такой почтой уже зарегистрирован!')
                 )
             return User.objects.normalize_email(self.cleaned_data['email'])
-        raise ValidationError(
-            gettext_lazy('Введите новый email или оставьте старый!')
-        )
+        raise ValidationError(_('Введите новый email или оставьте старый!'))
 
 
 class SignUpForm(
@@ -95,9 +107,7 @@ class SignUpForm(
 ):
     def clean_email(self):
         if not self.cleaned_data['email']:
-            return self.add_error(
-                User.email.field.name, gettext_lazy('Укажите email!')
-            )
+            return self.add_error(User.email.field.name, _('Укажите email!'))
         normalized_email = User.objects.normalize_email(
             self.cleaned_data['email']
         )
@@ -105,9 +115,7 @@ class SignUpForm(
         if is_email_unique:
             return self.add_error(
                 User.email.field.name,
-                gettext_lazy(
-                    'Пользователь с такой почтой уже зарегистрирован!'
-                ),
+                _('Пользователь с такой почтой уже зарегистрирован!'),
             )
         return normalized_email
 
@@ -127,12 +135,12 @@ class SignUpForm(
             User.email.field.name,
         )
         labels = {
-            User.username.field.name: gettext_lazy('Юзернейм'),
+            User.username.field.name: _('Юзернейм'),
             User.email.field.name: 'E-mail',
-            User.password.field.name: gettext_lazy('Пароль'),
+            User.password.field.name: _('Пароль'),
         }
         help_texts = {
-            User.email.field.name: gettext_lazy('Обязательное поле.'),
+            User.email.field.name: _('Обязательное поле.'),
         }
 
 
@@ -140,6 +148,10 @@ class InviteForm(BaseTailwindModelForm):
     class Meta:
         model = Invite
         fields = (Invite.to_user.field.name,)
+        labels = {Invite.to_user.field.name: _('Пользователю')}
+        help_texts = {
+            Invite.to_user.field.name: _('Какого пользователя пригласить?')
+        }
 
 
 class RequestForm(BaseTailwindForm):
@@ -148,6 +160,6 @@ class RequestForm(BaseTailwindForm):
             teams.models.Team.id.field.name,
             teams.models.Team.name.field.name,
         ),
-        label=gettext_lazy('В команду:'),
-        help_text=gettext_lazy('В какую команду запрос?'),
+        label=_('В команду:'),
+        help_text=_('В какую команду запрос?'),
     )

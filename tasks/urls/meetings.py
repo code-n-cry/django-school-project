@@ -11,4 +11,9 @@ urlpatterns = [
         tasks.views.MeetingDetailView.as_view(),
         name='detail',
     ),
+    django.urls.path(
+        'yours/',
+        tasks.views.YourMeetingsView.as_view(),
+        name='yours',
+    ),
 ]

@@ -7,7 +7,7 @@ app_name = 'users'
 
 urlpatterns = [
     django.urls.path(
-        'list/',
+        '',
         users.views.UserListView.as_view(),
         name='user_list',
     ),
