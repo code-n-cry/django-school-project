@@ -13,6 +13,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy
 from django.views import View
 
+import tasks.models
 import users.forms
 import users.models
 from users import forms
@@ -219,6 +220,13 @@ class UserDetailView(django.views.generic.DetailView):
     queryset = users.models.User.objects.public()
     context_object_name = 'user'
     http_method_names = ['get', 'head']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        users_tasks = tasks.models.Task.objects.filter(users=self.request.user)
+        context['all_tasks_count'] = len(users_tasks)
+        return context
 
 
 class UnauthorizedView(django.views.generic.TemplateView):
