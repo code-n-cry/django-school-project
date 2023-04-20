@@ -33,6 +33,25 @@
           {% endfor %}
         </div>
       </div>
+      <p class="text-3xl py-3">{% translate "Комментарии" %}:</p>
+      {% if request.user.is_authenticated %}
+          {% include "includes/form2.html" with submit_text="Оставить" %}
+        {% endif %}
+      <div class="flex space-x-3">
+        {% for comment in comments %}
+          <div class="p-3 border border-white rounded">
+            <p class="text-white text-l">{% translate "Автор" %}: {{ comment.author__username }}</p>
+            <p class="text-white text-center text-xl">{{ comment.content }}</p>
+            <a href="{{ comment.id }}">
+              <button
+                class="inline-block cursor-pointer rounded bg-danger px-6 py-1 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                {% translate "Пожаловаться" %}
+              </button></a>
+          </div>
+        {% empty %}
+          <p class="text-xl py-2">{% translate "Пустота" %}...</p>
+        {% endfor %}
+        </div>
     </div>
   </div>
 {% endblock %}

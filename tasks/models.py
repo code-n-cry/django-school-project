@@ -47,7 +47,7 @@ class Task(core.models.NameWithDetailAbstractModel):
         return self.name
 
 
-class Meeting(core.models.NameWithDetailAbstractModel):
+class Meeting(core.models.ShortNameWithDetailAbstractModel):
     team = django.db.models.ForeignKey(
         to=teams.models.Team,
         verbose_name='команда',

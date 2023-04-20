@@ -22,6 +22,17 @@ class NameWithDetailAbstractModel(models.Model):
         abstract = True
 
 
+class ShortNameWithDetailAbstractModel(NameWithDetailAbstractModel):
+    name = models.CharField(
+        max_length=20,
+        verbose_name='название',
+        help_text='как называется?',
+    )
+
+    class Meta:
+        abstract = True
+
+
 class UniqueNameWithDetailAbstractModel(NameWithDetailAbstractModel):
     is_cleaned = False
     similar_english_to_russian_letters = {
@@ -129,6 +140,15 @@ class ShortUniqueNameAbstractModel(models.Model):
     class Meta:
         abstract = True
 
+    def save(self, commit=True, *args, **kwargs):
+        if not self.is_cleaned:
+            self.full_clean()
+        super().save(*args, **kwargs)
+
+    def clean(self):
+        self.is_cleaned = True
+        self.generate_normalized_name()
+
     def generate_normalized_name(self):
         normalized_name_english = ''
         normalized_name_russian = ''
@@ -161,12 +181,3 @@ class ShortUniqueNameAbstractModel(models.Model):
             self.unique_name = normalized_name_russian
             return super().clean()
         raise django.core.exceptions.ValidationError(self.msg)
-
-    def save(self, *args, **kwargs):
-        if not self.is_cleaned:
-            self.full_clean()
-        super().save(*args, **kwargs)
-
-    def clean(self):
-        self.is_cleaned = True
-        self.generate_normalized_name()

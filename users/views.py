@@ -203,15 +203,48 @@ class UserDetailView(django.views.generic.DetailView):
     template_name = 'users/detail.html'
     queryset = users.models.User.objects.public()
     context_object_name = 'user'
-    http_method_names = ['get', 'head']
+    comment_form = users.forms.CommentForm
+    http_method_names = ['get', 'head', 'post']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        users_comments = (
+            users.models.Comment.objects.filter(
+                to_user=self.get_object(), is_reported=False
+            )
+            .select_related(users.models.Comment.author.field.name)
+            .values(
+                users.models.Comment.content.field.name,
+                users.models.Comment.id.field.name,
+                '__'.join(
+                    [
+                        users.models.Comment.author.field.name,
+                        users.models.User.username.field.name,
+                    ]
+                ),
+            )
+        )
         users_tasks = tasks.models.Task.objects.filter(
             users=self.request.user, completed_date__isnull=False
         )
-        context.update(all_tasks_count=users_tasks)
+        if self.request.user.is_authenticated:
+            context.update(form=self.comment_form())
+        context.update(all_tasks_count=users_tasks, comments=users_comments)
         return context
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            form = self.comment_form(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.author = request.user
+                comment.to_user = self.get_object()
+                comment.save()
+        return redirect(
+            django.urls.reverse(
+                'users:user_detail', kwargs={'pk': self.get_object().pk}
+            )
+        )
 
 
 class UnauthorizedView(django.views.generic.TemplateView):
@@ -244,3 +277,7 @@ class SendRequestView(django.views.generic.FormView):
                 )
                 return super().form_invalid(form)
         return super().form_valid(form)
+
+
+class ReportView(View):
+    pass
