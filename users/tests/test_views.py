@@ -226,9 +226,9 @@ class ViewTests(TestCase):
             )
         )
         self.assertFalse(
-            users.models.User.objects.filter(username=self.test_username)
-            .first()
-            .is_active
+            users.models.User.objects.filter(
+                username=self.test_username
+            ).exists()
         )
 
     def test_login_with_username(self):
@@ -359,7 +359,7 @@ class ViewTests(TestCase):
             )
         )
         self.assertFalse(
-            users.models.User.objects.filter(username=self.test_username)
-            .first()
-            .is_active
+            users.models.User.objects.filter(
+                username=self.test_username
+            ).exists()
         )

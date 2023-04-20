@@ -57,8 +57,18 @@ class TeamEditView(django.views.generic.UpdateView):
         context['meeting_form'] = self.meeting_form_class()
         return context
 
+    def get(self, request, *args, **kwargs):
+        team = self.get_object()
+        if not team.members.filter(user=request.user, is_lead=True).exists():
+            return redirect('homepage:home')
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if not self.object.members.filter(
+            user=request.user, is_lead=True
+        ).exists():
+            return redirect('homepage:home')
         form = self.form_class(
             request.POST, request.FILES, instance=self.object
         )
