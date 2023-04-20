@@ -14,12 +14,6 @@ class TasksManager(django.db.models.Manager):
                 completed_date__isnull=True,
                 deadline_date__lte=now,
             )
-            .prefetch_related(
-                django.db.models.Prefetch(
-                    tasks.models.Task.to_users.field.name,
-                    queryset=get_user_model().objects.active(),
-                )
-            )
             .only(
                 tasks.models.Task.name.field.name,
                 tasks.models.Task.detail.field.name,
@@ -34,12 +28,6 @@ class TasksManager(django.db.models.Manager):
             .filter(
                 completed_date__isnull=False,
                 deadline_date__gt=now,
-            )
-            .prefetch_related(
-                django.db.models.Prefetch(
-                    tasks.models.Task.to_users.field.name,
-                    queryset=get_user_model().objects.active(),
-                )
             )
             .only(
                 tasks.models.Task.name.field.name,
@@ -57,16 +45,9 @@ class TasksManager(django.db.models.Manager):
                 completed_date__isnull=True,
                 deadline_date__gt=now,
             )
-            .prefetch_related(
-                django.db.models.Prefetch(
-                    tasks.models.Task.to_users.field.name,
-                    queryset=get_user_model().objects.active(),
-                )
-            )
             .only(
                 tasks.models.Task.name.field.name,
                 tasks.models.Task.detail.field.name,
-                tasks.models.Task.created_at.field.name,
                 tasks.models.Task.deadline_date.field.name,
             )
         )
