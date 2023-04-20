@@ -1,4 +1,4 @@
-from django.views.generic import CreateView, FormView
+from django.views.generic import CreateView
 
 import skills.forms
 import skills.models

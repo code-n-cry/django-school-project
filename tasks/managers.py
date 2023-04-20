@@ -1,5 +1,4 @@
 import django.db.models
-from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 import tasks.models
