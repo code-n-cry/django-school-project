@@ -38,7 +38,7 @@ urlpatterns = [
     django.urls.path(
         '<int:pk>/members/',
         teams.views.TeamMembersView.as_view(),
-        name='members'
+        name='members',
     ),
     django.urls.path(
         '<int:team_id>/requests/<request_id>/accept',

@@ -36,21 +36,31 @@ class EmailBackend(ModelBackend):
                     email_text = gettext_lazy(
                         ''.join(
                             [
-                                'Совершено много неудачных попыток входа в Ваш'
-                                'аккаунт! Для безопасности он был отключён.\n',
-                                'Ваша ссылка для восстановления: ',
+                                'Совершено много неудачных попыток входа в '
+                                'Ваш аккаунт! Для безопасности он был отк',
+                                'лючён.\nВаша ссылка для восстановления: ',
                             ]
                         )
-                    ) + request.build_absolute_uri(
-                        django.urls.reverse(
-                            'auth:recover',
-                            kwargs={'username': user.get_username()},
-                        )
                     )
+                    try:
+                        email_text += request.build_absolute_uri(
+                            django.urls.reverse(
+                                'auth:recover',
+                                kwargs={'username': user.get_username()},
+                            )
+                        )
+                    except AttributeError:
+                        email_text += (
+                            'http://127.0.0.1:8000'
+                            + django.urls.reverse(
+                                'auth:recover',
+                                kwargs={'username': user.get_username()},
+                            )
+                        )
                     django.core.mail.send_mail(
                         gettext_lazy('Восстановление'),
                         email_text,
-                        settings.EMAIL,
+                        settings.FROM_EMAIL,
                         [user.email],
                         fail_silently=False,
                     )

@@ -70,7 +70,7 @@ class HomeView(TemplateView):
             )
             current_date = timezone.now()
             users_meetings = (
-                tasks.models.Meeting.objects.all().filter(
+                tasks.models.Meeting.objects.filter(
                     planned_date__year=current_date.year,
                     planned_date__month=current_date.month,
                     team__members__in=request.user.teams.all(),
@@ -89,6 +89,10 @@ class HomeView(TemplateView):
             ).formatmonth(with_year=True)
             user_tasks = tasks.models.Task.objects.filter(
                 users=self.request.user.pk, completed_date__isnull=True
+            ).only(
+                tasks.models.Task.name.field.name,
+                tasks.models.Task.detail.field.name,
+                tasks.models.Task.deadline_date.field.name,
             )
             context.update(
                 lead_teams=lead_teams,
