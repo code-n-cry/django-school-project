@@ -120,7 +120,7 @@ class SignUpForm(
         return normalized_email
 
     def save(self, commit: bool = True):
-        cleaned_data = super().clean()
+        cleaned_data = self.clean()
         return User.objects.create_user(
             cleaned_data['username'],
             cleaned_data['email'],

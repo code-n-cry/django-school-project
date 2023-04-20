@@ -67,6 +67,12 @@ class InviteBaseDetailView(django.views.generic.DetailView):
             pk=self.kwargs['pk'], to_user=self.request.user.pk
         )
 
+    def get_object(self):
+        obj = self.get_queryset()
+        if not obj:
+            return None
+        return obj
+
 
 @method_decorator(login_required, name='dispatch')
 class InviteAcceptView(InviteBaseDetailView):
@@ -74,10 +80,12 @@ class InviteAcceptView(InviteBaseDetailView):
 
     def get(self, *args, **kwargs):
         invite = self.get_object()
-        users.models.Member.objects.create(
-            user=self.request.user, team=invite.from_team
-        )
-        invite.delete()
+        if invite:
+            users.models.Member.objects.create(
+                user=self.request.user, team=invite.from_team
+            )
+            invite.delete()
+            return redirect('users:invites')
         return redirect('users:invites')
 
 
@@ -87,7 +95,9 @@ class InviteRejectView(InviteBaseDetailView):
 
     def get(self, *args, **kwargs):
         invite = self.get_object()
-        invite.delete()
+        if invite:
+            invite.delete()
+            return redirect('users:invites')
         return redirect('users:invites')
 
 
@@ -103,6 +113,7 @@ class ActivateNewView(View):
             ],
         ).first()
         if not user:
+            user = users.models.User.objects.filter(username=username).delete()
             messages.error(
                 request,
                 gettext_lazy(
@@ -128,6 +139,7 @@ class ActivateView(View):
             ],
         ).first()
         if not user:
+            user = users.models.User.objects.filter(username=username).delete()
             messages.error(
                 request,
                 gettext_lazy('Прошла неделя, ссылка уже не работает:('),
@@ -173,7 +185,8 @@ class SignUpView(django.views.generic.FormView):
                 [form.cleaned_data['email']],
                 fail_silently=False,
             )
-            form.save(commit=True)
+            form.save()
+            return redirect(self.success_url)
         context = self.get_context_data()
         context.update(form=form)
         return self.render_to_response(context, **kwargs)
@@ -189,14 +202,37 @@ class UserListView(django.views.generic.ListView):
 class UserDetailView(django.views.generic.DetailView):
     template_name = 'users/detail.html'
     queryset = users.models.User.objects.public()
-    context_object_name = 'user'
+    context_object_name = 'user_detail'
     http_method_names = ['get', 'head']
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .only(
+                users.models.User.avatar.field.name,
+                users.models.User.username.field.name,
+                users.models.User.email.field.name,
+                users.models.User.first_name.field.name,
+                users.models.User.last_name.field.name,
+                users.models.User.skills.field.name,
+            )
+            .prefetch_related(
+                '__'.join(
+                    [
+                        users.models.User.teams.rel.related_name,
+                        users.models.Member.team.field.name,
+                    ]
+                )
+            )
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        users_tasks = tasks.models.Task.objects.filter(users=self.request.user)
-        context['all_tasks_count'] = len(users_tasks)
+        users_tasks = tasks.models.Task.objects.filter(
+            users=self.request.user, completed_date__isnull=False
+        )
+        context.update(all_tasks_count=len(users_tasks))
         return context
 
 

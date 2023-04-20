@@ -3,7 +3,7 @@ import django.urls
 
 
 class TeamsViewsTestCase(django.test.TestCase):
-    fixtures = ('skills_fixture.json', 'team_fixture.json',)
+    fixtures = ['skills_fixture.json', 'team_fixture.json']
 
     def test_create_view(self):
         response = django.test.Client().get(

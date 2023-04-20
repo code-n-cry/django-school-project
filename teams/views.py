@@ -57,8 +57,18 @@ class TeamEditView(django.views.generic.UpdateView):
         context['meeting_form'] = self.meeting_form_class()
         return context
 
+    def get(self, request, *args, **kwargs):
+        team = self.get_object()
+        if not team.members.filter(user=request.user, is_lead=True).exists():
+            return redirect('homepage:home')
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+        if not self.object.members.filter(
+            user=request.user, is_lead=True
+        ).exists():
+            return redirect('homepage:home')
         form = self.form_class(
             request.POST, request.FILES, instance=self.object
         )
@@ -82,32 +92,41 @@ class TeamDetailView(django.views.generic.DetailView):
     context_object_name = 'team'
     http_method_names = ['get', 'head']
 
-    
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .prefetch_related(
+                teams.models.Team.members.rel.related_name,
+                teams.models.Team.skills.field.name,
+                '__'.join(
+                    [
+                        teams.models.Team.members.rel.related_name,
+                        users.models.Member.user.field.name,
+                    ]
+                ),
+            )
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         team = self.object
         if self.request.user.is_authenticated:
-            if self.request.user.pk in [
-                member.user_id for member in team.members.all()
-            ]:
+            if kwargs.get('member'):
                 user_tasks = tasks.models.Task.objects.filter(
-                    users=self.request.user.pk, team=team
-                ).only('name', 'detail', 'completed_date')
-
-                context['all_tasks_count'] = len(user_tasks)
-                context['done_tasks_count'] = len(
-                    [task for task in user_tasks if task.completed_date]
+                    users=self.request.user, team=team
+                ).only(
+                    tasks.models.Task.name.field.name,
+                    tasks.models.Task.detail.field.name,
+                    tasks.models.Task.completed_date.field.name,
                 )
-                # not completed tasks
-                context['tasks'] = [
-                    task for task in user_tasks if not task.completed_date
-                ]
-            if self.request.user.pk in [
-                member.user_id
-                for member in team.members.all()
-                if member.is_lead
-            ]:
-                context['is_lead'] = True
+                undone_tasks = user_tasks.filter(completed_date__isnull=True)
+                done_tasks = user_tasks.filter(completed_date__isnull=False)
+                context['all_tasks_count'] = len(undone_tasks) + len(
+                    done_tasks
+                )
+                context['done_tasks_count'] = len(done_tasks)
+                context['tasks'] = undone_tasks
         return context
 
     def get(self, request, *args, **kwargs):
