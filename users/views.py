@@ -279,5 +279,24 @@ class SendRequestView(django.views.generic.FormView):
         return super().form_valid(form)
 
 
-class ReportView(View):
-    pass
+class CommentReportView(django.views.generic.DetailView):
+    http_method_names = ['get']
+
+    def get_queryset(self):
+        return users.models.Comment.objects.filter(
+            pk=self.kwargs['pk']
+        ).first()
+
+    def get_object(self):
+        obj = self.get_queryset()
+        if not obj:
+            return None
+        return obj
+
+    def get(self, *args, **kwargs):
+        comment = self.get_object()
+        if comment:
+            comment.is_reported = True
+            comment.save()
+            return redirect('homepage:home')
+        return redirect('homepage:home')
