@@ -67,6 +67,12 @@ class InviteBaseDetailView(django.views.generic.DetailView):
             pk=self.kwargs['pk'], to_user=self.request.user.pk
         )
 
+    def get_object(self):
+        obj = self.get_queryset()
+        if not obj:
+            return None
+        return obj
+
 
 @method_decorator(login_required, name='dispatch')
 class InviteAcceptView(InviteBaseDetailView):
@@ -74,10 +80,12 @@ class InviteAcceptView(InviteBaseDetailView):
 
     def get(self, *args, **kwargs):
         invite = self.get_object()
-        users.models.Member.objects.create(
-            user=self.request.user, team=invite.from_team
-        )
-        invite.delete()
+        if invite:
+            users.models.Member.objects.create(
+                user=self.request.user, team=invite.from_team
+            )
+            invite.delete()
+            return redirect('users:invites')
         return redirect('users:invites')
 
 
@@ -87,7 +95,9 @@ class InviteRejectView(InviteBaseDetailView):
 
     def get(self, *args, **kwargs):
         invite = self.get_object()
-        invite.delete()
+        if invite:
+            invite.delete()
+            return redirect('users:invites')
         return redirect('users:invites')
 
 
@@ -103,6 +113,7 @@ class ActivateNewView(View):
             ],
         ).first()
         if not user:
+            user = users.models.User.objects.filter(username=username).delete()
             messages.error(
                 request,
                 gettext_lazy(
@@ -128,6 +139,7 @@ class ActivateView(View):
             ],
         ).first()
         if not user:
+            user = users.models.User.objects.filter(username=username).delete()
             messages.error(
                 request,
                 gettext_lazy('Прошла неделя, ссылка уже не работает:('),
