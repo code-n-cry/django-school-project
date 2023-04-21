@@ -195,6 +195,7 @@ class SignUpView(django.views.generic.FormView):
 class UserListView(django.views.generic.ListView):
     template_name = 'users/list.html'
     queryset = users.models.User.objects.public()
+    paginate_by = 5
     context_object_name = 'users'
     http_method_names = ['get', 'head']
 

@@ -62,4 +62,5 @@ class ActiveUserManager(django.contrib.auth.models.UserManager):
                     ]
                 ),
             )
+            .order_by(f'-{users.models.User.username.field.name}')
         )
