@@ -37,7 +37,7 @@ class TasksManager(django.db.models.Manager):
             )
             .prefetch_related(
                 django.db.models.Prefetch(
-                    tasks.models.Task.to_users.field.name,
+                    tasks.models.Task.users.field.name,
                     queryset=get_user_model().objects.active(),
                 )
             )

@@ -207,10 +207,8 @@ class UserDetailView(django.views.generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        users_tasks = tasks.models.Task.objects.filter(
-            users=self.request.user, completed_date__isnull=False
-        )
-        context.update(all_tasks_count=len(users_tasks))
+        completed_tasks = tasks.models.Task.objects.completed().filter(users=self.kwargs['pk']).count()
+        context.update(all_tasks_count=completed_tasks)
         return context
 
 
