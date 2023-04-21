@@ -38,7 +38,6 @@ class TeamEditView(django.views.generic.UpdateView):
     template_name = 'teams/edit.html'
     form_class = teams.forms.TeamForm
     meeting_form_class = tasks.forms.MeetingCreationForm
-    task_form_class = None
     context_object_name = 'team'
     http_method_names = ['get', 'head', 'post']
 
