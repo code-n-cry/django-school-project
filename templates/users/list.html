@@ -9,16 +9,19 @@
     <p class="text-white text-center text-3xl break-normal">{% translate "Список открытых пользователей" %}:</p>
     <div class="flex flex-col items-center">
       {% for user in users %}
-        <div class="grid grid-cols-3 rounded-md bg-indigo-600 text-white my-2 py-2">
-          <div class="col-span-2 justify-self-start flex items-start px-4 text-white">
-            <img class="h-8 w-8 rounded-full" src="{{ user.get_avatar_300x300.url }}" alt="">
-            <a href="{% url 'users:user_detail' user.id %}" class="underline text-[#dec98a] hover:text-[#d4bc77] visited:text-[#ebbf3d] px-1.5"> {{ user.username }}</a>
-            <div class="col flex items-end text-white px-5">
-              {% for skill in user.skills.all %}
-                <div class="text-center border rounded dark:border-neutral-100 px-3">{{ skill.name }}</div>
-              {% endfor %}
+        <div class="my-2 w-80 grid grid-cols-3 rounded-md border dark:border-white dark:text-white">
+          <div class="col-span-2 justify-self-start flex items-start text-white">
+            <img class="h-20 w-20 mr-2 rounded" src="{{ user.get_avatar_300x300.url }}" alt="">
+              <a href="{% url 'users:user_detail' user.id %}" class="text-xl underline text-[#dec98a] hover:text-[#d4bc77] visited:text-[#ebbf3d]">
+                {{ user.username }}
+              </a>
+              <div class="col flex items-end text-white px-5">
+                {% for skill in user.skills.all %}
+                  <div class="text-center border rounded dark:border-neutral-100 px-3">{{ skill.name }}
+                  </div>
+                {% endfor %}
+              </div>
             </div>
-          </div>
         </div>
       {% empty %}
         <p class="text-white text-center text-2xl break-normal py-3">{% translate "Пусто" %}...</p>

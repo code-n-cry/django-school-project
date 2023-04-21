@@ -16,20 +16,12 @@
       </div>
     </div>
     <div class="mt-5">
-      <p class="text-3xl">{% translate "Что умеет" %}:</p>
-      <div class="flex space-x-3">
+      {% if user.skills.all %}
+        <p class="text-3xl">{% translate "Что умеет" %}:</p>
+        <div class="flex space-x-3">
         {% for skill in user.skills.all %}
           <div class="p-3 border border-white rounded">{{ skill.name }}</div>
         {% endfor %}
-      </div>
-      <div class="mt-6">
-        <p class="text-3xl">{% translate "Команды" %}:</p>
-        <div class="mt-5 flex space-x-4 flex-wrap w-full">
-          {% for user_team in user.teams.all %}
-            <div class="w-1/4">
-              {% include "includes/command_card.html" with team=user_team.team show_detail=true %}
-            </div>
-          {% endfor %}
         </div>
       </div>
       <p class="text-3xl py-3">{% translate "Комментарии" %}:</p>
