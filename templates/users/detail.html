@@ -17,12 +17,14 @@
       </div>
     </div>
     <div class="mt-5">
-      <p class="text-3xl">{% translate "Что умеет" %}:</p>
-      <div class="flex space-x-3">
+      {% if user.skills.all %}
+        <p class="text-3xl">{% translate "Что умеет" %}:</p>
+        <div class="flex space-x-3">
         {% for skill in user.skills.all %}
           <div class="p-3 border border-white rounded">{{ skill.name }}</div>
         {% endfor %}
-      </div>
+        </div>
+      {% endif %}
       <div class="mt-6">
         <p class="text-3xl">{% translate "Команды" %}:</p>
         <div class="mt-5 flex space-x-4 flex-wrap w-full">

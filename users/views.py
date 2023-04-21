@@ -198,7 +198,7 @@ class UserDetailView(django.views.generic.DetailView):
         users_tasks = tasks.models.Task.objects.filter(
             users=self.request.user, completed_date__isnull=False
         )
-        context.update(all_tasks_count=users_tasks)
+        context.update(all_tasks_count=len(users_tasks))
         return context
 
 
