@@ -55,6 +55,8 @@ class ActiveUserManager(django.contrib.auth.models.UserManager):
                 users.models.User.username.field.name,
                 users.models.User.email.field.name,
                 users.models.User.avatar.field.name,
+                users.models.User.first_name.field.name,
+                users.models.User.last_name.field.name,
                 '__'.join(
                     [
                         users.models.User.skills.field.name,

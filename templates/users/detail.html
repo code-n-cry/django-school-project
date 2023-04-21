@@ -25,16 +25,18 @@
         {% endfor %}
         </div>
       {% endif %}
-      <div class="mt-6">
-        <p class="text-3xl">{% translate "Команды" %}:</p>
-        <div class="mt-5 flex space-x-4 flex-wrap w-full">
-          {% for user_team in user.teams.all %}
-            <div class="w-1/4">
-              {% include "includes/command_card.html" with team=user_team.team show_detail=true %}
-            </div>
-          {% endfor %}
+      {% if user.teams.all %}
+        <div class="mt-6">
+          <p class="text-3xl">{% translate "Команды" %}:</p>
+          <div class="mt-5 flex space-x-4 flex-wrap w-full">
+            {% for user_team in user.teams.all %}
+              <div class="w-1/4">
+                {% include "includes/command_card.html" with team=user_team.team show_detail=true %}
+              </div>
+            {% endfor %}
+          </div>
         </div>
-      </div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
