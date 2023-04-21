@@ -1,10 +1,10 @@
-import django.forms
 from django.utils.translation import gettext_lazy as _
 
+import core.forms
 import skills.models
 
 
-class SkillCreationForm(django.forms.ModelForm):
+class SkillCreationForm(core.forms.BaseTailwindModelForm):
     class Meta:
         model = skills.models.Skill
         fields = (skills.models.Skill.name.field.name,)

@@ -1,31 +1,25 @@
 {% extends "base.html" %}
-{% load static %}
 {% load i18n %}
 {% block title %}
-  <title>{% translate "Открытые пользователи" %}</title>
-{% endblock %}
+  <title>{% translate "Все навыки" %}</title>
+{% endblock title %}
 {% block content %}
-  <div class="mx-auto container">
-    <p class="text-white text-center text-3xl break-normal">{% translate "Список открытых пользователей" %}:</p>
-    <div class="flex flex-col items-center">
-      {% for user in users %}
-        <div class="my-2 w-80 grid grid-cols-3 rounded-md border dark:border-white dark:text-white">
-          <div class="col-span-2 justify-self-start flex items-start text-white">
-            <img class="h-20 w-20 mr-2 rounded" src="{{ user.get_avatar_300x300.url }}" alt="">
-              <a href="{% url 'users:user_detail' user.id %}" class="text-xl underline text-[#dec98a] hover:text-[#d4bc77] visited:text-[#ebbf3d]">
-                {{ user.username }}
-              </a>
-              <div class="col flex items-end text-white px-5">
-                {% for skill in user.skills.all %}
-                  <div class="text-center border rounded dark:border-neutral-100 px-3">{{ skill.name }}
-                  </div>
-                {% endfor %}
-              </div>
-            </div>
+ <div class="container mx-auto">
+  <p class="text-center text-3xl text-white">{% translate "Все навыки" %}:</p>
+  <div class="grid grid-cols-3 self-center">
+    {% for skill in skills %}
+      <div class="col px-3 py-3 ">
+        <div class="text-center border rounded dark:border-neutral-100 p-0.5">
+          {{ skill.name }}
         </div>
-      {% empty %}
-        <p class="text-white text-center text-2xl break-normal py-3">{% translate "Пусто" %}...</p>
-      {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="self-center py-3">
+    <a href="{% url 'skills:create' %}">
+      {% include "includes/button.html" with text="Создать навык" %}
+    </a>
+  </div>
   {% if is_paginated %}
     <ul class="inline-flex -space-x-px pagination self-center py-3">
       {% if page_obj.has_previous %}
@@ -47,5 +41,5 @@
       {% endif %}
     </ul>
   {% endif %}
-  </div>  
+ </div>
 {% endblock %}

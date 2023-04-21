@@ -146,3 +146,37 @@ class Request(django.db.models.Model):
         return (
             f'Запрос на вступление от пользователя {self.from_user.username}'
         )
+
+
+class Comment(django.db.models.Model):
+    author = django.db.models.ForeignKey(
+        to=User,
+        on_delete=django.db.models.DO_NOTHING,
+        verbose_name='автор',
+        help_text='кто оставил комментарий?',
+    )
+    to_user = django.db.models.ForeignKey(
+        to=User,
+        on_delete=django.db.models.DO_NOTHING,
+        verbose_name='получатель',
+        help_text='кому оставили комментарий?',
+        related_name='received_comments',
+    )
+    content = django.db.models.CharField(
+        max_length=50,
+        verbose_name='содержание',
+        help_text='содержание вашего комментария(до 50 символов)',
+    )
+    is_reported = django.db.models.BooleanField(
+        default=False,
+        verbose_name='жалоба',
+        help_text='жаловались ли на комментарий?',
+    )
+
+    class Meta:
+        verbose_name = 'комментарий'
+        verbose_name_plural = 'комментарии'
+        default_related_name = 'comments'
+
+    def __str__(self):
+        return f'Комментарий от пользователя {self.author.username}'
