@@ -191,18 +191,19 @@ class RequestAcceptView(django.views.generic.View):
             .exists()
         )
         if is_request_user_lead:
-            request = get_object_or_404(
-                users.models.Request, pk=kwargs['request_id'], to_team=team
-            )
-            users.models.Member.objects.create(
-                user=request.from_user, team=team
-            )
-            request.delete()
-            return redirect(
-                django.urls.reverse(
-                    'teams:requests', kwargs={'pk': kwargs['team_id']}
+            request = users.models.Request.filter(
+                pk=kwargs['request_id'], to_team=team
+            ).first()
+            if request:
+                users.models.Member.objects.create(
+                    user=request.from_user, team=team
                 )
-            )
+                request.delete()
+                return redirect(
+                    django.urls.reverse(
+                        'teams:requests', kwargs={'pk': kwargs['team_id']}
+                    )
+                )
         return redirect('homepage:home')
 
 
@@ -220,15 +221,16 @@ class RequestRejectView(django.views.generic.View):
             .exists()
         )
         if is_request_user_lead:
-            request = get_object_or_404(
-                users.models.Request, pk=kwargs['request_id'], to_team=team
-            )
-            request.delete()
-            return redirect(
-                django.urls.reverse(
-                    'teams:requests', kwargs={'pk': kwargs['team_id']}
+            request = users.models.Request.filter(
+                pk=kwargs['request_id'], to_team=team
+            ).first()
+            if request:
+                request.delete()
+                return redirect(
+                    django.urls.reverse(
+                        'teams:requests', kwargs={'pk': kwargs['team_id']}
+                    )
                 )
-            )
         return redirect('homepage:home')
 
 
