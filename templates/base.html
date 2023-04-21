@@ -28,4 +28,7 @@
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     document.cookie = "django_timezone=" + timezone;
   </script>
+  <script>
+    {% block script %}{% endblock %}
+  </script>
 </html>

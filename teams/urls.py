@@ -41,6 +41,16 @@ urlpatterns = [
         name='members',
     ),
     django.urls.path(
+        '<int:team_pk>/members/<int:user_pk>/kick/',
+        teams.views.TeamMemberKickView.as_view(),
+        name='kick_member',
+    ),
+    django.urls.path(
+        '<int:team_pk>/members/<int:user_pk>/give_lead/',
+        teams.views.TeamMemberGiveLeadView.as_view(),
+        name='give_lead_member',
+    ),
+    django.urls.path(
         '<int:team_id>/requests/<request_id>/accept',
         teams.views.RequestAcceptView.as_view(),
         name='request_accept',
