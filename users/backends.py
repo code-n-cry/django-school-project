@@ -42,14 +42,14 @@ class EmailBackend(ModelBackend):
                             ]
                         )
                     )
-                    try:
+                    if request:
                         email_text += request.build_absolute_uri(
                             django.urls.reverse(
                                 'auth:recover',
                                 kwargs={'username': user.get_username()},
                             )
                         )
-                    except AttributeError:
+                    else:
                         email_text += (
                             'http://127.0.0.1:8000'
                             + django.urls.reverse(
