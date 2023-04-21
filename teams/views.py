@@ -1,13 +1,16 @@
 import zoneinfo
 
+import django.core.mail
 import django.db.models
 import django.shortcuts
 import django.urls
 import django.views.generic
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy
 
 import tasks.forms
 import tasks.models
@@ -51,15 +54,16 @@ class TeamEditView(django.views.generic.UpdateView):
         return super().get_queryset().filter(members__user=self.request.user)
 
     def get_context_data(self, **kwargs):
-        self.object = self.get_object()
         context = super().get_context_data(**kwargs)
         context['form'] = self.form_class(instance=self.object)
         context['meeting_form'] = self.meeting_form_class()
         return context
 
     def get(self, request, *args, **kwargs):
-        team = self.get_object()
-        if not team.members.filter(user=request.user, is_lead=True).exists():
+        self.object = self.get_object()
+        if not self.object.members.filter(
+            user=request.user, is_lead=True
+        ).exists():
             return redirect('homepage:home')
         return super().get(request, *args, **kwargs)
 
@@ -83,6 +87,34 @@ class TeamEditView(django.views.generic.UpdateView):
             )
             meeting.team = self.object
             meeting.save()
+
+            meeting_uri = request.build_absolute_uri(
+                django.urls.reverse_lazy('meetings:detail', args=[meeting.pk])
+            )
+            email_text = gettext_lazy(
+                r'Назначена новая встреча %(name)s'
+                '\n\n'
+                r'Детали: %(detail)s'
+                '\n\n'
+                r'Дата и время встречи: %(planned_date)s'
+                '\n\n'
+                r'Ссылка встречи %(uri)s'
+            ) % {
+                'name': meeting.name,
+                'detail': meeting.detail,
+                'planned_date': meeting.planned_date,
+                'uri': meeting_uri,
+            }
+            django.core.mail.send_mail(
+                gettext_lazy('Назначена новая встреча'),
+                email_text,
+                settings.FROM_EMAIL,
+                list(
+                    self.object.members.all().values_list(
+                        'user__email', flat=True
+                    )
+                ),
+            )
         return self.render_to_response(context)
 
 
