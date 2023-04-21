@@ -225,12 +225,14 @@ class UserDetailView(django.views.generic.DetailView):
                 ),
             )
         )
-        users_tasks = tasks.models.Task.objects.filter(
-            users=self.request.user, completed_date__isnull=False
-        )
+        completed_tasks = tasks.models.Task.objects.filter(
+            users=kwargs['pk'], completed_date__isnull=False
+        ).count()
         if self.request.user.is_authenticated:
             context.update(form=self.comment_form())
-        context.update(all_tasks_count=users_tasks, comments=users_comments)
+        context.update(
+            all_tasks_count=completed_tasks, comments=users_comments
+        )
         return context
 
     def post(self, request, *args, **kwargs):

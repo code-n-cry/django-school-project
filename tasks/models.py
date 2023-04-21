@@ -48,6 +48,8 @@ class Task(core.models.NameWithDetailAbstractModel):
 
 
 class Meeting(core.models.ShortNameWithDetailAbstractModel):
+    objects = tasks.managers.MeetingManager()
+
     team = django.db.models.ForeignKey(
         to=teams.models.Team,
         verbose_name='команда',

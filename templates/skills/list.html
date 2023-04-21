@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+  <title>{% translate "Все навыки" %}</title>
+{% endblock title %}
+{% block content %}
+ <div class="container mx-auto">
+  <p class="text-center text-3xl text-white">{% translate "Все навыки" %}:</p>
+  <div class="grid grid-cols-3 self-center">
+    {% for skill in skills %}
+      <div class="col px-3 py-3 ">
+        <div class="text-center border rounded dark:border-neutral-100 p-0.5">
+          {{ skill.name }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <div class="self-center py-3">
+    <a href="{% url 'skills:create' %}">
+      {% include "includes/button.html" with text="Создать навык" %}
+    </a>
+  </div>
+  {% if is_paginated %}
+    <ul class="inline-flex -space-x-px pagination self-center py-3">
+      {% if page_obj.has_previous %}
+        <li class="px-1"><a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-2 ml-0 leading-tight text-gray-500 border border-gray-300 rounded-l-lg hover:bg-gray-700 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white">{% translate "Предыдущая" %}</a></li>
+      {% else %}
+        <li class="disabled px-1"><span>{% translate "Предыдущая" %}</span></li>
+      {% endif %}
+      {% for i in paginator.page_range %}
+        {% if page_obj.number == i %}
+          <li class="active px-1.5"><span>{{ i }}<span class="sr-only" aria-current="page">(current)</span></span></li>
+        {% else %}
+          <li class="px-1.5"><a href="?page={{ i }}" "px-3 py-2 leading-tight text-gray-500 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+      {% if page_obj.has_next %}
+        <li class="px-1"><a href="?page={{ page_obj.next_page_number }}" class="px-3 py-2 ml-0 leading-tight text-gray-500 border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{% translate "Следующая" %}</a></li>
+      {% else %}
+        <li class="disabled px-1"><span>{% translate "Следующая" %}</span></li>
+      {% endif %}
+    </ul>
+  {% endif %}
+ </div>
+{% endblock %}

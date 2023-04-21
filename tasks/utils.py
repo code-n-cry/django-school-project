@@ -31,8 +31,6 @@ class Calendar(LocaleHTMLCalendar):
                 meeting['planned_date'],
                 timezone=user_timezone,
             )
-            if planned_date.day == timezone.now().day:
-                pass
             if planned_date.day == day:
                 planned_date = planned_date.strftime('%H:%M')
                 meeting_link = django.urls.reverse(
@@ -41,9 +39,10 @@ class Calendar(LocaleHTMLCalendar):
                 day_events.append(
                     ''.join(
                         [
-                            '<li><p class="text-white text-center">',
-                            f'{planned_date}',
-                            f'<a class="{style}" href="{meeting_link}">',
+                            '<li class="bg-green-600"><p class="text-white',
+                            f' text-center">{planned_date}',
+                            f'<a class="{style}"',
+                            f'href="{meeting_link}">',
                             meeting['name'],
                             '</a></p></li>',
                         ]

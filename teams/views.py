@@ -191,7 +191,7 @@ class RequestAcceptView(django.views.generic.View):
             .exists()
         )
         if is_request_user_lead:
-            request = users.models.Request.filter(
+            request = users.models.Request.objects.filter(
                 pk=kwargs['request_id'], to_team=team
             ).first()
             if request:
