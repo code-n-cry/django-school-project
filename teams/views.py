@@ -2,6 +2,7 @@ import zoneinfo
 
 import django.core.mail
 import django.db.models
+import django.http
 import django.shortcuts
 import django.urls
 import django.views.generic
@@ -299,11 +300,10 @@ class YoursTeamsView(TeamListView):
             .get_queryset()
             .filter(members__user=self.request.user)
             .order_by(f'-{order_by_field}')
-            .prefetch_related(
-                django.db.models.Prefetch(
-                    teams.models.Team.members.rel.related_name,
-                    queryset=users.models.Member.objects.all(),
-                )
+            .only(
+                teams.models.Team.avatar.field.name,
+                teams.models.Team.name.field.name,
+                teams.models.Team.detail.field.name,
             )
         )
 
@@ -366,6 +366,13 @@ class TeamMemberKickView(django.views.generic.DeleteView):
             obj = queryset.none()
         return obj
 
+    def get(self, request, *args, **kwargs):
+        return redirect(
+            django.urls.reverse_lazy(
+                'teams:members', kwargs={'pk': kwargs.get('team_pk')}
+            )
+        )
+
     def delete(self, request, *args, **kwargs):
         member = users.models.Member.objects.filter(
             user=request.user, team__pk=kwargs.get('team_pk'), is_lead=True
@@ -406,6 +413,13 @@ class TeamMemberGiveLeadView(django.views.generic.DetailView):
         except queryset.model.DoesNotExist:
             obj = queryset.none()
         return obj
+
+    def get(self, request, *args, **kwargs):
+        return redirect(
+            django.urls.reverse_lazy(
+                'teams:members', kwargs={'pk': kwargs.get('team_pk')}
+            )
+        )
 
     def post(self, request, *args, **kwargs):
         member = users.models.Member.objects.filter(
