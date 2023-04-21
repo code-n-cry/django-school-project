@@ -12,6 +12,12 @@ import tasks.forms
 import tasks.models
 import teams.models
 
+@method_decorator(login_required, name='dispatch')
+class TaskListView(django.views.generic.ListView):
+    template_name = 'tasks/your_tasks.html'
+    queryset = tasks.models.Task.objects.all()
+    context_object_name = 'tasks'
+    http_method_names = ['get']
 
 @method_decorator(login_required, name='dispatch')
 class TaskCreateView(django.views.generic.FormView):
