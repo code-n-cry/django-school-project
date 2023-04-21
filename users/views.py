@@ -207,6 +207,28 @@ class UserDetailView(django.views.generic.DetailView):
     comment_form = users.forms.CommentForm
     http_method_names = ['get', 'head', 'post']
 
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .only(
+                users.models.User.avatar.field.name,
+                users.models.User.username.field.name,
+                users.models.User.email.field.name,
+                users.models.User.first_name.field.name,
+                users.models.User.last_name.field.name,
+                users.models.User.skills.field.name,
+            )
+            .prefetch_related(
+                '__'.join(
+                    [
+                        users.models.User.teams.rel.related_name,
+                        users.models.Member.team.field.name,
+                    ]
+                )
+            )
+        )
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         users_comments = (

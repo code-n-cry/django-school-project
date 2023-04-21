@@ -10,7 +10,7 @@
       <p class="text-sm">{{ task.detail }}</p>
     </div>
     <div>
-      <p class="mb-2">{{ task.deadline_date|date:"M d, H:m" }}</p>
+      <p class="mb-2 text-red-500">{{ task.deadline_date|date:"M d, H:m" }}</p>
       <a href="{% url 'tasks:done' task.pk %}">
         {% include 'includes/button.html' with text="Готово" %}
       </a>

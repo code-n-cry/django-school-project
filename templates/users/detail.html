@@ -7,11 +7,17 @@
 {% block content %}
   <div class="mx-auto container">
     <div class="flex">
-      <div class="w-36 h-44 bg-slate-600 rounded mr-3 bg-center" style="background-image: url({{ user.get_avatar_300x300.url }}); backgorund-position: center; background-size: cover;">
+      <div class="w-36 h-44 bg-slate-600 rounded mr-3 bg-center" style="background-image: url({{ user_detail.get_avatar_300x300.url }}); backgorund-position: center; background-size: cover;">
       </div>
       <div>
+<<<<<<< HEAD
         <p class="text-3xl">{{ user.username }}</p>
         <p class="text-3xl">{{ user.email }}</p>
+=======
+        <p class="text-3xl">{{ user_detail.username }}</p>
+        <p class="text-3xl">{{ user_detail.first_name }} {{ user_detail.last_name }}</p>
+        <p class="text-3xl">{{ user_detail.email }}</p>
+>>>>>>> 46c73f6cd99808984bedae7b7bc0b80f005420db
         <p class="text-sm mt-1">{% translate "Кол-во выполненных заданий" %}: {{ all_tasks_count }}</p>
       </div>
     </div>
