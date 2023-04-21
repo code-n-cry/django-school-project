@@ -247,9 +247,11 @@ class UserDetailView(django.views.generic.DetailView):
                 ),
             )
         )
-        completed_tasks = tasks.models.Task.objects.uncompleted().filter(
-            users=self.get_object()
-        ).count()
+        completed_tasks = (
+            tasks.models.Task.objects.uncompleted()
+            .filter(users=self.get_object())
+            .count()
+        )
         if self.request.user.is_authenticated:
             context.update(form=self.comment_form())
         context.update(
