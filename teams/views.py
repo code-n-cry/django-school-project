@@ -79,6 +79,10 @@ class TeamEditView(django.views.generic.UpdateView):
         )
         meeting_form = self.meeting_form_class(request.POST)
         context = self.get_context_data()
+        context.update(
+            form_success=form.is_valid(),
+            meeting_form_success=meeting_form.is_valid(),
+        )
         if form.is_valid():
             form.save()
         if meeting_form.is_valid():
