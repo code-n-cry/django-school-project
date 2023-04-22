@@ -31,6 +31,11 @@ urlpatterns = [
         name='yours',
     ),
     django.urls.path(
+        '<int:pk>/invite/',
+        teams.views.TeamInviteUserView.as_view(),
+        name='invite_user',
+    ),
+    django.urls.path(
         '<int:pk>/requests/',
         teams.views.TeamRequestsView.as_view(),
         name='requests',
@@ -39,6 +44,16 @@ urlpatterns = [
         '<int:pk>/members/',
         teams.views.TeamMembersView.as_view(),
         name='members',
+    ),
+    django.urls.path(
+        '<int:team_pk>/members/<int:user_pk>/kick/',
+        teams.views.TeamMemberKickView.as_view(),
+        name='kick_member',
+    ),
+    django.urls.path(
+        '<int:team_pk>/members/<int:user_pk>/give_lead/',
+        teams.views.TeamMemberGiveLeadView.as_view(),
+        name='give_lead_member',
     ),
     django.urls.path(
         '<int:team_id>/requests/<request_id>/accept',

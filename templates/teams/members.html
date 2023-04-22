@@ -5,8 +5,11 @@
   <title>{% translate "Участники команды" %}</title>
 {% endblock %}
 {% block content %}
-  <div class="mx-auto container block h-full sm:flex">
-    <div class="flex space-x-4 flex-wrap w-full">
+  <div class="mx-auto block container h-full">
+    <div id="result" class="">
+
+    </div>
+    <div class="flex flex-wrap w-full">
       {% for member in members %}
         <div class="w-full">
             {% include 'includes/user_card.html' %}
@@ -14,4 +17,29 @@
       {% endfor %}
     </div>
   </div>
+{% endblock %}
+
+{% block script %}
+funcButtons = document.getElementsByClassName('funcButton');
+for(var i = 0; i < funcButtons.length; i++){
+    funcButtons[i].onclick = (event) => {
+        event.preventDefault();
+        url = event.target.href;
+        csrftoken = "{{ csrf_token }}";
+        fetch(url, {
+            method: 'POST',
+            headers: {'X-CSRFToken': csrftoken},
+            mode: 'same-origin'
+        }).then(res => res.text()).then(res => {
+            document.getElementById('result').innerHTML = res;
+            if (event.target.classList.contains('kick')){
+                event.target.parentElement.parentElement.parentElement.remove();
+            }
+            else if (event.target.classList.contains('give_lead')){
+                event.target.parentElement.parentElement.children[1].children[0].children[1].innerText = "{% translate "Лид" %}";
+                event.target.parentElement.remove();
+            }
+        })
+    }
+}
 {% endblock %}

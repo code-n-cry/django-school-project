@@ -39,9 +39,10 @@ class Calendar(LocaleHTMLCalendar):
                 day_events.append(
                     ''.join(
                         [
-                            '<li><p class="text-white text-center">',
-                            f'{planned_date}',
-                            f'<a class="{style}" href="{meeting_link}">',
+                            '<li class="bg-green-600"><p class="text-white',
+                            f' text-center">{planned_date}',
+                            f'<a class="{style}"',
+                            f'href="{meeting_link}">',
                             meeting['name'],
                             '</a></p></li>',
                         ]

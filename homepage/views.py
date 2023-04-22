@@ -13,14 +13,14 @@ class HomeView(TemplateView):
     template_name = 'homepage/home.html'
 
     def get(self, request, *args, **kwargs):
-        opened_teams = teams.models.Team.objects.opened()
+        opened_teams = teams.models.Team.objects.opened()[:10]
         context = self.get_context_data()
         if request.user.is_authenticated:
             opened_teams = (
                 teams.models.Team.objects.opened()
                 .exclude(members__in=request.user.teams.all())
                 .filter(skills__in=request.user.skills.all())
-            )
+            )[:5]
             lead_teams = (
                 teams.models.Team.objects.all()
                 .filter(
@@ -87,12 +87,8 @@ class HomeView(TemplateView):
                 current_date.year,
                 current_date.month,
             ).formatmonth(with_year=True)
-            user_tasks = tasks.models.Task.objects.filter(
-                users=self.request.user.pk, completed_date__isnull=True
-            ).only(
-                tasks.models.Task.name.field.name,
-                tasks.models.Task.detail.field.name,
-                tasks.models.Task.deadline_date.field.name,
+            user_tasks = tasks.models.Task.objects.uncompleted().filter(
+                users=self.request.user.pk
             )
             context.update(
                 lead_teams=lead_teams,

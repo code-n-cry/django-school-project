@@ -3,8 +3,40 @@
     "model": "skills.skill",
     "pk": 1,
     "fields": {
-        "name": "python",
-        "unique_name": "рутhоn"
+        "unique_name": "рутhоn",
+        "name": "python"
+    }
+},
+{
+    "model": "skills.skill",
+    "pk": 2,
+    "fields": {
+        "unique_name": "срр",
+        "name": "cpp"
+    }
+},
+{
+    "model": "skills.skill",
+    "pk": 3,
+    "fields": {
+        "unique_name": "rовото",
+        "name": "roboto"
+    }
+},
+{
+    "model": "skills.skill",
+    "pk": 4,
+    "fields": {
+        "unique_name": "sаnssеrif",
+        "name": "sans-serif"
+    }
+},
+{
+    "model": "skills.skill",
+    "pk": 5,
+    "fields": {
+        "unique_name": "gоlаng",
+        "name": "golang"
     }
 }
 ]

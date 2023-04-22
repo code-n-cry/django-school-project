@@ -65,7 +65,13 @@ class InviteBaseDetailView(django.views.generic.DetailView):
     def get_queryset(self):
         return users.models.Invite.objects.filter(
             pk=self.kwargs['pk'], to_user=self.request.user.pk
-        )
+        ).first()
+
+    def get_object(self):
+        obj = self.get_queryset()
+        if not obj:
+            return None
+        return obj
 
 
 @method_decorator(login_required, name='dispatch')
@@ -74,10 +80,12 @@ class InviteAcceptView(InviteBaseDetailView):
 
     def get(self, *args, **kwargs):
         invite = self.get_object()
-        users.models.Member.objects.create(
-            user=self.request.user, team=invite.from_team
-        )
-        invite.delete()
+        if invite:
+            users.models.Member.objects.create(
+                user=self.request.user, team=invite.from_team
+            )
+            invite.delete()
+            return redirect('users:invites')
         return redirect('users:invites')
 
 
@@ -87,7 +95,9 @@ class InviteRejectView(InviteBaseDetailView):
 
     def get(self, *args, **kwargs):
         invite = self.get_object()
-        invite.delete()
+        if invite:
+            invite.delete()
+            return redirect('users:invites')
         return redirect('users:invites')
 
 
@@ -103,6 +113,7 @@ class ActivateNewView(View):
             ],
         ).first()
         if not user:
+            user = users.models.User.objects.filter(username=username).delete()
             messages.error(
                 request,
                 gettext_lazy(
@@ -128,6 +139,7 @@ class ActivateView(View):
             ],
         ).first()
         if not user:
+            user = users.models.User.objects.filter(username=username).delete()
             messages.error(
                 request,
                 gettext_lazy('Прошла неделя, ссылка уже не работает:('),
@@ -183,6 +195,7 @@ class SignUpView(django.views.generic.FormView):
 class UserListView(django.views.generic.ListView):
     template_name = 'users/list.html'
     queryset = users.models.User.objects.public()
+    paginate_by = 5
     context_object_name = 'users'
     http_method_names = ['get', 'head']
 
@@ -191,15 +204,72 @@ class UserDetailView(django.views.generic.DetailView):
     template_name = 'users/detail.html'
     queryset = users.models.User.objects.public()
     context_object_name = 'user'
-    http_method_names = ['get', 'head']
+    comment_form = users.forms.CommentForm
+    http_method_names = ['get', 'head', 'post']
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .only(
+                users.models.User.avatar.field.name,
+                users.models.User.username.field.name,
+                users.models.User.email.field.name,
+                users.models.User.first_name.field.name,
+                users.models.User.last_name.field.name,
+                users.models.User.skills.field.name,
+            )
+            .prefetch_related(
+                '__'.join(
+                    [
+                        users.models.User.teams.rel.related_name,
+                        users.models.Member.team.field.name,
+                    ]
+                )
+            )
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        users_tasks = tasks.models.Task.objects.filter(
-            users=self.request.user, completed_date__isnull=False
+        users_comments = (
+            users.models.Comment.objects.filter(
+                to_user=self.get_object(), is_reported=False
+            )
+            .select_related(users.models.Comment.author.field.name)
+            .values(
+                users.models.Comment.content.field.name,
+                users.models.Comment.id.field.name,
+                '__'.join(
+                    [
+                        users.models.Comment.author.field.name,
+                        users.models.User.username.field.name,
+                    ]
+                ),
+            )
         )
-        context.update(all_tasks_count=users_tasks)
+        tasks_percentage = tasks.models.Task.objects.completed_percentage(
+            self.get_object()
+        )
+        if self.request.user.is_authenticated:
+            context.update(form=self.comment_form())
+        context.update(
+            all_tasks_count=tasks_percentage, comments=users_comments
+        )
         return context
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            form = self.comment_form(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.author = request.user
+                comment.to_user = self.get_object()
+                comment.save()
+        return redirect(
+            django.urls.reverse(
+                'users:user_detail', kwargs={'pk': self.get_object().pk}
+            )
+        )
 
 
 class UnauthorizedView(django.views.generic.TemplateView):
@@ -232,3 +302,28 @@ class SendRequestView(django.views.generic.FormView):
                 )
                 return super().form_invalid(form)
         return super().form_valid(form)
+
+
+class CommentReportView(django.views.generic.DetailView):
+    http_method_names = ['get']
+
+    def get_queryset(self):
+        if self.request.user:
+            return users.models.Comment.objects.filter(
+                pk=self.kwargs['pk'], to_user=self.request.user
+            ).first()
+        return self.queryset.none()
+
+    def get_object(self):
+        obj = self.get_queryset()
+        if not obj:
+            return None
+        return obj
+
+    def get(self, *args, **kwargs):
+        comment = self.get_object()
+        if comment:
+            comment.is_reported = True
+            comment.save()
+            return redirect(self.request.META['HTTP_REFERER'])
+        return redirect('homepage:home')

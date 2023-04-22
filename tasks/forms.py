@@ -11,7 +11,7 @@ class TaskCreationForm(core.forms.BaseTailwindModelForm):
         super(TaskCreationForm, self).__init__(*args, **kwargs)
         self.fields[
             Task.users.field.name
-        ].queryset = get_user_model().objects.filter(teams__in=[team_id])
+        ].queryset = get_user_model().objects.filter(teams__team__in=[team_id])
 
     class Meta:
         model = Task

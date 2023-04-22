@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 import teams.models
 from core.forms import BaseTailwindForm, BaseTailwindModelForm
 from core.widgets import CheckboxInput, ImageInput
-from users.models import Invite, User
+from users.models import Comment, Invite, User
 
 
 class AuthenticationForm(BaseTailwindForm, forms.AuthenticationForm):
@@ -156,10 +156,22 @@ class InviteForm(BaseTailwindModelForm):
 
 class RequestForm(BaseTailwindForm):
     to_team = django.forms.ModelChoiceField(
-        queryset=teams.models.Team.objects.opened().only(
+        queryset=teams.models.Team.objects.opened()
+        .only(
             teams.models.Team.id.field.name,
             teams.models.Team.name.field.name,
-        ),
+        )
+        .exclude(),
         label=_('В команду:'),
         help_text=_('В какую команду запрос?'),
     )
+
+
+class CommentForm(BaseTailwindModelForm):
+    class Meta:
+        model = Comment
+        fields = (Comment.content.field.name,)
+        labels = {Comment.content.field.name: _('Содержание')}
+        help_texts = {
+            Comment.content.field.name: _('Текст комментария(до 50 символов)')
+        }

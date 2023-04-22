@@ -3,18 +3,18 @@
     "model": "tasks.meeting",
     "pk": 1,
     "fields": {
-        "name": "Провал дедлайна",
-        "detail": "Обсуждаем, что мы сделали не так",
+        "detail": "Вытаскиваем всю бумагу и не только",
+        "name": "Ломаем офис",
         "team": 1,
-        "planned_date": "2023-04-23T17:04:00Z"
+        "planned_date": "2023-04-23T10:00:00Z"
     }
 },
 {
     "model": "tasks.meeting",
     "pk": 2,
     "fields": {
-        "name": "Созвон 2",
-        "detail": "Просто созвон",
+        "detail": "Был у лида команды",
+        "name": "День рождения",
         "team": 1,
         "planned_date": "2006-04-17T17:04:00Z"
     }
@@ -23,10 +23,40 @@
     "model": "tasks.meeting",
     "pk": 3,
     "fields": {
-        "name": "Созвон 3",
-        "detail": "Просто созвон",
+        "detail": "Созвон 3",
+        "name": "Пьём moloko",
         "team": 1,
         "planned_date": "2023-04-18T05:43:00Z"
+    }
+},
+{
+    "model": "tasks.meeting",
+    "pk": 5,
+    "fields": {
+        "detail": "О Великий Плов наварили",
+        "name": "Варим plov",
+        "team": 1,
+        "planned_date": "2023-04-22T15:30:00Z"
+    }
+},
+{
+    "model": "tasks.meeting",
+    "pk": 6,
+    "fields": {
+        "detail": "Неповторимый оригинал",
+        "name": "Созвон №1",
+        "team": 2,
+        "planned_date": "2023-04-01T08:32:00Z"
+    }
+},
+{
+    "model": "tasks.meeting",
+    "pk": 7,
+    "fields": {
+        "detail": "Жалкая пародия",
+        "name": "Ещё один sozvon",
+        "team": 4,
+        "planned_date": "2023-04-22T20:34:00Z"
     }
 }
 ]

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-19 12:14+0300\n"
+"POT-Creation-Date: 2023-04-22 16:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\skills\forms.py:11 .\tasks\forms.py:25 .\teams\forms.py:20
+#: .\lyceum\settings.py:172
+msgid "Russian"
+msgstr ""
+
+#: .\lyceum\settings.py:173
+msgid "English"
+msgstr ""
+
+#: .\skills\forms.py:11 .\tasks\forms.py:25 .\teams\forms.py:22
 #: .\templates\tasks\meeting_detail.html:9
 msgid "Название"
 msgstr "Name"
@@ -28,7 +36,11 @@ msgstr "Name"
 msgid "Укажите название навыка(уникальное, не больше 25 символов)"
 msgstr "Write down skill's name(unique, 25 chars or less)"
 
-#: .\tasks\forms.py:26 .\teams\forms.py:21
+#: .\skills\views.py:21
+msgid "Похожее название уже существует!"
+msgstr "Same name skill exists!"
+
+#: .\tasks\forms.py:26 .\teams\forms.py:23
 #: .\templates\tasks\meeting_detail.html:10
 msgid "Описание"
 msgstr "Description"
@@ -39,7 +51,7 @@ msgstr "Description"
 msgid "Дата дедлайна"
 msgstr "Deadline"
 
-#: .\tasks\forms.py:28
+#: .\tasks\forms.py:28 .\templates\includes\header.html:115
 msgid "Пользователи"
 msgstr "Users"
 
@@ -59,67 +71,79 @@ msgstr "Date when task should be done"
 msgid "Кто будет выполнять задачу?"
 msgstr "Who will complete the task?"
 
-#: .\tasks\forms.py:49
+#: .\tasks\forms.py:54
 msgid "Тема"
 msgstr "Theme"
 
-#: .\tasks\forms.py:50
+#: .\tasks\forms.py:55
 msgid "Детали"
 msgstr "Details"
 
-#: .\tasks\forms.py:51
+#: .\tasks\forms.py:56
 msgid "Дата"
 msgstr "Date"
 
-#: .\tasks\forms.py:54
+#: .\tasks\forms.py:59
 msgid "Укажите тему встречи"
 msgstr "Set the meeting's theme"
 
-#: .\tasks\forms.py:56
+#: .\tasks\forms.py:61
 msgid "Опишите подробнее, что будете обсуждать"
 msgstr "Describe meeting's details"
 
-#: .\tasks\forms.py:59
+#: .\tasks\forms.py:64
 msgid "Дата, на которую будет назначена встреча"
 msgstr "Date when meeting will happen"
 
-#: .\teams\forms.py:22
+#: .\teams\forms.py:24
 msgid "Открытая?"
 msgstr "Opened?"
 
-#: .\teams\forms.py:23
+#: .\teams\forms.py:25
 msgid "Аватарка"
 msgstr "Avatar"
 
-#: .\teams\forms.py:24
+#: .\teams\forms.py:26
 msgid "Навыки(тэги)"
 msgstr "Skills(tags)"
 
-#: .\teams\forms.py:28
+#: .\teams\forms.py:30
 msgid "Как будет называться команда?"
 msgstr "Name of team"
 
-#: .\teams\forms.py:31
+#: .\teams\forms.py:33
 msgid "Расскажите о команде подробнее."
 msgstr "Describe team"
 
-#: .\teams\forms.py:34
+#: .\teams\forms.py:36
 msgid "Будет ли показываться команда всем пользователям?"
 msgstr "Would all users see your team?"
 
-#: .\teams\forms.py:37
+#: .\teams\forms.py:39
 msgid "Профильное изображение команды"
 msgstr "Team's avatar"
 
-#: .\teams\forms.py:40
+#: .\teams\forms.py:42
 msgid "Что должен уметь участник команды?"
 msgstr "What should member of this team be able to do?"
 
-#: .\teams\models.py:64 .\users\models.py:75
-msgid "Нет аватарки"
-msgstr "No avatar"
+#: .\teams\views.py:123
+#, python-format
+msgid ""
+"Назначена новая встреча %(name)s\n"
+"\n"
+"Детали: %(detail)s\n"
+"\n"
+"Дата и время встречи: %(planned_date)s\n"
+"\n"
+"Ссылка встречи %(uri)s"
+msgstr ""
 
-#: .\templates\homepage\home.html:5 .\templates\includes\header.html:35
+#: .\teams\views.py:137
+msgid "Назначена новая встреча"
+msgstr "Your lead had planned new meeting"
+
+#: .\templates\homepage\home.html:5 .\templates\includes\header.html:40
 msgid "Главная"
 msgstr "Home"
 
@@ -136,65 +160,108 @@ msgid "Не нашли ничего для вас "
 msgstr "We hadn't found anything for you"
 
 #: .\templates\homepage\home.html:26
+msgid "Ваши задания"
+msgstr "Your tasks"
+
+#: .\templates\homepage\home.html:34
 msgid "Команды, которыми вы управляете"
 msgstr "Teams that you're lead in"
 
-#: .\templates\homepage\home.html:42
+#: .\templates\homepage\home.html:50
 msgid "Команды, в которых вы участник"
 msgstr "Teams that you're member in"
 
-#: .\templates\homepage\home.html:54 .\templates\tasks\your_meetings.html:9
+#: .\templates\homepage\home.html:62 .\templates\tasks\your_meetings.html:9
 msgid "Ваши встречи в этом месяце"
 msgstr "Calendar of your meetings in current month"
 
-#: .\templates\includes\form1.html:12 .\templates\includes\form2.html:12
+#: .\templates\includes\form1.html:12 .\templates\includes\form2.html:42
+#: .\templates\teams\give_lead_member.html:28
+#: .\templates\teams\kick_member.html:28
 msgid "Ошибка"
 msgstr "Error"
 
-#: .\templates\includes\header.html:46 .\templates\users\detail.html:26
+#: .\templates\includes\form2.html:28
+msgid "Добавить ещё навык"
+msgstr "Add another skill"
+
+#: .\templates\includes\header.html:51
 msgid "Команды"
 msgstr "Teams"
 
-#: .\templates\includes\header.html:60
+#: .\templates\includes\header.html:65
 msgid "Все команды"
 msgstr "All teams"
 
-#: .\templates\includes\header.html:68 .\templates\teams\yours.html:5
+#: .\templates\includes\header.html:73 .\templates\teams\yours.html:5
 msgid "Ваши команды"
 msgstr "Your teams"
 
-#: .\templates\includes\header.html:83
+#: .\templates\includes\header.html:88
 msgid "Созвоны и таски"
 msgstr "Tasks & meetings"
 
-#: .\templates\includes\header.html:97
+#: .\templates\includes\header.html:102
 msgid "Созвоны"
 msgstr "Meetings"
 
-#: .\templates\includes\header.html:105
+#: .\templates\includes\header.html:110 .\templates\tasks\your_tasks.html:5
+#: .\templates\tasks\your_tasks.html:9
 msgid "Таски"
 msgstr "Tasks"
 
-#: .\templates\includes\header.html:138 .\templates\includes\header.html:182
+#: .\templates\includes\header.html:117
+msgid "Админка"
+msgstr "Admin panel"
+
+#: .\templates\includes\header.html:147 .\templates\includes\header.html:191
 #: .\templates\users\profile.html:5 .\templates\users\request_form.html:5
 msgid "Профиль"
 msgstr "Profile"
 
-#: .\templates\includes\header.html:146
+#: .\templates\includes\header.html:155
 msgid "Мои приглашения"
 msgstr "My invites"
 
-#: .\templates\includes\header.html:154 .\templates\includes\header.html:190
+#: .\templates\includes\header.html:163 .\templates\includes\header.html:199
 msgid "Выход"
 msgstr "Logout"
 
-#: .\templates\includes\header.html:161 .\templates\users\login.html:4
+#: .\templates\includes\header.html:170 .\templates\users\login.html:4
 msgid "Вход"
 msgstr "Login"
 
-#: .\templates\includes\header.html:162
+#: .\templates\includes\header.html:171
 msgid "Регистрация"
 msgstr "Register"
+
+#: .\templates\includes\user_card.html:14 .\templates\teams\members.html:39
+msgid "Лид"
+msgstr "Lead"
+
+#: .\templates\includes\user_card.html:14
+msgid "Участник"
+msgstr "Member"
+
+#: .\templates\skills\create.html:4
+msgid "Создание навыка"
+msgstr "Create skill"
+
+#: .\templates\skills\list.html:4 .\templates\skills\list.html:8
+msgid "Все навыки"
+msgstr "All skills"
+
+#: .\templates\skills\list.html:26 .\templates\skills\list.html:28
+#: .\templates\teams\list.html:25 .\templates\teams\list.html:27
+#: .\templates\users\list.html:32 .\templates\users\list.html:34
+msgid "Предыдущая"
+msgstr "Previous"
+
+#: .\templates\skills\list.html:38 .\templates\skills\list.html:40
+#: .\templates\teams\list.html:37 .\templates\teams\list.html:39
+#: .\templates\users\list.html:44 .\templates\users\list.html:46
+msgid "Следующая"
+msgstr "Next"
 
 #: .\templates\tasks\create.html:4
 msgid "Создание задания"
@@ -215,6 +282,10 @@ msgstr "Team"
 #: .\templates\tasks\your_meetings.html:5
 msgid "Ваши встречи"
 msgstr "Your meetings"
+
+#: .\templates\tasks\your_tasks.html:14
+msgid "Тасок нет"
+msgstr "No tasks"
 
 #: .\templates\teams\all_requests.html:5
 msgid "Запросы в команду"
@@ -248,35 +319,47 @@ msgstr "Create team"
 msgid "О команде"
 msgstr "About"
 
-#: .\templates\teams\detail.html:20
+#: .\templates\teams\detail.html:18
+msgid "Выполнено заданий"
+msgstr "Tasks completed"
+
+#: .\templates\teams\detail.html:28
 msgid "Необходимые навыки"
 msgstr "Required skills"
 
-#: .\templates\teams\detail.html:33
+#: .\templates\teams\detail.html:40
 msgid "Участники"
 msgstr "Members"
 
-#: .\templates\teams\detail.html:35
+#: .\templates\teams\detail.html:42
 msgid "лид команды"
 msgstr "team lead"
 
-#: .\templates\teams\detail.html:42
+#: .\templates\teams\detail.html:48
+msgid "Создать задание"
+msgstr "Create task"
+
+#: .\templates\teams\detail.html:55
 msgid "Пригласить пользователей"
 msgstr "Invite users"
 
-#: .\templates\teams\detail.html:49
+#: .\templates\teams\detail.html:62
 msgid "Посмотреть запросы на вступление"
 msgstr "Check out team requests"
 
-#: .\templates\teams\detail.html:55
+#: .\templates\teams\detail.html:68
 msgid "Запрос на вступление"
 msgstr "Request to this team"
 
-#: .\templates\teams\detail.html:62
-msgid "Редактировать информацию/назначить задания и встречи"
-msgstr "Edit info/create meeting or tasks"
+#: .\templates\teams\detail.html:75
+msgid "Редактировать информацию/назначить встречи"
+msgstr "Edit info/create meeting"
 
-#: .\templates\teams\detail.html:70
+#: .\templates\teams\detail.html:80
+msgid "Управлять участниками"
+msgstr "Manage members"
+
+#: .\templates\teams\detail.html:88
 msgid "Извините, команда скрыта от чужих глаз"
 msgstr "Sorry, this team is hidden"
 
@@ -288,13 +371,62 @@ msgstr "Edit team"
 msgid "Назначить новую встречу"
 msgstr "Plan new meeting"
 
+#: .\templates\teams\form_invite_user.html:4
+msgid "Приглащение"
+msgstr "Invite"
+
+#: .\templates\teams\give_lead_member.html:11
+#: .\templates\teams\kick_member.html:11
+msgid "Успешно"
+msgstr "Success"
+
+#: .\templates\teams\give_lead_member.html:12
+msgid "Юзер теперь стал лидом"
+msgstr "User is team lead now!"
+
+#: .\templates\teams\give_lead_member.html:29
+msgid "Не удалось сделать юзера лидом"
+msgstr "Can't make this user lead"
+
+#: .\templates\teams\kick_member.html:12
+msgid "Юзер успешно изгнан из команды"
+msgstr "User kicked successfully"
+
+#: .\templates\teams\kick_member.html:29
+msgid "Не удалось изгнать юзера"
+msgstr "Can't kick this user"
+
+#: .\templates\teams\members.html:5
+msgid "Участники команды"
+msgstr "Team members"
+
 #: .\templates\users\detail.html:5
 msgid "О пользователе"
 msgstr "About user"
 
-#: .\templates\users\detail.html:19
+#: .\templates\users\detail.html:15
+msgid "Процент выполненных заданий"
+msgstr "Percentage of completed tasks"
+
+#: .\templates\users\detail.html:20
 msgid "Что умеет"
 msgstr "Skills"
+
+#: .\templates\users\detail.html:28
+msgid "Комментарии"
+msgstr "Comments"
+
+#: .\templates\users\detail.html:35
+msgid "Автор"
+msgstr "Author"
+
+#: .\templates\users\detail.html:41
+msgid "Пожаловаться"
+msgstr "Report"
+
+#: .\templates\users\detail.html:47
+msgid "Пустота"
+msgstr "Empty"
 
 #: .\templates\users\includes\forgot_password.html:3
 msgid "Забыли пароль?"
@@ -315,6 +447,18 @@ msgstr "Reject"
 #: .\templates\users\invites.html:28
 msgid "Приглашений нет"
 msgstr "No invites"
+
+#: .\templates\users\list.html:5
+msgid "Открытые пользователи"
+msgstr "Open users"
+
+#: .\templates\users\list.html:9
+msgid "Список открытых пользователей"
+msgstr "List of open usrs"
+
+#: .\templates\users\list.html:27
+msgid "Пусто"
+msgstr "Empty"
 
 #: .\templates\users\password_change.html:3
 msgid "Изменения пароля"
@@ -371,7 +515,7 @@ msgstr "or drag'n'drop it here"
 msgid "PNG, JPG, GIF до 10Мб"
 msgstr "PNG, JPG, GIF under 10mb"
 
-#: .\users\backends.py:51
+#: .\users\backends.py:61
 msgid "Восстановление"
 msgstr "Recover"
 
@@ -453,40 +597,48 @@ msgstr "To user"
 msgid "Какого пользователя пригласить?"
 msgstr "What user is  request for?"
 
-#: .\users\forms.py:163
+#: .\users\forms.py:165
 msgid "В команду:"
 msgstr "To team:"
 
-#: .\users\forms.py:164
+#: .\users\forms.py:166
 msgid "В какую команду запрос?"
 msgstr "What team is request to?"
 
-#: .\users\views.py:142
+#: .\users\forms.py:174
+msgid "Содержание"
+msgstr "Content"
+
+#: .\users\forms.py:176
+msgid "Текст комментария(до 50 символов)"
+msgstr ""
+
+#: .\users\views.py:120
 msgid "Прошло больше 12 часов, ссылка уже не работает:("
 msgstr "12 hours've passed, link doesn't work now :("
 
-#: .\users\views.py:148
+#: .\users\views.py:126
 msgid "Вы активированы!"
 msgstr "You're activated!"
 
-#: .\users\views.py:166
+#: .\users\views.py:145
 msgid "Прошла неделя, ссылка уже не работает:("
 msgstr "Week've passed, link doesn't work now :("
 
-#: .\users\views.py:196
-msgid "Активация"
-msgstr "Activation"
-
-#: .\users\views.py:206
+#: .\users\views.py:163
 msgid "Вы уже авторизованы!"
 msgstr "You're already authorized!"
 
-#: .\users\views.py:251
+#: .\users\views.py:182
+msgid "Активация"
+msgstr "Activation"
+
+#: .\users\views.py:301
 msgid "Вы уже состоите в этой команде!"
 msgstr "You're already member of this team!"
 
-#~ msgid "Укажите название задачи"
-#~ msgstr "Set the task's name"
+#~ msgid "Нет аватарки"
+#~ msgstr "No avatar"
 
 #~ msgid "Опишите подробнее, что надо сделать"
 #~ msgstr "Describe task more detail"
