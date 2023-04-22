@@ -1,4 +1,3 @@
-# import timezone
 import zoneinfo
 
 import django.core.mail
@@ -19,6 +18,34 @@ import tasks.models
 import teams.forms
 import teams.models
 import users.models
+
+
+@method_decorator(login_required, name='dispatch')
+class TeamInviteUserView(django.views.generic.FormView):
+    template_name = 'teams/form_invite_user.html'
+    form_class = teams.forms.TeamInviteUserForm
+    success_url = '.'
+    http_method_names = ['get', 'head', 'post']
+
+    def dispatch(self, request, *args, **kwargs):
+        get_object_or_404(
+            users.models.Member,
+            user_id=request.user.pk,
+            is_lead=True,
+            team_id=kwargs['pk'],
+        )
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        invite = form.save(commit=False)
+        invite.from_team_id = self.kwargs['pk']
+        invite.save()
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 
 @method_decorator(login_required, name='dispatch')
