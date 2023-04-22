@@ -1,6 +1,43 @@
 {% load i18n %}
 
 <form method="post" enctype="multipart/form-data">
+  {% if success %}
+  <div class="p-6 max-w-lg mx-auto bg-white rounded-xl shadow-lg flex items-center space-x-4 mt-4 dark:bg-neutral-800 dark:text-white dark:border border-green-400">
+    <div class="">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 stroke-green-400">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+      </svg>
+      
+    </div>
+    <div>
+      <div class="text-lg font-medium">{% translate "Успешно" %}</div>
+      <p class="text-slate-500 dark:text-neutral-300">{% translate 'Форма успешно заполнена!' %}</p>
+    </div>
+    <div class="hover:cursor-pointer hover:scale-90 duration-75" onclick="this.parentElement.remove()">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>              
+    </div>
+  </div>
+  {% endif %}
+  {% for error in form.non_field_errors %}
+      <div class="p-6 max-w-lg bg-white rounded-xl shadow-lg flex items-center space-x-4 mt-4 dark:bg-neutral-800 dark:text-white dark:border border-red-400">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 stroke-red-700">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+          </svg>
+        </div>
+        <div>
+          <div class="text-lg font-medium">{% translate 'Ошибка' %}</div>
+          <p class="text-slate-500 dark:text-neutral-300">{{ error }}</p>
+        </div>
+        <div class="hover:cursor-pointer hover:scale-90 duration-75" onclick="this.parentElement.remove()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>              
+        </div>
+      </div>
+   {% endfor %}
   {% csrf_token %}
   <div class="space-y-6">
     <div class="mt-6 mb-2">
@@ -23,6 +60,9 @@
             {{ field }}
           </div>
           <p class="mt-1 text-sm">{{ field.help_text }}</p>
+          {% for error in field.errors %}
+            <p class="text-sm text-red-500">{{error}}</p>
+          {% endfor %}
           {% if field.name ==  "skills" %}
             <a href="{% url 'skills:create' %}?next={{ request.path }}" class="inline-block cursor-pointer rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
               {% translate "Добавить ещё навык" %}
@@ -31,24 +71,6 @@
         </div>
       {% endfor %}
     </div>
-    {% for error in form.non_field_errors %}
-      <div class="p-6 max-w-lg bg-white rounded-xl shadow-lg flex items-center space-x-4 mt-4 dark:bg-neutral-800 dark:text-white dark:border border-red-400">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 stroke-red-700">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-          </svg>
-        </div>
-        <div>
-          <div class="text-lg font-medium">{% translate 'Ошибка' %}</div>
-          <p class="text-slate-500 dark:text-neutral-300">{{ error }}</p>
-        </div>
-        <div class="hover:cursor-pointer hover:scale-90 duration-75" onclick="this.parentElement.remove()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>              
-        </div>
-      </div>
-   {% endfor %}
   </div>
   <div class="mt-6 flex items-center justify-end gap-x-6">
     <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{% translate submit_text|default:'Подтвердить' %}</button>
