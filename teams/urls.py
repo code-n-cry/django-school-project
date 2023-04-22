@@ -31,6 +31,11 @@ urlpatterns = [
         name='yours',
     ),
     django.urls.path(
+        '<int:pk>/invite/',
+        teams.views.TeamInviteUserView.as_view(),
+        name='invite_user',
+    ),
+    django.urls.path(
         '<int:pk>/requests/',
         teams.views.TeamRequestsView.as_view(),
         name='requests',

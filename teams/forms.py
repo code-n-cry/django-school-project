@@ -1,7 +1,9 @@
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 import core.forms
 import teams.models
+import users.models
 from core.widgets import CheckboxInput, ImageInput
 from teams.models import Team
 
@@ -44,3 +46,15 @@ class TeamForm(core.forms.BaseTailwindModelForm):
             Team.avatar.field.name: ImageInput,
             Team.is_open.field.name: CheckboxInput,
         }
+
+
+class TeamInviteUserForm(core.forms.BaseTailwindModelForm):
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields[
+            users.models.Invite.to_user.field.name
+        ].queryset = get_user_model().objects.exclude(pk=request.user.pk)
+
+    class Meta:
+        model = users.models.Invite
+        fields = (users.models.Invite.to_user.field.name,)
