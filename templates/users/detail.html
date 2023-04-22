@@ -34,6 +34,7 @@
           <div class="p-3 border border-white rounded">
             <p class="text-white text-l">{% translate "Автор" %}: {{ comment.author__username }}</p>
             <p class="text-white text-center text-xl py-2">{{ comment.content }}</p>
+            
             {% if comment.to_user__username == request.user.username %}
               <a href="{% url 'users:report' comment.id %}">
                 <button

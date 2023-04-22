@@ -236,12 +236,19 @@ class UserDetailView(django.views.generic.DetailView):
                 to_user=self.get_object(), is_reported=False
             )
             .select_related(users.models.Comment.author.field.name)
+            .select_related(users.models.Comment.to_user.field.name)
             .values(
                 users.models.Comment.content.field.name,
                 users.models.Comment.id.field.name,
                 '__'.join(
                     [
                         users.models.Comment.author.field.name,
+                        users.models.User.username.field.name,
+                    ]
+                ),
+                '__'.join(
+                    [
+                        users.models.Comment.to_user.field.name,
                         users.models.User.username.field.name,
                     ]
                 ),
