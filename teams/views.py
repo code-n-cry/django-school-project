@@ -3,6 +3,7 @@ import zoneinfo
 
 import django.core.mail
 import django.db.models
+import django.http
 import django.shortcuts
 import django.urls
 import django.views.generic
@@ -302,41 +303,29 @@ class YoursTeamsView(TeamListView):
             .get_queryset()
             .filter(members__user=self.request.user)
             .order_by(f'-{order_by_field}')
-            .prefetch_related(
-                django.db.models.Prefetch(
-                    teams.models.Team.members.rel.related_name,
-                    queryset=users.models.Member.objects.all(),
-                )
+            .only(
+                teams.models.Team.avatar.field.name,
+                teams.models.Team.name.field.name,
+                teams.models.Team.detail.field.name,
             )
         )
 
 
 @method_decorator(login_required, name='dispatch')
-class TeamMembersView(django.views.generic.DetailView):
+class TeamMembersView(django.views.generic.ListView):
     template_name = 'teams/members.html'
-    queryset = teams.models.Team.objects.all()
+    queryset = users.models.Member.objects.all()
     context_object_name = 'members'
     http_method_names = ['get', 'head']
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        result = queryset.filter(is_open=True)
+        result = queryset.filter(team__is_open=True)
         if self.request.user.is_authenticated:
-            result |= queryset.filter(members__user=self.request.user)
-        return result.prefetch_related(
-            Prefetch(teams.models.Team.members.rel.related_name),
-            Prefetch(
-                '__'.join(
-                    [
-                        teams.models.Team.members.rel.related_name,
-                        users.models.Member.user.field.name,
-                    ]
-                )
-            ),
+            result |= queryset.filter(user=self.request.user)
+        return result.filter(team__pk=self.kwargs.get('pk')).prefetch_related(
+            Prefetch(users.models.Member.user.field.name),
         )
-
-    def get_object(self, queryset=None):
-        return super().get_object(queryset).members.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -345,8 +334,105 @@ class TeamMembersView(django.views.generic.DetailView):
         if (
             members is not None
             and self.request.user.id
-            in members.values_list(users.models.Member.user.field.name)
+            in members.values_list(
+                users.models.Member.user.field.name, flat=True
+            )
         ):
             member = members.get(user=self.request.user)
         context.update(user_member=member)
         return context
+
+
+@method_decorator(login_required, name='dispatch')
+class TeamMemberKickView(django.views.generic.DeleteView):
+    queryset = users.models.Member.objects.all()
+    template_name = 'teams/kick_member.html'
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+        team_pk = self.kwargs.get('team_pk')
+        user_pk = self.kwargs.get('user_pk')
+        if team_pk is not None and user_pk is not None:
+            queryset = queryset.filter(
+                team__pk=team_pk, user__pk=user_pk, is_lead=False
+            )
+        else:
+            raise AttributeError(
+                'Generic detail view %s must be called with either an object '
+                'pk or a slug in the URLconf.' % self.__class__.__name__
+            )
+
+        try:
+            obj = queryset.first()
+        except queryset.model.DoesNotExist:
+            obj = queryset.none()
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        return redirect(
+            django.urls.reverse_lazy(
+                'teams:members', kwargs={'pk': kwargs.get('team_pk')}
+            )
+        )
+
+    def delete(self, request, *args, **kwargs):
+        member = users.models.Member.objects.filter(
+            user=request.user, team__pk=kwargs.get('team_pk'), is_lead=True
+        )
+        if member.exists():
+            self.object = self.get_object()
+            self.object.delete()
+            status = 200
+        else:
+            self.object = None
+            status = 418
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context, status=status)
+
+
+@method_decorator(login_required, name='dispatch')
+class TeamMemberGiveLeadView(django.views.generic.DetailView):
+    queryset = users.models.Member.objects.all()
+    template_name = 'teams/give_lead_member.html'
+
+    def get_object(self, queryset=None):
+        if queryset is None:
+            queryset = self.get_queryset()
+        team_pk = self.kwargs.get('team_pk')
+        user_pk = self.kwargs.get('user_pk')
+        if team_pk is not None and user_pk is not None:
+            queryset = queryset.filter(
+                team__pk=team_pk, user__pk=user_pk, is_lead=False
+            ).prefetch_related(users.models.Member.user.field.name)
+        else:
+            raise AttributeError(
+                'Generic detail view %s must be called with either an object '
+                'pk or a slug in the URLconf.' % self.__class__.__name__
+            )
+
+        try:
+            obj = queryset.first()
+        except queryset.model.DoesNotExist:
+            obj = queryset.none()
+        return obj
+
+    def get(self, request, *args, **kwargs):
+        return redirect(
+            django.urls.reverse_lazy(
+                'teams:members', kwargs={'pk': kwargs.get('team_pk')}
+            )
+        )
+
+    def post(self, request, *args, **kwargs):
+        member = users.models.Member.objects.filter(
+            user=request.user, team__pk=kwargs.get('team_pk'), is_lead=True
+        )
+        if member.exists():
+            self.object = self.get_object()
+            self.object.is_lead = True
+            self.object.save()
+        else:
+            self.object = None
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
