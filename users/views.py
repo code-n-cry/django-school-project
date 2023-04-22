@@ -248,7 +248,7 @@ class UserDetailView(django.views.generic.DetailView):
             )
         )
         completed_tasks = (
-            tasks.models.Task.objects.uncompleted()
+            tasks.models.Task.objects.completed()
             .filter(users=self.get_object())
             .count()
         )
