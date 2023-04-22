@@ -17,7 +17,7 @@ class AddSkillView(FormView):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(request.META.get('HTTP_REFERER', '/'))
+            return redirect(request.GET.get('next', '/'))
         form.add_error('name', _('Похожее название уже существует!'))
         return super().post(request, *args, **kwargs)
 

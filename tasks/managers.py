@@ -22,12 +22,10 @@ class TasksManager(django.db.models.Manager):
         )
 
     def completed(self):
-        now = timezone.now()
         return (
             self.get_queryset()
             .filter(
                 completed_date__isnull=False,
-                deadline_date__gt=now,
             )
             .only(
                 tasks.models.Task.name.field.name,
@@ -48,6 +46,20 @@ class TasksManager(django.db.models.Manager):
                 tasks.models.Task.detail.field.name,
                 tasks.models.Task.deadline_date.field.name,
             )
+        )
+
+    def completed_percentage(self, user):
+        user_completed = self.completed().filter(users=user).count()
+        user_failed_and_uncompleted = (
+            self.failed()
+            .filter(users=user)
+            .union(self.uncompleted().filter(users=user))
+            .count()
+        )
+        return (
+            user_completed / user_failed_and_uncompleted * 100
+            if user_failed_and_uncompleted > 0
+            else 100
         )
 
 

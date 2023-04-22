@@ -39,7 +39,7 @@
           <div>
             <p>{% translate "Участники" %}: </p>
             {% for team_member in team.members.all %}
-              <a href="{% url 'users:user_detail' team_member.user.pk %}">{{ team_member.user.username }} {% if team_member.is_lead %} ({% translate 'лид команды' %}) {% endif %}</a>
+              <a class="underline" href="{% url 'users:user_detail' team_member.user.pk %}">{{ team_member.user.username }} </a>{% if team_member.is_lead %} ({% translate 'лид команды' %}) {% endif %}<br>
             {% endfor %}
           </div>
           <div class="mt-5">

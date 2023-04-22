@@ -65,7 +65,7 @@ class InviteBaseDetailView(django.views.generic.DetailView):
     def get_queryset(self):
         return users.models.Invite.objects.filter(
             pk=self.kwargs['pk'], to_user=self.request.user.pk
-        )
+        ).first()
 
     def get_object(self):
         obj = self.get_queryset()
@@ -247,15 +247,13 @@ class UserDetailView(django.views.generic.DetailView):
                 ),
             )
         )
-        completed_tasks = (
-            tasks.models.Task.objects.completed()
-            .filter(users=self.get_object())
-            .count()
+        tasks_percentage = tasks.models.Task.objects.completed_percentage(
+            self.get_object()
         )
         if self.request.user.is_authenticated:
             context.update(form=self.comment_form())
         context.update(
-            all_tasks_count=completed_tasks, comments=users_comments
+            all_tasks_count=tasks_percentage, comments=users_comments
         )
         return context
 
@@ -310,9 +308,11 @@ class CommentReportView(django.views.generic.DetailView):
     http_method_names = ['get']
 
     def get_queryset(self):
-        return users.models.Comment.objects.filter(
-            pk=self.kwargs['pk']
-        ).first()
+        if self.request.user:
+            return users.models.Comment.objects.filter(
+                pk=self.kwargs['pk'], to_user=self.request.user
+            ).first()
+        return self.queryset.none()
 
     def get_object(self):
         obj = self.get_queryset()
@@ -325,5 +325,5 @@ class CommentReportView(django.views.generic.DetailView):
         if comment:
             comment.is_reported = True
             comment.save()
-            return redirect('homepage:home')
+            return redirect(self.request.META['HTTP_REFERER'])
         return redirect('homepage:home')

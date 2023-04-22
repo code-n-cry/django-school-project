@@ -73,7 +73,7 @@ class TaskDoneView(django.views.generic.DetailView):
         if task:
             task.completed_date = datetime.now()
             task.save()
-        return redirect(request.META.get('HTTP_REFERER'))
+        return redirect(request.META['HTTP_REFERER'])
 
 
 @method_decorator(login_required, name='dispatch')

@@ -156,10 +156,12 @@ class InviteForm(BaseTailwindModelForm):
 
 class RequestForm(BaseTailwindForm):
     to_team = django.forms.ModelChoiceField(
-        queryset=teams.models.Team.objects.opened().only(
+        queryset=teams.models.Team.objects.opened()
+        .only(
             teams.models.Team.id.field.name,
             teams.models.Team.name.field.name,
-        ),
+        )
+        .exclude(),
         label=_('В команду:'),
         help_text=_('В какую команду запрос?'),
     )

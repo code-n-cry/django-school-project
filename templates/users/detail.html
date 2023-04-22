@@ -12,7 +12,7 @@
       <div>
         <p class="text-3xl">{{ user.username }}</p>
         <p class="text-3xl">{{ user.email }}</p>
-        <p class="text-sm mt-1">{% translate "Кол-во выполненных заданий" %}: {{ all_tasks_count }}</p>
+        <p class="text-sm mt-1">{% translate "Процент выполненных заданий" %}: {{ all_tasks_count }}%</p>
       </div>
     </div>
     <div class="mt-5">
@@ -34,11 +34,14 @@
           <div class="p-3 border border-white rounded">
             <p class="text-white text-l">{% translate "Автор" %}: {{ comment.author__username }}</p>
             <p class="text-white text-center text-xl py-2">{{ comment.content }}</p>
-            <a href="{% url 'users:report' comment.id %}">
-              <button
-                class="inline-block cursor-pointer rounded bg-danger px-6 py-1 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
-                {% translate "Пожаловаться" %}
-              </button></a>
+            {% if comment.to_user__username == request.user.username %}
+              <a href="{% url 'users:report' comment.id %}">
+                <button
+                  class="inline-block cursor-pointer rounded bg-danger px-6 py-1 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                  {% translate "Пожаловаться" %}
+                </button>
+              </a>
+            {% endif %}
           </div>
         {% empty %}
           <p class="text-xl py-2">{% translate "Пустота" %}...</p>

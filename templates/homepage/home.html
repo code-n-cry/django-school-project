@@ -51,7 +51,7 @@
         {% endif %}
         <div class="grid grid-cols-2 justify-items-end rounded-md bg-indigo-600 text-white my-2">
           <div class="justify-self-start flex items-start p-0 text-white">
-            <img class="h-8 w-8 rounded-full" src="{{ team.avatar }}" alt="">
+            <img class="h-8 w-8 rounded-full" src="{{ team.get_avatar_300x300.url }}" alt="">
             <a href="{% url "teams:detail" team.id %}" class="pl-3">{{ team.name }}</a>
           </div>
           <div class="justify-self-end flex items-end text-white">
