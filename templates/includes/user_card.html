@@ -8,7 +8,7 @@
         <div>
             <div class="flex justify-between text-base font-medium text-white">
                 <h3>
-                    <a href="{% url 'users:user_detail' member.user.pk %}">{{member.user.username}}</a>
+                    <a href="{% url 'users:user_detail' member.user.pk %}">{{ member.user.username }}</a>
                 </h3>
             </div>
             <p class="mt-1 text-sm text-gray-500">{% if member.is_lead %}{% translate 'Лид' %}{% else %}{% translate 'Участник' %}{% endif %}</p>
