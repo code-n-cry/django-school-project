@@ -7,25 +7,7 @@
 {% block content %}
   <div class="mx-auto container">
     {% csrf_token %}
-    {% include "includes/form2.html" with form_title="Изменение команды" submit_text="Изменить" %}
-    <p class="text-center text-white text-2xl">{% translate "Назначить новую встречу" %}:</p>
-    <form method="post">
-      {% csrf_token %}
-      {% for field in meeting_form %}
-        <div class="col-span-full mb-6">
-          <label class="block text-sm font-medium leading-6">{{ field.label }}</label>
-            {{ field }}
-          <div class="text-slate-500 text-sm">{{ field.help_text }}</div>
-            {% for error in field.errors %}
-              <p class="text-red-700 text-sm">{{ error }}</p>
-            {% endfor %}
-        </div>
-      {% endfor %}
-      {% if additional_field %}
-        {% include additional_field %}
-      {% endif %}
-      <button class="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">{% translate submit_text|default:"Назначить" %}</button>
-    </form>
-    {{ task_form }}
+    {% include "includes/form2.html" with form_title="Изменение команды" submit_text="Изменить" success=form_success %}
+    {% include "includes/form2.html" with form=meeting_form form_title="Создание встречи" submit_text="Создать" success=meeting_form_success %}
   </div>
 {% endblock %}

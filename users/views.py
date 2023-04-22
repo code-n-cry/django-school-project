@@ -71,7 +71,7 @@ class InviteBaseDetailView(django.views.generic.DetailView):
         obj = self.get_queryset()
         if not obj:
             return None
-        return obj
+        return obj.first()
 
 
 @method_decorator(login_required, name='dispatch')
