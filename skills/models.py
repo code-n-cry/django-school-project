@@ -1,7 +1,10 @@
 from core.models import ShortUniqueNameAbstractModel
+from skills.managers import SkillManager
 
 
 class Skill(ShortUniqueNameAbstractModel):
+    objects = SkillManager()
+
     class Meta:
         verbose_name = 'навык'
         verbose_name_plural = 'навыки'

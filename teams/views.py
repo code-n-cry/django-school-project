@@ -1,3 +1,4 @@
+# import timezone
 import zoneinfo
 
 import django.core.mail
@@ -42,7 +43,6 @@ class TeamEditView(django.views.generic.UpdateView):
     template_name = 'teams/edit.html'
     form_class = teams.forms.TeamForm
     meeting_form_class = tasks.forms.MeetingCreationForm
-    task_form_class = None
     context_object_name = 'team'
     http_method_names = ['get', 'head', 'post']
 
@@ -173,6 +173,7 @@ class TeamDetailView(django.views.generic.DetailView):
 
 class TeamListView(django.views.generic.ListView):
     template_name = 'teams/list.html'
+    paginate_by = 5
     queryset = teams.models.Team.objects.opened()
     context_object_name = 'teams'
     http_method_names = ['get', 'head']
@@ -240,18 +241,19 @@ class RequestAcceptView(django.views.generic.View):
             .exists()
         )
         if is_request_user_lead:
-            request = get_object_or_404(
-                users.models.Request, pk=kwargs['request_id'], to_team=team
-            )
-            users.models.Member.objects.create(
-                user=request.from_user, team=team
-            )
-            request.delete()
-            return redirect(
-                django.urls.reverse(
-                    'teams:requests', kwargs={'pk': kwargs['team_id']}
+            request = users.models.Request.objects.filter(
+                pk=kwargs['request_id'], to_team=team
+            ).first()
+            if request:
+                users.models.Member.objects.create(
+                    user=request.from_user, team=team
                 )
-            )
+                request.delete()
+                return redirect(
+                    django.urls.reverse(
+                        'teams:requests', kwargs={'pk': kwargs['team_id']}
+                    )
+                )
         return redirect('homepage:home')
 
 
@@ -269,15 +271,16 @@ class RequestRejectView(django.views.generic.View):
             .exists()
         )
         if is_request_user_lead:
-            request = get_object_or_404(
-                users.models.Request, pk=kwargs['request_id'], to_team=team
-            )
-            request.delete()
-            return redirect(
-                django.urls.reverse(
-                    'teams:requests', kwargs={'pk': kwargs['team_id']}
+            request = users.models.Request.filter(
+                pk=kwargs['request_id'], to_team=team
+            ).first()
+            if request:
+                request.delete()
+                return redirect(
+                    django.urls.reverse(
+                        'teams:requests', kwargs={'pk': kwargs['team_id']}
+                    )
                 )
-            )
         return redirect('homepage:home')
 
 

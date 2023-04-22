@@ -87,12 +87,8 @@ class HomeView(TemplateView):
                 current_date.year,
                 current_date.month,
             ).formatmonth(with_year=True)
-            user_tasks = tasks.models.Task.objects.filter(
-                users=self.request.user.pk, completed_date__isnull=True
-            ).only(
-                tasks.models.Task.name.field.name,
-                tasks.models.Task.detail.field.name,
-                tasks.models.Task.deadline_date.field.name,
+            user_tasks = tasks.models.Task.objects.uncompleted().filter(
+                users=self.request.user.pk
             )
             context.update(
                 lead_teams=lead_teams,

@@ -14,6 +14,14 @@ import teams.models
 
 
 @method_decorator(login_required, name='dispatch')
+class TaskListView(django.views.generic.ListView):
+    template_name = 'tasks/your_tasks.html'
+    queryset = tasks.models.Task.objects.uncompleted()
+    context_object_name = 'tasks'
+    http_method_names = ['get']
+
+
+@method_decorator(login_required, name='dispatch')
 class TaskCreateView(django.views.generic.FormView):
     template_name = 'tasks/create.html'
     queryset = tasks.models.Task.objects.all()
@@ -55,15 +63,16 @@ class TaskCreateView(django.views.generic.FormView):
 class TaskDoneView(django.views.generic.DetailView):
     http_method_names = ['get']
 
-    def get_queryset(self):
+    def get_object(self):
         return tasks.models.Task.objects.filter(
-            pk=self.kwargs['pk'], users=self.request.user.pk
-        )
+            pk=self.kwargs['pk'], users=self.request.user
+        ).first()
 
     def get(self, request, *args, **kwargs):
         task = self.get_object()
-        task.completed_date = datetime.now()
-        task.save()
+        if task:
+            task.completed_date = datetime.now()
+            task.save()
         return redirect(request.META.get('HTTP_REFERER'))
 
 

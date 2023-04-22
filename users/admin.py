@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm
 
-from users.models import Invite, Member, User
+from users.models import Comment, Invite, Member, User
 
 
 class MemberInline(admin.TabularInline):
@@ -12,6 +12,22 @@ class MemberInline(admin.TabularInline):
 class CustomUserAdminForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = User
+
+
+@admin.register(Comment)
+class ReportedCommentAdmin(admin.ModelAdmin):
+    fields = (Comment.content.field.name, Comment.is_reported.field.name)
+    readonly_fields = (Comment.content.field.name,)
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        return queryset.filter(is_reported=True).only(
+            Comment.pk,
+            Comment.content.field.name,
+            Comment.is_reported.field.name,
+        )
 
 
 class CustomUserAdmin(UserAdmin):

@@ -41,4 +41,9 @@ urlpatterns = [
         users.views.SendRequestView.as_view(),
         name='send_request',
     ),
+    django.urls.path(
+        'comments/report/<int:pk>',
+        users.views.CommentReportView.as_view(),
+        name='report',
+    ),
 ]

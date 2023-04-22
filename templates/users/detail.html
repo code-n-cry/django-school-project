@@ -7,32 +7,43 @@
 {% block content %}
   <div class="mx-auto container">
     <div class="flex">
-      <div class="w-36 h-44 bg-slate-600 rounded mr-3 bg-center" style="background-image: url({{ user_detail.get_avatar_300x300.url }}); backgorund-position: center; background-size: cover;">
+      <div class="w-36 h-44 bg-slate-600 rounded mr-3 bg-center" style="background-image: url({{ user.get_avatar_300x300.url }}); backgorund-position: center; background-size: cover;">
       </div>
       <div>
-        <p class="text-3xl">{{ user_detail.username }}</p>
-        <p class="text-3xl">{{ user_detail.first_name }} {{ user_detail.last_name }}</p>
-        <p class="text-3xl">{{ user_detail.email }}</p>
+        <p class="text-3xl">{{ user.username }}</p>
+        <p class="text-3xl">{{ user.email }}</p>
         <p class="text-sm mt-1">{% translate "Кол-во выполненных заданий" %}: {{ all_tasks_count }}</p>
       </div>
     </div>
     <div class="mt-5">
-      <p class="text-3xl">{% translate "Что умеет" %}:</p>
-      <div class="flex space-x-3">
-        {% for skill in user_detail.skills.all %}
+      {% if user.skills.all %}
+        <p class="text-3xl">{% translate "Что умеет" %}:</p>
+        <div class="flex space-x-3">
+        {% for skill in user.skills.all %}
           <div class="p-3 border border-white rounded">{{ skill.name }}</div>
         {% endfor %}
-      </div>
-      <div class="mt-6">
-        <p class="text-3xl">{% translate "Команды" %}:</p>
-        <div class="mt-5 flex space-x-4 flex-wrap w-full">
-          {% for user_team in user_detail.teams.all %}
-            <div class="w-1/4">
-              {% include "includes/command_card.html" with team=user_team.team show_detail=true %}
-            </div>
-          {% endfor %}
         </div>
+      {% endif %}
       </div>
+      <p class="text-3xl py-3">{% translate "Комментарии" %}:</p>
+      {% if request.user.is_authenticated %}
+          {% include "includes/form2.html" with submit_text="Оставить" title="Ваш комментарий:" %}
+      {% endif %}
+      <div class="flex space-x-3">
+        {% for comment in comments %}
+          <div class="p-3 border border-white rounded">
+            <p class="text-white text-l">{% translate "Автор" %}: {{ comment.author__username }}</p>
+            <p class="text-white text-center text-xl py-2">{{ comment.content }}</p>
+            <a href="{% url 'users:report' comment.id %}">
+              <button
+                class="inline-block cursor-pointer rounded bg-danger px-6 py-1 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]">
+                {% translate "Пожаловаться" %}
+              </button></a>
+          </div>
+        {% empty %}
+          <p class="text-xl py-2">{% translate "Пустота" %}...</p>
+        {% endfor %}
+        </div>
     </div>
   </div>
 {% endblock %}
