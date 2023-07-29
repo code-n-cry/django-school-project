@@ -6,9 +6,9 @@
 {% endblock %}
 {% block content %}
   <div class="mx-auto container block h-full sm:flex">
-    <div class="flex gap-2 flex-wrap w-full">
+    <div class="flex gap-2 flex-wrap w-full px-2">
       {% for team in teams %}
-        <div class="w-[calc(100%/3-0.5rem)]">
+        <div class="w-[calc(100%/3-0.5rem)] px-2 py-2">
           {% include "includes/command_card.html" with team=team show_detail="true" %}
         </div>
       {% endfor %}

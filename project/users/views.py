@@ -65,7 +65,7 @@ class InviteBaseDetailView(django.views.generic.DetailView):
     def get_queryset(self):
         return users.models.Invite.objects.filter(
             pk=self.kwargs['pk'], to_user=self.request.user.pk
-        ).first()
+        )
 
     def get_object(self):
         obj = self.get_queryset()
