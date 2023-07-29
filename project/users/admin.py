@@ -20,11 +20,8 @@ class ReportedCommentAdmin(admin.ModelAdmin):
     readonly_fields = (Comment.content.field.name,)
 
     def get_queryset(self, request):
-        queryset = super().get_queryset(request)
-        if request.user.is_superuser:
-            return queryset
-        return queryset.filter(is_reported=True).only(
-            Comment.pk,
+        return Comment.objects.filter(is_reported=True).only(
+            Comment.id.field.name,
             Comment.content.field.name,
             Comment.is_reported.field.name,
         )
