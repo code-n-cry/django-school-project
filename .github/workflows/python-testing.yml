@@ -29,4 +29,5 @@ jobs:
         pip install mock
     - name: Run Tests
       run: |
-        python project/manage.py test
+        cd project/
+        python manage.py test
